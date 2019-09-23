@@ -68,18 +68,18 @@ smooth_index_rand = random_index(Y,"smooth",10)
 spiral_index_rand = random_index(Y,"spiral",10)
 
 # Affichage des spirales
-print ("SPIRAL")
-for i in spiral_index_rand:
-    print(Y[i])
-    plt.imshow(X[i].transpose(1, 2, 0))
-    plt.show()
+# print ("SPIRAL")
+# for i in spiral_index_rand:
+#     print(Y[i])
+#     plt.imshow(X[i].transpose(1, 2, 0))
+#     plt.show()
 
 # Affichage des smooths
-print ("SMOOTH")
-for i in smooth_index_rand:
-    print(Y[i])
-    plt.imshow(X[i].transpose(1, 2, 0))
-    plt.show()
+# print ("SMOOTH")
+# for i in smooth_index_rand:
+#     print(Y[i])
+#     plt.imshow(X[i].transpose(1, 2, 0))
+#     plt.show()
 
 #######   4
 # Nombre d'images des données d'entrainements pour chaque classe ici : 0.7*100//2 = 35
@@ -101,12 +101,12 @@ Y_test = Y[test_index]
 print(X_train.shape,X_test.shape)
 
 # Vérification du jeu de données
-cpt = 1
-for i in X_train:
-    print(cpt,Y_train[cpt-1])
-    plt.imshow(i)
-    plt.show()
-    cpt = cpt + 1
+# cpt = 1
+# for i in X_train:
+#     print(cpt,Y_train[cpt-1])
+#     plt.imshow(i)
+#     plt.show()
+#     cpt = cpt + 1
 
 #######   5   
 # Nombre d'images du jeu de données d'entrainement
