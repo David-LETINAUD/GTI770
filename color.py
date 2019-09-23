@@ -1,4 +1,4 @@
-
+import numpy as np
 #######   7
 # Plusieurs façons de supprimer les 3 canaux de couleurs pour n'en faire qu'1 gris
 # On peut par exemple donner un poids différents à chaque couleur
@@ -52,20 +52,4 @@ def otsu_threshold(im):
 
     # Retourne le seuil pour lequel la variance inter-classe est maximale (variance intra-classe minimale)
     return s_max[0]
-
-# Rogne de manière centrée l'image img aux dimensions cropx/cropy
-# Retourne l'image rognée
-def crop_center(img,cropx,cropy):
-    x = img.shape[0] # Sauvegarde la taille de l'image en x
-    y = img.shape[1]
-    startx = x//2-(cropx//2) # '//' Renvoie la partie décimale du quotient.
-    starty = y//2-(cropy//2)    
-    return img[starty:starty+cropy,startx:startx+cropx]
-
-X_train_crop_color = []
-# Rogner toutes les images des données d'entrainements
-for img in X_train:
-    X_train_crop_color.append(crop_center(img,25,25))
-    
-X_train_crop_color = np.array(X_train_crop_color)
 

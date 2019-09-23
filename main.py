@@ -5,6 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 import random
 
+from color import *  
 
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
@@ -49,6 +50,7 @@ with open(dataset_path) as f:
 #print (ligne[0])
 X = np.array(X)
 Y = np.array(Y)
+print(len(Y))
 
 # Conversion de NHWC en NCHW
 X = X.transpose(0,3, 1, 2) # La colonne 3 (channel) est délacée entre la 0 (N) et la 1 (H)
@@ -88,6 +90,8 @@ nb_train = int(ratio_train * nb_img )
 # Récupére la position des images de chaque classe
 spiral_index = np.where(Y=="spiral")[0]
 smooth_index = np.where(Y=="smooth")[0]    
+print(spiral_index)
+print(smooth_index)
 
 # Séparation du jeu de données 
 train_index = np.concatenate((spiral_index[0:nb_train], smooth_index[0:nb_train]))
@@ -130,9 +134,65 @@ X_train_crop = np.array(X_train_crop)
 
 
 #######   6        
-print("SPIRAL")
-plt.imshow(X_train_crop[0])
-plt.show()
-print("SMOOTH")
-plt.imshow(X_train_crop[int(ratio_train*2*nb_img) - 1])
-plt.show()
+### COLOR
+X_train_crop_color = []
+# Rogner toutes les images des données d'entrainements
+for img in X_train:
+    X_train_crop_color.append(crop_center(img,25,25))
+    
+X_train_crop_color = np.array(X_train_crop_color)
+
+
+cpt=0
+X_train_crop_grey_mean = []
+for img in X_train_crop_color:
+    i = to_grey(img)
+    m = int(np.mean(i))
+    #print(m)
+    X_train_crop_grey_mean.append(m)
+    # Calcul du seuil optimale de binarisation
+    #t = otsu_threshold(X_train_crop_grey[cpt])
+    # Binarisation de l'image
+    cpt = cpt + 1
+
+cpt = 0
+# print("spiral")
+# for cpt in range(35):
+#     print(X_train_crop_grey_mean[cpt])
+# cpt = 0
+# print("SMOOTH")
+# for cpt in range(35):
+#     print(X_train_crop_grey_mean[cpt+35])
+
+
+X_train_crop_grey_mean = np.array(X_train_crop_grey_mean)
+
+Spiral_mean = np.mean(X_train_crop_grey_mean[0:nb_train//2])
+Smooth_mean = np.mean(X_train_crop_grey_mean[nb_train//2:nb_train])
+print(Spiral_mean,Smooth_mean)
+th = (Spiral_mean + Smooth_mean)/2 # reviens à faire la moyenne de toutes les images
+print (th)
+#th = np.median(X_train_crop_grey_mean)
+th = otsu_threshold(X_train_crop_grey_mean)
+print (th)
+
+classe_test = []
+for test in X_train_crop_grey_mean:
+    if test>th:
+        classe_test.append("SMOOTH")
+    else:
+        classe_test.append("SPIRAL")
+
+classe_test = np.array(classe_test)
+nb_spiral= np.sum(1 * (classe_test[0:35] == "SPIRAL")) 
+nb_smooth = np.sum(1 * (classe_test[35:70] == "SMOOTH")) 
+
+print(classe_test[0:35])
+print(classe_test[35:70])
+print(nb_spiral,nb_smooth)
+
+
+
+
+
+
