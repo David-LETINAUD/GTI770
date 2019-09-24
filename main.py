@@ -116,14 +116,7 @@ print(X_train.shape,X_test.shape)
 # Nombre d'images du jeu de données d'entrainement
 nb_img_train = int(ratio_train*2*nb_img)
 
-# Rogne de manière centrée l'image img aux dimensions cropx/cropy
-# Retourne l'image rognée
-def crop_center(img,cropx,cropy):
-    x = img.shape[0] # Sauvegarde la taille de l'image en x
-    y = img.shape[1]
-    startx = x//2-(cropx//2) # '//' Renvoie la partie décimale du quotient.
-    starty = y//2-(cropy//2)    
-    return img[starty:starty+cropy,startx:startx+cropx]
+
 
 X_train_crop = []
 # Rogner toutes les images des données d'entrainements
@@ -136,24 +129,17 @@ X_train_crop = np.array(X_train_crop)
 #######   6        
 ### COLOR
 X_train_crop_color = []
-# Rogner toutes les images des données d'entrainements
-for img in X_train:
-    X_train_crop_color.append(crop_center(img,25,25))
-    
-X_train_crop_color = np.array(X_train_crop_color)
-
 
 cpt=0
 X_train_crop_grey_mean = []
-for img in X_train_crop_color:
-    i = to_grey(img)
-    m = int(np.mean(i))
+for img in X_train:
+    m=center_color(img)
+    # i = to_grey(img)
+    # m = int(np.mean(i))
     #print(m)
     X_train_crop_grey_mean.append(m)
     # Calcul du seuil optimale de binarisation
     #t = otsu_threshold(X_train_crop_grey[cpt])
-    # Binarisation de l'image
-    cpt = cpt + 1
 
 cpt = 0
 # print("spiral")
@@ -172,6 +158,7 @@ Smooth_mean = np.mean(X_train_crop_grey_mean[nb_train//2:nb_train])
 print(Spiral_mean,Smooth_mean)
 th = (Spiral_mean + Smooth_mean)/2 # reviens à faire la moyenne de toutes les images
 print (th)
+# Détermination du seuil
 #th = np.median(X_train_crop_grey_mean)
 th = otsu_threshold(X_train_crop_grey_mean)
 print (th)
