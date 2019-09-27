@@ -33,15 +33,14 @@ def f_spirale(img):
     print("f_spirale")
 
 
-
+########################################   TRAINING   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
     f_csv = csv.reader(f)
     en_tetes = next(f_csv) # On passe la 1ere ligne d'entête
     
     sm=1
-    sp=1
-    
+    sp=1    
     # Lecture ligne par ligne
     for ligne in f_csv:
         X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
@@ -59,5 +58,13 @@ with open(dataset_path) as f:
         elif sm<=nb_img and sp<=nb_img:
             print(ligne[1] + " inconnu")
 
+########################################   PROCESSING   ########################################
+color_threshold = np.median(X_mean_color)
+color_threshold = otsu_threshold(X_mean_color)
+print(color_threshold)
 
-print(X_mean_color)
+
+
+########################################    TESTING   ########################################
+
+
