@@ -22,7 +22,7 @@ dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_
 
 
 # Nombre d'images
-nb_img = 100
+nb_img = 500
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 # Taille de rognage de l'image
