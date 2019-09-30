@@ -27,37 +27,4 @@ def fourier_transform(image,seuil):
     return(res)
 
 
-# cpt = 0
-# th = -1 #A définir : doit être > 0 
-
-# from main import *
-
-# list_smooth = []
-# list_spiral = []
-
-# for img in X_train_crop:
-    
-#     tmp = fourier_transform(img,th)
-    
-#     if cpt in smooth_index:
-#         list_smooth.append(tmp)
-    
-#     if cpt in spiral_index:
-#         list_spiral.append(tmp)
-    
-#     cpt += 1
-
-# list_smooth = np.array(list_smooth)
-# list_spiral = np.array(list_spiral)
-# print(list_smooth,list_spiral)
-
-# print(np.shape(list_smooth))
-# print('la moyenne (smooth) est ', np.mean(list_smooth))
-# print('la médiane (smooth) est ', np.median(list_smooth))
-# #print(list_smooth)
-# print('======================================================================================')
-# print(np.shape(list_spiral))
-# print('la moyenne (spiral) est ', np.mean(list_spiral))
-# print('la médiane (spiral) est ', np.median(list_spiral))
-# #print(list_spiral)
 
