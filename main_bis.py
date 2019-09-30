@@ -3,6 +3,7 @@ from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifie
+import sklearn.metrics as metrics
 
 import numpy as np
 import csv
@@ -26,16 +27,23 @@ crop_size = 240
 #######   2
 Y = [] # Classe
 #Features
-Features = [[],[]]
+
 X_mean_color = []
+X_f= []
 
 def f_X(img):
-    th = -1
+    global X_f
+    Features = []
+    th = 150
     global X_mean_color
     m=center_color(img)
+    # plt.imshow(img)
+    # plt.show()
     fft = fourier_transform(img,th)
-    Features[0].append(m)
-    Features[1].append(fft)
+    Features.append(m)   
+    Features.append(fft)
+
+    X_f.append(Features)
     X_mean_color.append(m)
 
 def f_smooth(img):
@@ -60,12 +68,12 @@ with open(dataset_path) as f:
         if sm<=nb_img and ligne[1]=="smooth":
             X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
             f_X(X)
-            Y.append("smooth")  
+            Y.append(0)  
             sm=sm+1
         elif sp<=nb_img and ligne[1]=="spiral":
             X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
             f_X(X)
-            Y.append("spiral")  
+            Y.append(1)  
             sp=sp+1
         elif sm>nb_img and sp>nb_img:
             # Quand toutes les images sont enregistrées => sortir de la boucle
@@ -78,7 +86,7 @@ with open(dataset_path) as f:
 color_threshold = np.median(X_mean_color)
 #color_threshold = otsu_threshold(X_mean_color)
 print(color_threshold)
-print(Features)
+#print(Features)
 
 
 
@@ -89,8 +97,8 @@ X =  X_mean_color #[X_mean_color, nb_freq, ...] # features de chaque image d'ent
 #Y  # Label ciblé
 
 # Split dataset into training set and test set
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.7, random_state=1) # 70% training and 30% test
-print(X_train.sh)
+X_train, X_test, Y_train, Y_test = train_test_split(X_f, Y, train_size=0.7, random_state=1) # 70% training and 30% test
+print(X_train)
 print(Y_train)
 print(X_test)
 print(Y_test)

@@ -20,6 +20,7 @@ def fourier_transform(image,seuil):
     magnitude_spectrum = np.abs(fshift) #on calcule la valeur absolue de l'amplitude des raies spectrales.
     temp_array = np.where(magnitude_spectrum > seuil) #on compare la veleur de l'amplitude par rapport au seuil  
                                                         #et on stocke la valeur dans le tableau si le test est vrai
+    #print (np.shape(temp_array))
     res = np.shape(temp_array)[1] #on calcule le nombre de valeur d'amplitude ayant passé le test
     
     return(res)
@@ -28,22 +29,26 @@ def fourier_transform(image,seuil):
 # cpt = 0
 # th = -1 #A définir : doit être > 0 
 
+# from main import *
+
 # list_smooth = []
 # list_spiral = []
 
 # for img in X_train_crop:
+    
 #     tmp = fourier_transform(img,th)
-
+    
 #     if cpt in smooth_index:
 #         list_smooth.append(tmp)
-
+    
 #     if cpt in spiral_index:
 #         list_spiral.append(tmp)
-
+    
 #     cpt += 1
 
 # list_smooth = np.array(list_smooth)
 # list_spiral = np.array(list_spiral)
+# print(list_smooth,list_spiral)
 
 # print(np.shape(list_smooth))
 # print('la moyenne (smooth) est ', np.mean(list_smooth))
