@@ -1,3 +1,5 @@
+#! /usr/bin/env python3 
+# -*- coding: utf-8 -*-
 #######   Initialisation
 from skimage import io
 from sklearn import tree
@@ -32,6 +34,8 @@ Y = [] # Classe
 
 X_mean_color = []
 X_f= []
+TestParam = []
+
 
 
 def f_X(img):
@@ -39,6 +43,7 @@ def f_X(img):
     Features = []
     th = 150
     global X_mean_color
+
     m=center_color(img)
     # plt.imshow(img)
     # plt.show()
@@ -63,7 +68,12 @@ def f_smooth(img):
 def f_spirale(img):
     print("f_spirale")
 
+<<<<<<< HEAD
 X = []
+=======
+	
+
+>>>>>>> 0a947fb0ddd895ed2afd6e69dc6cacd09ebafd4f
 ########################################   TRAINING   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:

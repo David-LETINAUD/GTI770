@@ -1,3 +1,5 @@
+#! /usr/bin/env python3 
+# -*- coding: utf-8 -*-
 #######   Initialisation
 from skimage import io
 from sklearn import tree
@@ -15,8 +17,8 @@ from color import *
 from fourier_transform import *
 from binaryPattern import *
 
-image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
-dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
+image_path = "/home/ens/AN03460/Desktop/tp0/data/data/images/"
+dataset_path = "/home/ens/AN03460/Desktop/tp0/data/data/csv/galaxy/galaxy_label_data_set.csv"
 
 
 # Nombre d'images de chaque classe
@@ -33,13 +35,13 @@ Y = [] # Classe
 X_mean_color = []
 X_f= []
 
-def f_X(img):
+def f_X(img,i):
     global X_f
     global Patern
     Features = []
     th = 150
     global X_mean_color
-    m=center_color(img)
+    m=center_color(img,i)
     # plt.imshow(img)
     # plt.show()
 
@@ -71,25 +73,26 @@ with open(dataset_path) as f:
     
     sm=1
     sp=1    
+    for i in range 50:
     # Lecture ligne par ligne
-    for ligne in f_csv:
+  	  for ligne in f_csv:
         
 
-        if sm<=nb_img and ligne[1]=="smooth":
-            X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
-            f_X(X)
-            Y.append(0)  
-            sm=sm+1
-        elif sp<=nb_img and ligne[1]=="spiral":
-            X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
-            f_X(X)
-            Y.append(1)  
-            sp=sp+1
-        elif sm>nb_img and sp>nb_img:
-            # Quand toutes les images sont enregistrées => sortir de la boucle
-            break
-        elif sm<=nb_img and sp<=nb_img:
-            print(ligne[1] + " inconnu")
+    	  if sm<=nb_img and ligne[1]=="smooth":
+      	    	 X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
+        	 f_X(X,i)
+        	 Y.append(0)  
+        	 sm=sm+1
+      	  elif sp<=nb_img and ligne[1]=="spiral":
+           	 X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
+         	 f_X(X,i)
+         	 Y.append(1)  
+         	 sp=sp+1
+      	  elif sm>nb_img and sp>nb_img:
+          	 # Quand toutes les images sont enregistrées => sortir de la boucle
+          	 break
+   	  elif sm<=nb_img and sp<=nb_img:
+         	 print(ligne[1] + " inconnu")
 
 ########################################   PROCESSING   ########################################
 # ESSAYER EN ENLEVANT LE VERT (le rouge et le bleue peuvent être plus discriminant)
@@ -125,5 +128,7 @@ clf = clf.fit(X_train,Y_train)
 Y_pred = clf.predict(X_test)
 
 # Model Accuracy, how often is the classifier correct?
+Paramresult = []
+ParamResult.append(metrics.accuracy_score(Y_test, Y_pred))
 print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred))
-
+print(Paramresult)
