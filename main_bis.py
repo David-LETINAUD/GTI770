@@ -60,14 +60,6 @@ def f_X(img,th_color,th_fft):
     return Features
     
 
-
-def f_smooth(img):
-    print("f_smooth")
-
-def f_spirale(img):
-    print("f_spirale")
-
-
 ########################################   TRAINING   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
