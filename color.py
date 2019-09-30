@@ -1,3 +1,5 @@
+#! /usr/bin/env python3 
+# -*- coding: utf-8 -*-
 import numpy as np
 # Rogne de manière centrée l'image img aux dimensions cropx/cropy
 # Retourne l'image rognée
@@ -62,6 +64,10 @@ def otsu_threshold(im):
     # Retourne le seuil pour lequel la variance inter-classe est maximale (variance intra-classe minimale)
     return s_max[0]
 
-def center_color(img):
-    img_crop = crop_center(img,18,18)
-    return int(np.mean(to_grey(img_crop)))
+def center_color(img,i):
+	img_crop = crop_center(img,i,i)
+	
+	return int(np.mean(to_grey(img_crop)))
+
+
+     
