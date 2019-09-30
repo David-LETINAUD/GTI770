@@ -31,9 +31,10 @@ crop_size = 180
 X = [] # Contient les features de l'image
 Y = [] # Contient les classes associées aux images 
 
-
+# Paramètre des features
 fft_threshold = 150
 color_threshold = 18
+#bp_calibration =
 
 def FeaturesProcess(img,th_color,th_fft):
     Features = []
