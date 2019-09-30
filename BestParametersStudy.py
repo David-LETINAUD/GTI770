@@ -110,7 +110,7 @@ X =  X_mean_color #[X_mean_color, nb_freq, ...] # features de chaque image d'ent
 #Y  # Label ciblé
 
 # Split dataset into training set and test set
-X_train, X_test, Y_train, Y_test = train_test_split(X_f, Y, train_size=0.7, random_state=1) # 70% training and 30% test
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.7, random_state=1) # 70% training and 30% test
 print(X_train)
 print(Y_train)
 print(X_test)

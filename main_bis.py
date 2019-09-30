@@ -22,7 +22,7 @@ dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_
 
 
 # Nombre d'images de chaque classe
-nb_img = 50
+nb_img = 100
 
 ratio_train = 0.7
 
@@ -30,32 +30,31 @@ crop_size = 180
 
 #######   2
 Y = [] # Classe
+X = []
 #Features
 
 X_mean_color = []
 X_f= []
 TestParam = []
 
+fft_threshold = 150
+color_threshold = 18
 
-
-def f_X(img):
-    global X_f
+def f_X(img,th_color,th_fft):
     Features = []
-    th = 150
-    global X_mean_color
 
-    m=center_color(img)
+    m=center_color(img,th_color)
     # plt.imshow(img)
     # plt.show()
 
-    fft = fourier_transform(img,th)
+    fft = fourier_transform(img,th_fft)
     e = binaryPatterns(img)  
 
     Features.append(m)   
     Features.append(fft)
 
     Features.append(e)
-    X_f.append(Features)
+    #X_f.append(Features)
     #X_mean_color.append(m)
 
     return Features
@@ -68,12 +67,7 @@ def f_smooth(img):
 def f_spirale(img):
     print("f_spirale")
 
-<<<<<<< HEAD
-X = []
-=======
-	
 
->>>>>>> 0a947fb0ddd895ed2afd6e69dc6cacd09ebafd4f
 ########################################   TRAINING   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
@@ -85,12 +79,9 @@ with open(dataset_path) as f:
     for ligne,i in zip(f_csv,range(nb_img)):
         
         image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
-        X.append(f_X(image))
+        X.append(f_X(image,color_threshold,fft_threshold))
         Y.append(1 * (ligne[1]=="smooth"))  # smooth :1 et spiral : 0
-        t+=1
-        if t>nb_img:
-            break
-    print(len(X), len(X_f), len(Y))
+       
 
 ########################################   PROCESSING   ########################################
 # ESSAYER EN ENLEVANT LE VERT (le rouge et le bleue peuvent être plus discriminant)
@@ -102,18 +93,7 @@ print(color_threshold)
 
 
 ########################################    TESTING   ########################################
-
-#features = [color, fft, SIFT]
-#X =  X_mean_color #[X_mean_color, nb_freq, ...] # features de chaque image d'entrainement
-#Y  # Label ciblé
-
 # Split dataset into training set and test set
-print(X_f)
-print()
-print()
-print()
-print()
-print(X)
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.7, random_state=1) # 70% training and 30% test
 print(X_train)
