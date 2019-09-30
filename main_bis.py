@@ -33,9 +33,9 @@ Y = [] # Classe
 X_mean_color = []
 X_f= []
 
+
 def f_X(img):
     global X_f
-    global Patern
     Features = []
     th = 150
     global X_mean_color
@@ -50,11 +50,12 @@ def f_X(img):
     Features.append(fft)
 
     Features.append(e)
-    
     X_f.append(Features)
     #X_mean_color.append(m)
 
-   
+    return Features
+    
+
 
 def f_smooth(img):
     print("f_smooth")
@@ -62,34 +63,24 @@ def f_smooth(img):
 def f_spirale(img):
     print("f_spirale")
 
-
+X = []
 ########################################   TRAINING   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
     f_csv = csv.reader(f)
     en_tetes = next(f_csv) # On passe la 1ere ligne d'entête
     
-    sm=1
-    sp=1    
+    t = 1
     # Lecture ligne par ligne
-    for ligne in f_csv:
+    for ligne,i in zip(f_csv,range(nb_img)):
         
-
-        if sm<=nb_img and ligne[1]=="smooth":
-            X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
-            f_X(X)
-            Y.append(0)  
-            sm=sm+1
-        elif sp<=nb_img and ligne[1]=="spiral":
-            X = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size) 
-            f_X(X)
-            Y.append(1)  
-            sp=sp+1
-        elif sm>nb_img and sp>nb_img:
-            # Quand toutes les images sont enregistrées => sortir de la boucle
+        image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
+        X.append(f_X(image))
+        Y.append(1 * (ligne[1]=="smooth"))  # smooth :1 et spiral : 0
+        t+=1
+        if t>nb_img:
             break
-        elif sm<=nb_img and sp<=nb_img:
-            print(ligne[1] + " inconnu")
+    print(len(X), len(X_f), len(Y))
 
 ########################################   PROCESSING   ########################################
 # ESSAYER EN ENLEVANT LE VERT (le rouge et le bleue peuvent être plus discriminant)
@@ -103,14 +94,22 @@ print(color_threshold)
 ########################################    TESTING   ########################################
 
 #features = [color, fft, SIFT]
-X =  X_mean_color #[X_mean_color, nb_freq, ...] # features de chaque image d'entrainement
+#X =  X_mean_color #[X_mean_color, nb_freq, ...] # features de chaque image d'entrainement
 #Y  # Label ciblé
 
 # Split dataset into training set and test set
-X_train, X_test, Y_train, Y_test = train_test_split(X_f, Y, train_size=0.7, random_state=1) # 70% training and 30% test
+print(X_f)
+print()
+print()
+print()
+print()
+print(X)
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.7, random_state=1) # 70% training and 30% test
 print(X_train)
 print(Y_train)
 print(X_test)
+
 print(Y_test)
 
 
