@@ -4,6 +4,7 @@ from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifie
 import sklearn.metrics as metrics
+import cv2
 
 import numpy as np
 import csv
@@ -12,6 +13,7 @@ import random
 
 from color import *  
 from fourier_transform import *
+from binaryPattern import *
 
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
@@ -22,7 +24,7 @@ nb_img = 50
 
 ratio_train = 0.7
 
-crop_size = 240
+crop_size = 180
 
 #######   2
 Y = [] # Classe
@@ -33,18 +35,26 @@ X_f= []
 
 def f_X(img):
     global X_f
+    global Patern
     Features = []
     th = 150
     global X_mean_color
     m=center_color(img)
     # plt.imshow(img)
     # plt.show()
+
     fft = fourier_transform(img,th)
+    e = binaryPatterns(img)  
+
     Features.append(m)   
     Features.append(fft)
 
+    Features.append(e)
+    
     X_f.append(Features)
-    X_mean_color.append(m)
+    #X_mean_color.append(m)
+
+   
 
 def f_smooth(img):
     print("f_smooth")

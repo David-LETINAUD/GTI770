@@ -63,5 +63,5 @@ def otsu_threshold(im):
     return s_max[0]
 
 def center_color(img):
-    img_crop = crop_center(img,25,25)
+    img_crop = crop_center(img,18,18)
     return int(np.mean(to_grey(img_crop)))
