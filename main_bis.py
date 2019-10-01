@@ -13,54 +13,50 @@ import csv
 import matplotlib.pyplot as plt
 import random
 
-from color import *  
-from fourier_transform import *
+from color import center_color
+from fourier_transform import fourier_transform
 from binaryPattern import *
 
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
 
 
-# Nombre d'images de chaque classe
-nb_img = 100
-
+# Nombre d'images
+nb_img = 200
+# Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
-
+# Taille de rognage de l'image
 crop_size = 180
 
-#######   2
-Y = [] # Classe
-X = []
-#Features
+X = [] # Contient les features de l'image
+Y = [] # Contient les classes associées aux images 
 
-X_mean_color = []
-X_f= []
-TestParam = []
-
+# Paramètre des features
 fft_threshold = 150
-color_threshold = 18
+color_threshold = 11
+#bp_calibration =
 
-def f_X(img,th_color,th_fft):
+def FeaturesProcess(img,th_color,th_fft):
     Features = []
-
-    m=center_color(img,th_color)
+    
     # plt.imshow(img)
     # plt.show()
 
-    fft = fourier_transform(img,th_fft)
-    e = binaryPatterns(img)  
+    # Calculs des Features
+    f_c = center_color(img,th_color)
+    f_fft = fourier_transform(img,th_fft)
+    f_bp = binaryPatterns(img)  
 
-    Features.append(m)   
-    Features.append(fft)
+    Features.append(f_c)   
+    Features.append(f_fft)
+    Features.append(f_bp)
 
-    Features.append(e)
-    #X_f.append(Features)
-    #X_mean_color.append(m)
+    # Retourne les features calculés
+    return Features    
 
-    return Features
-    
 
-########################################   TRAINING   ########################################
+
+########################################   Lecture   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
     f_csv = csv.reader(f)
@@ -71,41 +67,27 @@ with open(dataset_path) as f:
     for ligne,i in zip(f_csv,range(nb_img)):
         
         image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
-        X.append(f_X(image,color_threshold,fft_threshold))
+        X.append(FeaturesProcess(image,color_threshold,fft_threshold))
         Y.append(1 * (ligne[1]=="smooth"))  # smooth :1 et spiral : 0
        
 
-########################################   PROCESSING   ########################################
-# ESSAYER EN ENLEVANT LE VERT (le rouge et le bleue peuvent être plus discriminant)
-color_threshold = np.median(X_mean_color)
-#color_threshold = otsu_threshold(X_mean_color)
-print(color_threshold)
-#print(Features)
+########################################    Entrainement   ########################################
+# Diviser l'ensemble de données en un ensemble d'apprentissage et un ensemble de test
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
+# print(X_train)
+# print(Y_train)
+# print(X_test)
+# print(Y_test)
 
 
-
-########################################    TESTING   ########################################
-# Split dataset into training set and test set
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.7, random_state=1) # 70% training and 30% test
-print(X_train)
-print(Y_train)
-print(X_test)
-
-print(Y_test)
-
-
-# Create Decision Tree classifer object
+# Création d'un arbre de décision 
 clf = DecisionTreeClassifier()
 
-# Train Decision Tree Classifer
-
+# Construit les décision de l'arbre de classification
 clf = clf.fit(X_train,Y_train)
 
-#Predict the response for test dataset
+# Prévoir la réponse pour l'ensemble de données de test
 Y_pred = clf.predict(X_test)
 
-# Model Accuracy, how often is the classifier correct?
+# Précision du modèle, à quelle fréquence le classificateur est-il correct ?
 print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred))
-
-
