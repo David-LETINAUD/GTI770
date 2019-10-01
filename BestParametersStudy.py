@@ -37,8 +37,8 @@ X = []
 X_f= []
 
 
-fft_threshold = 6
-color_threshold = 11
+fft_threshold = 140
+color_threshold = 18
 def f_X(img,th_color,th_fft):
     Features = []
 
@@ -64,7 +64,7 @@ best_param = -1
 best_accuracy = -1
 ########################################   TRAINING   ########################################
 # Lecture du fichier CSV
-for fft_threshold in range(1,1000):
+for fft_threshold in range(1,200,10):
     
     with open(dataset_path) as f:
         f_csv = csv.reader(f)
@@ -87,6 +87,7 @@ for fft_threshold in range(1,1000):
     if accuracy> best_accuracy:
         best_param = fft_threshold
         best_accuracy = accuracy
+        print(fft_threshold,best_accuracy)
 
     Paramresult.append(accuracy)
     if fft_threshold==1:
