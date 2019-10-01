@@ -18,13 +18,6 @@ def crop_center(img,cropx,cropy):
 def to_grey(img):
     return 0.2989*img[:,:,0] + 0.5870*img[:,:,1] + 0.1140*img[:,:,2]
 
-# Transforme une image grise en image binaire à partir d'un seuil
-# Les pixels de valeurs supérieurs seront associés à 1 et ceux à valeurs inférieurs à 0
-# img : image à binariser ; seuil : seuil de binarisation
-# Retourne l'image binaire
-def to_binary(img,seuil): 
-    return 1.0 *(img>seuil) # Si la condition est vrai : 1.0*True = 1 sinon 1.0*false = 0    
-
 # Retourne la couleur moyenne du centre de l'image
 # La taille du centre de l'image est déterminée par taille_centre
 def center_color(img,taille_centre):

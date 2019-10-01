@@ -23,8 +23,8 @@ class GalaxyBinaryPatterns:
         
         return hist
 
-def binaryPatterns(img):
-    Patern = GalaxyBinaryPatterns(100,50)
+def binaryPatterns(img,numPoints,radius):
+    Patern = GalaxyBinaryPatterns(numPoints,radius)
     gris = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
     Hist = Patern.Galaxy_description(gris)

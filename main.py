@@ -1,185 +1,87 @@
+#! /usr/bin/env python3 
+# -*- coding: utf-8 -*-
 #######   Initialisation
 from skimage import io
-import numpy as np
+from sklearn import tree
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifie
+import sklearn.metrics as metrics
+
 import csv
 import matplotlib.pyplot as plt
-import random
 
-from color import *  
+from color import center_color,crop_center
+from fourier_transform import fourier_transform
+from binaryPattern import binaryPatterns
 
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
 
-
-# Nombre d'images de chaque classe
+# Nombre d'images total du dataset (training + testing)
 nb_img = 50
-
+# Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
+# Taille de rognage de l'image
+crop_size = 180
 
-crop_size = 240
+X = [] # Contient les features de l'image
+Y = [] # Contient les classes associées aux images 
 
-#######   2
-X = []
-Y = []
+# Paramètres de chaque features
+fft_threshold = 140
+color_threshold = 18
+bp_calibration = [100,50]
 
+def FeaturesProcess(img,th_color,th_fft,nr_binaryPattern):
+    Features = []
+    
+    # plt.imshow(img)
+    # plt.show()
+
+    # Calculs des Features
+    f_c = center_color(img,th_color)
+    f_fft = fourier_transform(img,th_fft)
+    f_bp = binaryPatterns(img,nr_binaryPattern[0],nr_binaryPattern[1])  
+
+    Features.append(f_c)   
+    Features.append(f_fft)
+    Features.append(f_bp)
+
+    # Retourne les features calculés
+    return Features    
+
+
+########################################   Lecture   ########################################
 # Lecture du fichier CSV
 with open(dataset_path) as f:
     f_csv = csv.reader(f)
-    en_tetes = next(f_csv) # On passe la 1ere ligne d'entête
-    
-    sm=1
-    sp=1
+    next(f_csv) # On passe la 1ere ligne d'entête
     
     # Lecture ligne par ligne
-    for ligne in f_csv:
-        #print(ligne)
-        if sm<=nb_img and ligne[1]=="smooth":
-           X.append(io.imread( image_path + ligne[0] + ".jpg" ))   
-           Y.append('smooth')
-           sm=sm+1
-        elif sp<=nb_img and ligne[1]=="spiral":
-           X.append(io.imread( image_path + ligne[0] + ".jpg" ))
-           Y.append('spiral')
-           sp=sp+1
-        elif sm>nb_img and sp>nb_img:
-            # Quand toutes les images sont enregistrées => sortir de la boucle
-            break
-        elif sm<=nb_img and sp<=nb_img:
-            print(ligne[1] + " inconnu")
-            
-#print (ligne[0])
-X = np.array(X)
-Y = np.array(Y)
-print(len(Y))
+    for ligne,i in zip(f_csv,range(nb_img)):
+        
+        # Lecture et rognage de l'image
+        image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
+        # Calcul des features et stockage dans X
+        X.append( FeaturesProcess(image, color_threshold, fft_threshold, bp_calibration) )
+        # Sauvegarde de la classe correspondante dans Y
+        Y.append(1 * (ligne[1]=="smooth"))  # smooth :1 et spiral : 0
+       
 
-# Conversion de NHWC en NCHW
-X = X.transpose(0,3, 1, 2) # La colonne 3 (channel) est délacée entre la 0 (N) et la 1 (H)
+########################################    Entrainement   ########################################
+# Diviser l'ensemble de données en un ensemble d'apprentissage et un ensemble de test
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
 
-#######   3    
+# Création d'un arbre de décision 
+clf = DecisionTreeClassifier()
 
-# Selectionne aléatoirement n éléments avec le nom name dans le tableau tab
-# Retourne un tableau contenant l'index de ces éléments aléatoires
-def random_index(tab, name, n):
-    index = np.where(tab==name)[0]
-    #smooth_index_rand = np.random.choice(smooth_index,10)
-    # Avec random.sample : Les élements aléatoires sont bien distincts les uns des autres
-    return random.sample(list(index),n) 
+# Construit les décision de l'arbre de classification
+clf = clf.fit(X_train,Y_train)
 
-# Selection des 10 images aux hazard
-smooth_index_rand = random_index(Y,"smooth",10)
-spiral_index_rand = random_index(Y,"spiral",10)
+# Prévoir la réponse pour l'ensemble de données de test
+Y_pred = clf.predict(X_test)
 
-# Affichage des spirales
-# print ("SPIRAL")
-# for i in spiral_index_rand:
-#     print(Y[i])
-#     plt.imshow(X[i].transpose(1, 2, 0))
-#     plt.show()
-
-# Affichage des smooths
-# print ("SMOOTH")
-# for i in smooth_index_rand:
-#     print(Y[i])
-#     plt.imshow(X[i].transpose(1, 2, 0))
-#     plt.show()
-
-#######   4
-# Nombre d'images des données d'entrainements pour chaque classe ici : 0.7*100//2 = 35
-nb_train = int(ratio_train * nb_img )
-
-# Récupére la position des images de chaque classe
-spiral_index = np.where(Y=="spiral")[0]
-smooth_index = np.where(Y=="smooth")[0]    
-print(spiral_index)
-print(smooth_index)
-
-# Séparation du jeu de données 
-train_index = np.concatenate((spiral_index[0:nb_train], smooth_index[0:nb_train]))
-test_index = np.concatenate((spiral_index[nb_train:nb_img], smooth_index[nb_train:nb_img]))
-
-X_train = X[train_index].transpose((0,2,3,1)) # Remise au format NHWC
-Y_train = Y[train_index]
-X_test = X[test_index].transpose((0,2,3,1))
-Y_test = Y[test_index]
-
-print(X_train.shape,X_test.shape)
-
-# Vérification du jeu de données
-# cpt = 1
-# for i in X_train:
-#     print(cpt,Y_train[cpt-1])
-#     plt.imshow(i)
-#     plt.show()
-#     cpt = cpt + 1
-
-#######   5   
-# Nombre d'images du jeu de données d'entrainement
-nb_img_train = int(ratio_train*2*nb_img)
-
-
-
-X_train_crop = []
-# Rogner toutes les images des données d'entrainements
-for img in X_train:
-    X_train_crop.append(crop_center(img,crop_size,crop_size))
-    
-X_train_crop = np.array(X_train_crop)
-
-
-#######   6        
-### COLOR
-X_train_crop_color = []
-
-cpt=0
-X_train_crop_grey_mean = []
-for img in X_train:
-    m=center_color(img)
-    # i = to_grey(img)
-    # m = int(np.mean(i))
-    #print(m)
-    X_train_crop_grey_mean.append(m)
-    # Calcul du seuil optimale de binarisation
-    #t = otsu_threshold(X_train_crop_grey[cpt])
-
-cpt = 0
-# print("spiral")
-# for cpt in range(35):
-#     print(X_train_crop_grey_mean[cpt])
-# cpt = 0
-# print("SMOOTH")
-# for cpt in range(35):
-#     print(X_train_crop_grey_mean[cpt+35])
-
-
-X_train_crop_grey_mean = np.array(X_train_crop_grey_mean)
-
-Spiral_mean = np.mean(X_train_crop_grey_mean[0:nb_train//2])
-Smooth_mean = np.mean(X_train_crop_grey_mean[nb_train//2:nb_train])
-print(Spiral_mean,Smooth_mean)
-th = (Spiral_mean + Smooth_mean)/2 # reviens à faire la moyenne de toutes les images
-print (th)
-# Détermination du seuil
-#th = np.median(X_train_crop_grey_mean)
-th = otsu_threshold(X_train_crop_grey_mean)
-print (th)
-
-classe_test = []
-for test in X_train_crop_grey_mean:
-    if test>th:
-        classe_test.append("SMOOTH")
-    else:
-        classe_test.append("SPIRAL")
-
-classe_test = np.array(classe_test)
-nb_spiral= np.sum(1 * (classe_test[0:35] == "SPIRAL")) 
-nb_smooth = np.sum(1 * (classe_test[35:70] == "SMOOTH")) 
-
-print(classe_test[0:35])
-print(classe_test[35:70])
-print(nb_spiral,nb_smooth)
-
-
-
-
+# Précision du modèle, à quelle fréquence le classificateur est-il correct ?
+print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred))
 
 
