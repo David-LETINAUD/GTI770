@@ -1,0 +1,7 @@
+Librairies utilisées :
+
+scikit-learn
+scikit-image
+opencv
+matplotlib
+numpy

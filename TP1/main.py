@@ -1,6 +1,22 @@
 #! /usr/bin/env python3 
 # -*- coding: utf-8 -*-
 
+"""
+Course :
+GTI770 — Systèmes intelligents et apprentissage machine
+
+Project :
+Lab # 1 — Définition et extraction de primitives
+
+Students :
+Alexendre Bleau — BLEA14058906
+David Létinaud  — LETD05129708
+Thomas Lioret   — LIOT20069605
+
+Group :
+GTI770-A19-01
+"""
+
 from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
@@ -20,7 +36,7 @@ image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 160
+nb_img = 50
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 # Taille de rognage de l'image
@@ -55,7 +71,7 @@ def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
     # plt.show()
 
     # Calculs des Features
-    f_c = center_color(img,th_color)
+    f_c = center_color(img,cs_color)
     f_fft = fourier_transform(img,th_fft)
     f_bp = binaryPatterns(img,nr_binaryPattern[0],nr_binaryPattern[1])  
 
@@ -89,15 +105,15 @@ with open(dataset_path) as f:
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
 
 # Création d'un arbre de décision 
-clf = DecisionTreeClassifier()
+clf = tree.DecisionTreeClassifier()
 
 # Construit les décision de l'arbre de classification
 clf = clf.fit(X_train,Y_train)
+tree.plot_tree(clf) 
 
 # Prévoir la réponse pour l'ensemble de données de test
 Y_pred = clf.predict(X_test)
 
 # Précision du modèle, à quelle fréquence le classificateur est-il correct ?
-print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred))
-
+print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred)) 
 

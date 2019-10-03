@@ -1,5 +1,23 @@
 #! /usr/bin/env python3 
 # -*- coding: utf-8 -*-
+
+"""
+Course :
+GTI770 — Systèmes intelligents et apprentissage machine
+
+Project :
+Lab # 1 — Définition et extraction de primitives
+
+Students :
+Alexendre Bleau — BLEA14058906
+David Létinaud  — LETD05129708
+Thomas Lioret   — LIOT20069605
+
+Group :
+GTI770-A19-01
+"""
+
+
 import numpy as np
 
 # Rogne de manière centrée l'image img aux dimensions cropx/cropy

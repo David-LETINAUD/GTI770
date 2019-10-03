@@ -2,6 +2,22 @@
 #! /usr/bin/env python3 
 # -*- coding: utf-8 -*-
 # Inspirer de www.pyimagesearch.com/2015/12/07/local-binary-paterns-with-python-opencv/
+"""
+Course :
+GTI770 — Systèmes intelligents et apprentissage machine
+
+Project :
+Lab # 1 — Définition et extraction de primitives
+
+Students :
+Alexendre Bleau — BLEA14058906
+David Létinaud  — LETD05129708
+Thomas Lioret   — LIOT20069605
+
+Group :
+GTI770-A19-01
+"""
+
 from skimage import feature
 from scipy.stats import entropy as scipy_entropy 
 import numpy as np
