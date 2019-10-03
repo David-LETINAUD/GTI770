@@ -9,8 +9,8 @@ def fourier_transform(image,seuil):
     la transormée de Fourier d'une image
     
     input :
-        image = ndarray (taille de l'image quelconque)
-        seuil = seuil à partir duquel on prend en compte les fréquences (strictement positif)
+        image (ndarray) : image quelconque
+        seuil (int) : seuil à partir duquel on prend en compte les fréquences (strictement positif)
     output : 
         nombre de fréquences (ndarray de taille (1,Nombre de fréquences supérieures au seuil))
     

@@ -1,6 +1,6 @@
 #! /usr/bin/env python3 
 # -*- coding: utf-8 -*-
-#######   Initialisation
+
 from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
@@ -14,11 +14,13 @@ from color import center_color,crop_center
 from fourier_transform import fourier_transform
 from binaryPattern import binaryPatterns
 
+########################################   Initialisations   ########################################
+
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 50
+nb_img = 160
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 # Taille de rognage de l'image
@@ -29,10 +31,24 @@ Y = [] # Contient les classes associées aux images
 
 # Paramètres de chaque features
 fft_threshold = 140
-color_threshold = 18
+color_center_size = 18
 bp_calibration = [100,50]
 
-def FeaturesProcess(img,th_color,th_fft,nr_binaryPattern):
+def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
+    """
+    Fonction qui permet le calcul de chaque features d'img
+    
+    input :
+        img (ndarray) : image quelconque
+        cs_color (int) : taille du centre de l'image à prendre en compte pour calculer la moyenne du niveau de gris
+        th_fft (int) : seuil à partir duquel on prend en compte les fréquences (strictement positif)
+        nr_binaryPattern ([int,int]) : 
+                    nr_binaryPattern[0] : nombre de points à prendre en compte sur le périmètre du cercle
+                    nr_binaryPattern[1] : taille du rayon du cercle
+    output : 
+        (list) retourne la liste des features calculées
+    
+    """
     Features = []
     
     # plt.imshow(img)
@@ -63,7 +79,7 @@ with open(dataset_path) as f:
         # Lecture et rognage de l'image
         image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
         # Calcul des features et stockage dans X
-        X.append( FeaturesProcess(image, color_threshold, fft_threshold, bp_calibration) )
+        X.append( FeaturesProcess(image, color_center_size, fft_threshold, bp_calibration) )
         # Sauvegarde de la classe correspondante dans Y
         Y.append(1 * (ligne[1]=="smooth"))  # smooth :1 et spiral : 0
        
