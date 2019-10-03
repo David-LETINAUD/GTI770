@@ -26,13 +26,18 @@ from color import crop_center
 import cv2
 
 class GalaxyBinaryPatterns:
-    """
-    .........Description de la classe 
-
-    Attributs:
-        numPoints (int): nombre de points à prendre en compte sur le périmètre du cercle
-        radius (int): taille du rayon du cercle
-
+  """
+   Class binary Paterne. En premier lieu, elle permet de caculer les forme de la surface d'une image, 
+   en second lieu elle calcule l'entropy de celle ci 
+    
+    input :
+        numPoint = integer, fournie lkes nombre de point d'interet du relief de l'image
+        raduis = rayon en bit de l'image, represente la zone dans laquel on cehrcher les point
+        img = image a identifier
+        
+    output : 
+        entropy de chaque image 
+    
     """
     def __init__ (self,numPoints, radius):
         # Enregistre les points et radius 
