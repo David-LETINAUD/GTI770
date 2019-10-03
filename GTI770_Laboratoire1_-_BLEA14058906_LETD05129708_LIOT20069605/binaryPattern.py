@@ -27,16 +27,16 @@ import cv2
 
 class GalaxyBinaryPatterns:
   """
-   Class binary Paterne. En premier lieu, elle permet de caculer les forme de la surface d'une image, 
-   en second lieu elle calcule l'entropy de celle ci 
+   Class binary Pattern. En premier lieu, elle permet de caculer les formes de la surface d'une image, 
+   en second lieu elle calcule l'entropie de celle-ci 
     
     input :
-        numPoint = integer, fournie lkes nombre de point d'interet du relief de l'image
-        raduis = rayon en bit de l'image, represente la zone dans laquel on cehrcher les point
-        img = image a identifier
+        numPoint (int) : nombre de points d'interet du relief de l'image
+        raduis (int) : rayon en pixels de l'image, represente la zone dans laquel on cherche les points
+        img (ndarray) : image a identifier
         
     output : 
-        entropy de chaque image 
+        (int) entropie de l'image 
     
     """
     def __init__ (self,numPoints, radius):
