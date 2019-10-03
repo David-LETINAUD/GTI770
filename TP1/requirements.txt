@@ -1,7 +1,12 @@
 Librairies utilisées :
 
-scikit-learn
-scikit-image
-opencv
-matplotlib
-numpy
+scikit-learn	: pip install scikit-learn 	ou	conda install scikit-learn
+scikit-image	: pip install scikit-image	ou	conda install scikit-image
+scipy		: pip install scipy		ou	conda install scipy
+opencv		: pip install opencv-python	ou	conda install opencv
+matplotlib	: pip install matplotlib	ou	conda install matplotlib
+numpy		: pip install numpy		ou	conda install numpy
+
+pip install scikit-learn scikit-image scipy opencv-python matplotlib numpy
+ou
+conda install scikit-learn scikit-image scipy opencv matplotlib numpy
