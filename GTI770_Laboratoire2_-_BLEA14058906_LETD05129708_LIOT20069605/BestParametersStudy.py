@@ -6,7 +6,7 @@ Course :
 GTI770 — Systèmes intelligents et apprentissage machine
 
 Project :
-Lab # 1 — Définition et extraction de primitives
+Lab # 2 — Arbre de décision, Bayes Naïf et KNN
 
 Students :
 Alexendre Bleau — BLEA14058906
@@ -16,6 +16,7 @@ Thomas Lioret   — LIOT20069605
 Group :
 GTI770-A19-01
 """
+
 
 from skimage import io
 from sklearn import tree
