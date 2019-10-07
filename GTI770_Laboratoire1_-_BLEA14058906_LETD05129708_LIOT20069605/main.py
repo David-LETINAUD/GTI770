@@ -36,7 +36,7 @@ dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_
 
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 500
+nb_img = 1600
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 # Taille de rognage de l'image
@@ -105,9 +105,7 @@ with open(dataset_path) as f:
 # Diviser l'ensemble de données en un ensemble d'apprentissage et un ensemble de test
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
 
-# Création d'un arbre de décision 
-# Faire varier max_depth selon la profondeur de l'arbre souhaité
-max_depth_tab = [2,3,4,5,10,30,50]
+# Création d'un arbre de décision
 
 clf = tree.DecisionTreeClassifier(max_depth=None)
 clf = clf.fit(X_train,Y_train) 
@@ -123,28 +121,38 @@ acc_ = metrics.accuracy_score(Y_test, Y_pred)
 accuracy_tab.append(acc_)
 print("Accuracy:",acc_) 
 
+
+from sklearn.metrics import roc_curve, auc
+ 
+# Faire varier max_depth selon la profondeur de l'arbre souhaité
+max_depth_tab = [2,3,4,5,10,15,20,25,30,35,40,45,50]
+
+# On peut toutefois améliorer cette étude en étudiant les courbes AUC et ROC
+# Inspiré de : https://medium.com/@mohtedibf/indepth-parameter-tuning-for-decision-tree-6753118a03c3
+train_results = []
+test_results = []
+
 for i in max_depth_tab:
-    clf = tree.DecisionTreeClassifier(max_depth=i)
+    dt = DecisionTreeClassifier(max_depth=i)
+    dt.fit(X_train, Y_train)
+    train_pred = dt.predict(X_train)
+    false_positive_rate, true_positive_rate, thresholds = roc_curve(Y_train, train_pred)
+    roc_auc = auc(false_positive_rate, true_positive_rate)
+    # Add auc score to previous train results
+    train_results.append(roc_auc)
+    Y_pred = dt.predict(X_test)
+    false_positive_rate, true_positive_rate, thresholds = roc_curve(Y_test, Y_pred)
+    roc_auc = auc(false_positive_rate, true_positive_rate)
+    # Add auc score to previous test results
+    test_results.append(roc_auc)
 
-    # Construit les décision de l'arbre de classification
-    clf = clf.fit(X_train,Y_train) 
-    plot_tree(clf, filled=True)
-    plt.show()
-
-    # Prévoir la réponse pour l'ensemble de données de test
-    Y_pred = clf.predict(X_test)
-
-    acc_ = metrics.accuracy_score(Y_test, Y_pred)
-    accuracy_tab.append(acc_)
-    print("Accuracy:",acc_) 
-
-max_depth_tab.insert(0, 0)
-print(max_depth_tab,accuracy_tab)
-# Affichage de la précision
-plt.plot(max_depth_tab,accuracy_tab,'x--')
-plt.xlabel('max_depth')
-plt.ylabel('Accuracy')
+from matplotlib.legend_handler import HandlerLine2D
+line1, = plt.plot(max_depth_tab, train_results, 'b', label="Train AUC")
+line2, = plt.plot(max_depth_tab, test_results, 'r', label="Test AUC")
+plt.legend(handler_map={line1: HandlerLine2D(numpoints=2)})
 plt.title('Etude de la précision en fonction de la profondeur de l arbre de décision')
 plt.grid(True)
+plt.ylabel('AUC score')
+plt.xlabel('max_depth')
 plt.show()
 
