@@ -27,6 +27,9 @@ nb_img = 10
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 
+
+#X_tree
+#X_bayes
 ########################################   Lecture   ########################################
 # Lecture du fichier CSV
 with open(dataset_path, 'r') as f:
@@ -39,4 +42,5 @@ with open(dataset_path, 'r') as f:
         print(features)
         print("")
         print("")
+        #X_tree.append(zoo_tree(features))
         features_list.pop(0)
