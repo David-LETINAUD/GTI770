@@ -124,7 +124,7 @@ accuracy_tab.append(acc_)
 print("Accuracy:",acc_) 
 
 for i in max_depth_tab:
-    clf = tree.DecisionTreeClassifier(max_depth=3)
+    clf = tree.DecisionTreeClassifier(max_depth=i)
 
     # Construit les décision de l'arbre de classification
     clf = clf.fit(X_train,Y_train) 
