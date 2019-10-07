@@ -1,4 +1,3 @@
-
 #! /usr/bin/env python3 
 # -*- coding: utf-8 -*-
 # Inspirer de www.pyimagesearch.com/2015/12/07/local-binary-paterns-with-python-opencv/
@@ -26,27 +25,33 @@ from color import crop_center
 import cv2
 
 class GalaxyBinaryPatterns:
-    """
-    .........Description de la classe 
-
-    Attributs:
-        numPoints (int): nombre de points à prendre en compte sur le périmètre du cercle
-        radius (int): taille du rayon du cercle
-
-    """
-    def __init__ (self,numPoints, radius):
-        # Enregistre les points et radius 
-        # Permet la construction d'un histograme
-        self.numPoints = numPoints
-        self.radius = radius
-           
-    def Galaxy_description(self,image , eps=1e-7): 
-        lbp = feature.local_binary_pattern(image , self.numPoints , self.radius, method="uniform")
-        (hist, _) = np.histogram(lbp.ravel(),bins = np.arange(0 , self.numPoints +3),range=(0,self.numPoints +2))
-        hist = hist.astype("float")
-        hist/= (hist.sum()+eps)
+  """
+  Class binary Pattern. En premier lieu, elle permet de caculer les formes de la surface d'une image, 
+  en second lieu elle calcule l'entropie de celle-ci 
+    
+  input :
+  numPoint (int) : nombre de points d'interet du relief de l'image
+  raduis (int) : rayon en pixels de l'image, represente la zone dans laquel on cherche les points
+  img (ndarray) : image a identifier
         
-        return hist
+  output : 
+  (int) entropie de l'image 
+    
+  """
+
+  def __init__ (self,numPoints, radius):
+    #Enregistre les points et radius 
+    # Permet la construction d'un histograme
+    self.numPoints = numPoints
+    self.radius = radius
+           
+  def Galaxy_description(self,image , eps=1e-7): 
+    lbp = feature.local_binary_pattern(image , self.numPoints , self.radius, method="uniform")
+    (hist, _) = np.histogram(lbp.ravel(),bins = np.arange(0 , self.numPoints +3),range=(0,self.numPoints +2))
+    hist = hist.astype("float")
+    hist/= (hist.sum()+eps)
+        
+    return hist
 
 def binaryPatterns(img,numPoints,radius):
     """
