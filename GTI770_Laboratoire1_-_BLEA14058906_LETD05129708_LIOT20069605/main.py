@@ -4,15 +4,12 @@
 """
 Course :
 GTI770 — Systèmes intelligents et apprentissage machine
-
 Project :
 Lab # 1 — Définition et extraction de primitives
-
 Students :
 Alexendre Bleau — BLEA14058906
 David Létinaud  — LETD05129708
 Thomas Lioret   — LIOT20069605
-
 Group :
 GTI770-A19-01
 """
@@ -20,7 +17,7 @@ GTI770-A19-01
 from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifie
+from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifie
 import sklearn.metrics as metrics
 
 import csv
@@ -33,7 +30,10 @@ from binaryPattern import binaryPatterns
 ########################################   Initialisations   ########################################
 
 image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
+#image_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/images/'
 dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
+#dataset_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_label_data_set.csv'
+
 
 # Nombre d'images total du dataset (training + testing)
 nb_img = 50
@@ -94,6 +94,7 @@ with open(dataset_path) as f:
         
         # Lecture et rognage de l'image
         image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
+        
         # Calcul des features et stockage dans X
         X.append( FeaturesProcess(image, color_center_size, fft_threshold, bp_calibration) )
         # Sauvegarde de la classe correspondante dans Y
@@ -105,15 +106,16 @@ with open(dataset_path) as f:
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
 
 # Création d'un arbre de décision 
-clf = tree.DecisionTreeClassifier()
+# Faire varier max_depth selon la profondeur de l'arbre souhaité
+clf = tree.DecisionTreeClassifier(max_depth=3)
 
 # Construit les décision de l'arbre de classification
-clf = clf.fit(X_train,Y_train)
-tree.plot_tree(clf) 
+clf = clf.fit(X_train,Y_train) 
+plot_tree(clf, filled=True)
+plt.show()
 
 # Prévoir la réponse pour l'ensemble de données de test
 Y_pred = clf.predict(X_test)
 
 # Précision du modèle, à quelle fréquence le classificateur est-il correct ?
 print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred)) 
-
