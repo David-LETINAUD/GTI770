@@ -36,7 +36,7 @@ dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_
 
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 50
+nb_img = 500
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
 # Taille de rognage de l'image
@@ -107,9 +107,9 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train
 
 # Création d'un arbre de décision 
 # Faire varier max_depth selon la profondeur de l'arbre souhaité
-clf = tree.DecisionTreeClassifier(max_depth=3)
+max_depth_tab = [2,3,4,5,10,30,50]
 
-# Construit les décision de l'arbre de classification
+clf = tree.DecisionTreeClassifier(max_depth=None)
 clf = clf.fit(X_train,Y_train) 
 plot_tree(clf, filled=True)
 plt.show()
@@ -118,4 +118,33 @@ plt.show()
 Y_pred = clf.predict(X_test)
 
 # Précision du modèle, à quelle fréquence le classificateur est-il correct ?
-print("Accuracy:",metrics.accuracy_score(Y_test, Y_pred)) 
+accuracy_tab = []
+acc_ = metrics.accuracy_score(Y_test, Y_pred)
+accuracy_tab.append(acc_)
+print("Accuracy:",acc_) 
+
+for i in max_depth_tab:
+    clf = tree.DecisionTreeClassifier(max_depth=3)
+
+    # Construit les décision de l'arbre de classification
+    clf = clf.fit(X_train,Y_train) 
+    plot_tree(clf, filled=True)
+    plt.show()
+
+    # Prévoir la réponse pour l'ensemble de données de test
+    Y_pred = clf.predict(X_test)
+
+    acc_ = metrics.accuracy_score(Y_test, Y_pred)
+    accuracy_tab.append(acc_)
+    print("Accuracy:",acc_) 
+
+max_depth_tab.insert(0, 0)
+print(max_depth_tab,accuracy_tab)
+# Affichage de la précision
+plt.plot(max_depth_tab,accuracy_tab,'x--')
+plt.xlabel('max_depth')
+plt.ylabel('Accuracy')
+plt.title('Etude de la précision en fonction de la profondeur de l arbre de décision')
+plt.grid(True)
+plt.show()
+
