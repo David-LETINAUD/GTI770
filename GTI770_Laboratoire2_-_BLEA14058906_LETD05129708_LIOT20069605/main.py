@@ -35,11 +35,13 @@ ratio_train = 0.7
 with open(dataset_path, 'r') as f:
     features_list = list(csv.reader(f, delimiter=','))
 
+
     # Lecture ligne par ligne
     for c in range(nb_img):
-        features = [float(i) for i in features_list[0]]
-        print(type(features))
-        print(features)
+        features = [float(i) for i in features_list[0][1:75]]
+        galaxy_class = int(float(features_list[0][75]))
+        print(type(features),type(galaxy_class))
+        print(features,galaxy_class)
         print("")
         print("")
         #X_tree.append(zoo_tree(features))
