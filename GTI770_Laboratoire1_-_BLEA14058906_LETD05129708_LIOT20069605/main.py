@@ -115,8 +115,10 @@ plt.show()
 # Prévoir la réponse pour l'ensemble de données de test
 Y_pred = clf.predict(X_test)
 
-# Précision du modèle, à quelle fréquence le classificateur est-il correct ?
+# Faire varier max_depth selon la profondeur de l'arbre souhaité
+max_depth_tab = [2,3,4,5,10,15,20,25,30,35,40,45,50]
 accuracy_tab = []
+
 acc_ = metrics.accuracy_score(Y_test, Y_pred)
 accuracy_tab.append(acc_)
 print("Accuracy:",acc_) 
@@ -124,9 +126,6 @@ print("Accuracy:",acc_)
 
 from sklearn.metrics import roc_curve, auc
  
-# Faire varier max_depth selon la profondeur de l'arbre souhaité
-max_depth_tab = [2,3,4,5,10,15,20,25,30,35,40,45,50]
-
 # On peut toutefois améliorer cette étude en étudiant les courbes AUC et ROC
 # Inspiré de : https://medium.com/@mohtedibf/indepth-parameter-tuning-for-decision-tree-6753118a03c3
 train_results = []
