@@ -16,29 +16,30 @@ Thomas Lioret   — LIOT20069605
 Group :
 GTI770-A19-01
 """
+from skimage import io
+from sklearn import tree
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifie
+import sklearn.metrics as metrics
+
 import csv
-
-########################################   Initialisations   ########################################
-dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+import matplotlib.pyplot as plt
 
 
-# Nombre d'images total du dataset (training + testing)
-nb_img = 10
-# Pourcentage de données utilisées pour l'entrainement
-ratio_train = 0.7
+def zoo_tree(X, Y,ratio_train = 0.7,):
 
-
-########################################   Lecture   ########################################
-# Lecture du fichier CSV
-with open(dataset_path, 'r') as f:
-    features_list = list(csv.reader(f,delimiter=','))
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
     
-    # Lecture ligne par ligne
-    for c in range(nb_img):
-        features = [float(i) for i in features_list[0]]
-        print(type(features))
-        print(features)
-        print("")
-        print("")
-        features_list.pop(0)
+    # Création d'un arbre de décision
 
+    clf = tree.DecisionTreeClassifier(max_depth=5)
+    clf = clf.fit(X_train,Y_train) 
+    # plot_tree(clf, filled=True)
+    # plt.show()
+
+    # Prévoir la réponse pour l'ensemble de données de test
+    Y_pred = clf.predict(X_test)
+
+    acc_ = metrics.accuracy_score(Y_test, Y_pred)
+    
+    return acc_
