@@ -21,7 +21,7 @@ import csv
 from zoo_tree import zoo_tree
 
 ########################################   Initialisations   ########################################                                                                                
-dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 # Nombre d'images total du dataset (training + testing)                                                                                                                              
 nb_img = 100
