@@ -50,8 +50,9 @@ with open(dataset_path, 'r') as f:
 
 
 ############## FIN LECTURE #########################
-
-
+print(X[3])
+print("class :")
+print(Y[3])
 
 # Imports                                                                                                                                                 
 import numpy as np
@@ -59,19 +60,26 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import GaussianNB
 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler                                                                                                           
 
-#pour les premiers tests                                                                                                                                  
-from sklearn import datasets
-iris = datasets.load_iris()
+from sklearn import preprocessing
 
+#sans prétraitement + Gaussian
 gnb = GaussianNB()
-y_pred = gnb.fit(iris.data, iris.target)
-
+y_pred = gnb.fit(X,Y)
+print(y_pred)
+print("ok")
 
 #scale data + multinomial bayes                                                                                                                           
-scaler = MinMaxScaler()
-#print(scaler.fit(data))                                                                                                                                  
-scale_data = scaler.fit(iris.data, iris.target).predict(iris.data)
+scaler = MinMaxScaler()                                                                                                                                  
+scale_data = scaler.fit_transform(X)
+print(scale_data)
 mnb = MultinomialNB()
-print(mnb.fit(iris.data,iris.target))
+print(mnb.fit(scale_data,Y))
+
+
+#K-Bins discretization + multinomial bayes
+tab = np.ones(74)
+est = preprocessing.KBinsDiscretizer(n_bins=tab, encode='ordinal').fit(X)
+coucou = est.transform(X)
+
