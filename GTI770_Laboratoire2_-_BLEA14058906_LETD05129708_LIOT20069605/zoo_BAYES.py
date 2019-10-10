@@ -79,7 +79,7 @@ print(mnb.fit(scale_data,Y))
 
 
 #K-Bins discretization + multinomial bayes
-tab = np.ones(74)
-est = preprocessing.KBinsDiscretizer(n_bins=tab, encode='ordinal').fit(X)
-coucou = est.transform(X)
 
+est = preprocessing.KBinsDiscretizer(n_bins=3, encode='ordinal', strategy='uniform').fit(X)
+coucou = est.transform(X)
+print("ok")
