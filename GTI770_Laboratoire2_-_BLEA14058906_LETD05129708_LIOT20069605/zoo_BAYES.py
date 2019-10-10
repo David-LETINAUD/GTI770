@@ -50,9 +50,7 @@ with open(dataset_path, 'r') as f:
 
 
 ############## FIN LECTURE #########################
-print(X[3])
-print("class :")
-print(Y[3])
+
 
 # Imports                                                                                                                                                 
 import numpy as np
@@ -66,20 +64,31 @@ from sklearn import preprocessing
 
 #sans prétraitement + Gaussian
 gnb = GaussianNB()
-y_pred = gnb.fit(X,Y)
-print(y_pred)
+gnb_pred = gnb.fit(X,Y)
+#print(gnb_pred)
+tree_acc = zoo_tree(gnb_pred,Y)
+print("Accuracy zoo_tree:",tree_acc)
 print("ok")
 
-#scale data + multinomial bayes                                                                                                                           
+#scale data + multinomial bayes
+mnb = MultinomialNB()
+                                                                                                                           
 scaler = MinMaxScaler()                                                                                                                                  
 scale_data = scaler.fit_transform(X)
 print(scale_data)
-mnb = MultinomialNB()
-print(mnb.fit(scale_data,Y))
+scale_mnb_pred = mnb.fit(scale_data,Y)
+#print(scale_mnb_pred)
+tree_acc = zoo_tree(scale_mnb_pred,Y)
+print("Accuracy zoo_tree:",tree_acc)
+print("ok")
 
 
 #K-Bins discretization + multinomial bayes
-
-est = preprocessing.KBinsDiscretizer(n_bins=3, encode='ordinal', strategy='uniform').fit(X)
-coucou = est.transform(X)
+kbins = preprocessing.KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform').fit(X) #jouer avec n_bins pour faire varier le nombre d'intervalles 
+kbins_data = kbins.transform(X)
+print(kbins_data)
+kbins_mnb_pred = mnb.fit(kbins_data,Y)
+#print(kbins_mnb_pred) 
+tree_acc = zoo_tree(kbins_mnb_pred,Y)
+print("Accuracy zoo_tree:",tree_acc)
 print("ok")
