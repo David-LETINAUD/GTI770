@@ -19,7 +19,7 @@ GTI770-A19-01
 from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifie
+from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifier
 import sklearn.metrics as metrics
 
 import csv
@@ -43,3 +43,4 @@ def zoo_tree(X, Y,ratio_train = 0.7,):
     acc_ = metrics.accuracy_score(Y_test, Y_pred)
     
     return acc_
+

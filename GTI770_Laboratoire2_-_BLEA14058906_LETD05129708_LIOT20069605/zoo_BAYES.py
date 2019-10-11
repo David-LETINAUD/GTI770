@@ -20,6 +20,7 @@ GTI770-A19-01
 import csv
 from zoo_tree import zoo_tree
 
+
 ########################################   Initialisations   ########################################                                                                                
 dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
@@ -54,6 +55,10 @@ with open(dataset_path, 'r') as f:
 
 # Imports                                                                                                                                                 
 import numpy as np
+
+from sklearn.model_selection import train_test_split
+import sklearn.metrics as metrics
+
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import GaussianNB
@@ -62,33 +67,47 @@ from sklearn.preprocessing import MinMaxScaler
 
 from sklearn import preprocessing
 
+
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
+
 #sans prétraitement + Gaussian
-gnb = GaussianNB()
-gnb_pred = gnb.fit(X,Y)
-#print(gnb_pred)
-tree_acc = zoo_tree(gnb_pred,Y)
-print("Accuracy zoo_tree:",tree_acc)
+# Création d'un arbre de décision                                                                                                                                                
+clf = GaussianNB()
+clf = clf.fit(X_train,Y_train)
+# Prévoir la réponse pour l'ensemble de données de test                                                                                                                          
+Y_pred = clf.predict(X_test)
+acc_ = metrics.accuracy_score(Y_test, Y_pred)
+print("Accuracy zoo_tree:",acc_)
 print("ok")
+
 
 #scale data + multinomial bayes
-mnb = MultinomialNB()
-                                                                                                                           
-scaler = MinMaxScaler()                                                                                                                                  
-scale_data = scaler.fit_transform(X)
-print(scale_data)
-scale_mnb_pred = mnb.fit(scale_data,Y)
-#print(scale_mnb_pred)
-tree_acc = zoo_tree(scale_mnb_pred,Y)
-print("Accuracy zoo_tree:",tree_acc)
+scaler = MinMaxScaler()
+X_train_scale = scaler.fit_transform(X_train) #On scale les data d'entrainement
+X_test_scale = scaler.fit_transform(X_test) #On scale les data de test
+
+clf = MultinomialNB()
+clf = clf.fit(X_train_scale,Y_train)
+
+Y_pred = clf.predict(X_test_scale)
+acc_ = metrics.accuracy_score(Y_test,Y_pred)
+print("Accuracy zoo_tree:",acc_)
+print("ok")
+                                                                                                 
+
+#K-Bins discretization + multinomial bayes  
+pre_proc = preprocessing.KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform').fit(X)
+X_train_pp = pre_proc.transform(X_train)
+X_test_pp = pre_proc.transform(X_test)
+
+clf = MultinomialNB()
+clf = clf.fit(X_train_pp,Y_train)
+
+Y_pred = clf.predict(X_test_pp)
+acc_ = metrics.accuracy_score(Y_test,Y_pred)
+print("Accuracy zoo_tree:",acc_)
 print("ok")
 
 
-#K-Bins discretization + multinomial bayes
-kbins = preprocessing.KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform').fit(X) #jouer avec n_bins pour faire varier le nombre d'intervalles 
-kbins_data = kbins.transform(X)
-print(kbins_data)
-kbins_mnb_pred = mnb.fit(kbins_data,Y)
-#print(kbins_mnb_pred) 
-tree_acc = zoo_tree(kbins_mnb_pred,Y)
-print("Accuracy zoo_tree:",tree_acc)
-print("ok")
+
