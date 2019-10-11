@@ -78,7 +78,10 @@ clf = clf.fit(X_train,Y_train)
 # Prévoir la réponse pour l'ensemble de données de test                                                                                                                          
 Y_pred = clf.predict(X_test)
 acc_ = metrics.accuracy_score(Y_test, Y_pred)
-print("Accuracy zoo_tree:",acc_)
+print("Accuracy gaussian sans prétraitement:",acc_)
+score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+print("f1_score gaussian sans prétraitement:", score_)
+
 print("ok")
 
 
@@ -92,7 +95,10 @@ clf = clf.fit(X_train_scale,Y_train)
 
 Y_pred = clf.predict(X_test_scale)
 acc_ = metrics.accuracy_score(Y_test,Y_pred)
-print("Accuracy zoo_tree:",acc_)
+print("Accuracy multinomial bayes avec scale data:",acc_)
+score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+print("f1_score multinomial bayes avec scale data:", score_)
+
 print("ok")
                                                                                                  
 
@@ -106,7 +112,9 @@ clf = clf.fit(X_train_pp,Y_train)
 
 Y_pred = clf.predict(X_test_pp)
 acc_ = metrics.accuracy_score(Y_test,Y_pred)
-print("Accuracy zoo_tree:",acc_)
+print("Accuracy multinomial bayes avec K-Bins discretization:",acc_)
+score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+print("f1_score multinomial bayes avec K-Bins discretization:", score_)
 print("ok")
 
 
