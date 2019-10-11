@@ -98,7 +98,7 @@ print("ok")
 
 #K-Bins discretization + multinomial bayes  
 pre_proc = preprocessing.KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform').fit(X)
-X_train_pp = pre_proc.transform(X_train)
+X_train_pp = pre_proc.transform(X_train) #preprocessing des data
 X_test_pp = pre_proc.transform(X_test)
 
 clf = MultinomialNB()
