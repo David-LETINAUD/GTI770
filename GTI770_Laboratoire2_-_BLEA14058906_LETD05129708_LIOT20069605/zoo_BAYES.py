@@ -129,20 +129,6 @@ plt.legend()
 print("=========================================================================================")
 
 
-#scale data + multinomial bayes
-scaler = MinMaxScaler(feature_range=(0, 1), copy=True)
-X_train_scale = scaler.fit_transform(X_train) #On scale les data d'entrainement
-X_test_scale = scaler.fit_transform(X_test) #On scale les data de test
-
-clf = MultinomialNB()
-clf = clf.fit(X_train_scale,Y_train)
-
-Y_pred = clf.predict(X_test_scale)
-acc_ = metrics.accuracy_score(Y_test,Y_pred)
-print("Accuracy multinomial bayes avec scale data:",acc_)
-score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
-print("f1_score multinomial bayes avec scale data:", score_)
-
 
 def bayes_mutltinomial_scaleData(X_train,X_test,Y_train,Y_test,scale):
     """
@@ -195,22 +181,6 @@ print("=========================================================================
                                                                                                  
 
 #K-Bins discretization + multinomial bayes  
-pre_proc = preprocessing.KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform').fit(X) #Jouer avec les hypers paramètres
-X_train_pp = pre_proc.transform(X_train) #preprocessing des data
-X_test_pp = pre_proc.transform(X_test)
-
-clf = MultinomialNB()
-clf = clf.fit(X_train_pp,Y_train)
-
-Y_pred = clf.predict(X_test_pp)
-acc_ = metrics.accuracy_score(Y_test,Y_pred)
-print("Accuracy multinomial bayes avec K-Bins discretization:",acc_)
-score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
-print("f1_score multinomial bayes avec K-Bins discretization:", score_)
-print("ok")
-print("=========================================================================================")
-
-
 
 def bayes_multinomial_kbinDiscetization(X_train,X_test,Y_train,Y_test,nb_bins):
     """
