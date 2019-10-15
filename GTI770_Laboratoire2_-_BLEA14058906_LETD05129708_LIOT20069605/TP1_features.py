@@ -57,7 +57,7 @@ image_path = "/home/ens/AQ38840/Desktop/data/data/images/"
 
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 16000
+#nb_img = 16000
 # Taille de rognage de l'image
 crop_size = 180
 
@@ -108,7 +108,7 @@ with open(dataset_path) as f:
     next(f_csv) # On passe la 1ere ligne d'entête
     
     # Lecture ligne par ligne
-    for ligne,i in zip(f_csv,range(nb_img)):
+    for ligne in f_csv:#,i in zip(f_csv,range(nb_img)):
         l_CSV = []
         # Lecture et rognage de l'image
         image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)

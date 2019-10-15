@@ -16,7 +16,7 @@ Thomas Lioret   — LIOT20069605
 Group :
 GTI770-A19-01
 """
-from skimage import io
+#from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree  # Import Decision Tree Classifier
@@ -29,10 +29,10 @@ import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
-def zoo_tree(X_train, X_test, Y_train, Y_test, ratio_train=0.8):
+def zoo_tree(X_train, X_test, Y_train, Y_test, profondeur=None):
     # Création d'un arbre de décision
 
-    clf = tree.DecisionTreeClassifier(max_depth=5)
+    clf = tree.DecisionTreeClassifier(max_depth=profondeur)
     clf = clf.fit(X_train, Y_train)
     # plot_tree(clf, filled=True)
     # plt.show()
@@ -43,5 +43,5 @@ def zoo_tree(X_train, X_test, Y_train, Y_test, ratio_train=0.8):
     acc_ = metrics.accuracy_score(Y_test, Y_pred)
     score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
-    print(acc_,score_)
+    #print(acc_,score_)
     return([acc_,score_])
