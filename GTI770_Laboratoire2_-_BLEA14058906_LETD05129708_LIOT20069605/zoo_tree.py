@@ -19,21 +19,21 @@ GTI770-A19-01
 from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree  # Import Decision Tree Classifier
 import sklearn.metrics as metrics
 
 import csv
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
+import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit
 
 
-def zoo_tree(X, Y,ratio_train = 0.7,):
-
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
-    
+def zoo_tree(X_train, X_test, Y_train, Y_test, ratio_train=0.8):
     # Création d'un arbre de décision
 
     clf = tree.DecisionTreeClassifier(max_depth=5)
-    clf = clf.fit(X_train,Y_train) 
+    clf = clf.fit(X_train, Y_train)
     # plot_tree(clf, filled=True)
     # plt.show()
 
@@ -41,6 +41,7 @@ def zoo_tree(X, Y,ratio_train = 0.7,):
     Y_pred = clf.predict(X_test)
 
     acc_ = metrics.accuracy_score(Y_test, Y_pred)
-    
-    return acc_
+    score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
+    print(acc_,score_)
+    return([acc_,score_])
