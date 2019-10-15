@@ -16,7 +16,7 @@ Thomas Lioret   — LIOT20069605
 Group :
 GTI770-A19-01
 """
-from skimage import io
+#from skimage import io
 from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree  # Import Decision Tree Classifier
