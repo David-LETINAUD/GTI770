@@ -117,5 +117,6 @@ def KNN(DataOriginal,ratio,k):
     SplitData(DataOriginal,ratio,X_train,X_test)
     Voisin= GetVoisin(X_train,X_test,k)
     Result= GetReponse(Voisin)
+    return Result
     print(Result)
 
