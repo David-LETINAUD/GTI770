@@ -72,7 +72,6 @@ with open(dataset_path, 'r') as f:
 
             features_list.pop(0)
             #print(type(features),type(galaxy_class))
-
             
         
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train,random_state=1, stratify=Y)  # 70% training and 30% test
