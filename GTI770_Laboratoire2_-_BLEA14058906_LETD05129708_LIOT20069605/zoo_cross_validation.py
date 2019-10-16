@@ -76,14 +76,12 @@ from sklearn.naive_bayes import GaussianNB #IMPORTER FONCTION DE LA MEILLEURE ME
 scaler = MinMaxScaler(feature_range=(0, 1))
 X = scaler.fit_transform(X) #X devient un ndarray
 Y = np.array(Y)
+clf = GaussianNB(priors=None, var_smoothing=1e-09) #REMPLACER PAR MEILLEUR METHODE 
 ############
 
 scores = []
 accuracy = []
 kf = KFold(n_splits=10) #K=10 dans l'énoncé
-
-clf = GaussianNB(priors=None, var_smoothing=1e-09) #REMPLACER PAR MEILLEUR METHODE
-
 
 for train_index, test_index in kf.split(X):
     #print("TRAIN:", train_index, "TEST:", test_index)
