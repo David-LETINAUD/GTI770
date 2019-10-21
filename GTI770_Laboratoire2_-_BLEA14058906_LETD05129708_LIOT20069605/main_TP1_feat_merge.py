@@ -4,101 +4,97 @@
 """
 Course :
 GTI770 — Systèmes intelligents et apprentissage machine
-
 Project :
 Lab # 2 — Arbre de décision, Bayes Naïf et KNN
-
 Students :
 Alexendre Bleau — BLEA14058906
 David Létinaud  — LETD05129708
 Thomas Lioret   — LIOT20069605
-
 Group :
 GTI770-A19-01
 """
+# Imports
 
-import csv
-from zoo_tree import zoo_tree
-from zoo_KNN import KNN
-from zoo_BAYES import bayes_gaussian_noProcess
+import sklearn.metrics as metrics
 
-from sklearn.model_selection import train_test_split
-import numpy as np
-########################################   Initialisations   ########################################
-#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-#dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
-dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 
-#TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
-TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
+from sklearn.preprocessing import MinMaxScaler
 
-# Nombre d'images total du dataset (training + testing)
-nb_img = 1600
-# Pourcentage de données utilisées pour l'entrainement
-ratio_train = 0.8
+from sklearn import preprocessing
 
+# sans prétraitement + Gaussian
 
-X=[]
-Y=[]
+def bayes_gaussian_noProcess(X_train, X_test, Y_train, Y_test, var_smooth=1e-09):
+    """
+    Fonction qui calcule l'accuracy et le f1_score d'un dataset en utilisant la méthode de Bayes gaussien sans traitement des données.
+    input:
+    X_train  (ndarray)  : tableau des features destinées à l'entrainement.
+    X_test   (ndarray)  : tableau des features à tester aux tests.
+    Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
+    Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
+    output:
+    [acc_,score_] (list) : Résultat de l'accuracy et du f1_score sous forme de liste.
+    """
 
-########################################   Lecture   ########################################
-# Lecture du fichier CSV
-with open(dataset_path, 'r') as f:
-    with open(TP1_features_path, 'r') as f_TP1:
-        TP1_features_list = list(csv.reader(f_TP1, delimiter=','))
-        features_list = list(csv.reader(f, delimiter=','))
+    clf = GaussianNB(priors=None, var_smoothing=var_smooth)  # Par défaut : 1e-09
+    clf = clf.fit(X_train, Y_train)
+    Y_pred = clf.predict(X_test)
+    acc_ = metrics.accuracy_score(Y_test, Y_pred)
+    score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
-        # Recuperation des numéros des images dans l'ordre générer par le TP1
-        TP1_features_list_np = np.array(TP1_features_list)[:,0]
-
-        # Lecture ligne par ligne
-        for c in range(nb_img):
-            features = [float(i) for i in features_list[0][1:75]]
-
-            num_img = str(int(float(features_list[0][0])))
-
-            try :
-                # Cherche l'index de l'image num_img dans TP1_features_list 
-                # pour faire correspondre les features du TP1 avec les nouveaux features
-                index = np.where(TP1_features_list_np==num_img)[0]
-
-                features_TP1 = [float(i) for i in TP1_features_list[index[0]][1:4]]
-                
-                # concatenation des features
-                features = features_TP1 + features
-
-                galaxy_class = int(float(features_list[0][75]))
-
-                X.append(features)
-                Y.append(galaxy_class)
-            except :
-                print("Image {} not find".format(num_img) )
-
-            features_list.pop(0)
-            #print(type(features),type(galaxy_class))
-            
-        
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train,random_state=1, stratify=Y)  # 70% training and 30% test
-
-Y_train = np.array(Y_train)
-Y_test = np.array(Y_test)
+    return ([acc_, score_])
 
 
-# stratify ok
-s = np.size(Y_train)
-s0_train = np.size(np.where(Y_train ==0))
-s0_test = np.size(np.where(Y_train ==0))
-print(s0_train/s, s0_test/s)
+def bayes_mutltinomial_scaleData(X_train, X_test, Y_train, Y_test, scale=1):
+    """
+    Fonction qui calcule l'accuracy et le f1_score d'un dataset en utilisant la méthode de Bayes multinomial avec un scale des données.
+    input:
+    X_train  (ndarray)  : tableau des features destinées à l'entrainement.
+    X_test   (ndarray)  : tableau des features à tester aux tests.
+    Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
+    Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
+    scale    (int)      : valeur max pour le scale des data. Par défaut scale vaut 1. Doit être strictement positif.
+    output:
+    [acc_,score_] (list) : Résultat de l'accuracy et du f1_score sous forme de liste.
+    """
 
-# hyperparamètres :
-Profondeur = 5
-K = 25
-Var_smoothing = 1e-12
+    scaler = MinMaxScaler(feature_range=(0, scale), copy=True)  # scale des data entre 0 et 1 par défaut.
+    X_train_scale = scaler.fit_transform(X_train)  # On scale les data d'entrainement
+    X_test_scale = scaler.fit_transform(X_test)  # On scale les data de test
+    clf = MultinomialNB()  # Bayes multinomial
+    clf = clf.fit(X_train_scale, Y_train)
+    Y_pred = clf.predict(X_test_scale)
+    acc_ = metrics.accuracy_score(Y_test, Y_pred)
+    score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
-zt = zoo_tree(X_train, X_test, Y_train, Y_test, Profondeur)
-zk = KNN(X_train, X_test, Y_train, Y_test, K)
-zb = bayes_gaussian_noProcess(X_train,X_test,Y_train,Y_test, Var_smoothing)
+    return ([acc_, score_])
 
-print(zt)
-print(zk)
-print(zb)
+# K-Bins discretization + multinomial bayes
+
+def bayes_multinomial_kbinDiscetization(X_train, X_test, Y_train, Y_test, nb_bins=5):
+    """
+    Fonction qui calcule l'accuracy et le f1_score d'un dataset en utilisant la méthode de Bayes multinomial avec une discetisation des données. (KBinDiscretizer)
+    input:
+    X_train  (ndarray)  : tableau des features destinées à l'entrainement.
+    X_test   (ndarray)  : tableau des features à tester aux tests.
+    Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
+    Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
+    nb_bins  (int)      : valeur qui détermine le nombre d'intervalles pour la répartition des données (5 par défaut). Doit être strictement positif.
+
+    output:
+    [acc_,score_] (list) : Résultat de l'accuracy et du f1_score sous forme de liste.
+    """
+
+    pre_proc = preprocessing.KBinsDiscretizer(n_bins=nb_bins, encode='ordinal', strategy='uniform').fit(
+        X)  # Jouer avec les hypers paramètres
+    X_train_pp = pre_proc.transform(X_train)  # preprocessing des data
+    X_test_pp = pre_proc.transform(X_test)
+    clf = MultinomialNB()
+    clf = clf.fit(X_train_pp, Y_train)
+    Y_pred = clf.predict(X_test_pp)
+    acc_ = metrics.accuracy_score(Y_test, Y_pred)
+    score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+
+    return ([acc_, score_])

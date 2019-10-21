@@ -17,52 +17,26 @@ Group :
 GTI770-A19-01
 """
 
-#! /usr/bin/env python3 
-# -*- coding: utf-8 -*-
-
-"""
-Course :
-GTI770 — Systèmes intelligents et apprentissage machine
-Project :
-Lab # 1 — Définition et extraction de primitives
-Students :
-Alexendre Bleau — BLEA14058906
-David Létinaud  — LETD05129708
-Thomas Lioret   — LIOT20069605
-Group :
-GTI770-A19-01
-"""
-
 from skimage import io
-from sklearn import tree
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree # Import Decision Tree Classifie
-import sklearn.metrics as metrics
 
 import csv
-import matplotlib.pyplot as plt
-
 from color import center_color,crop_center
 from fourier_transform import fourier_transform
 from binaryPattern import binaryPatterns
 
 ########################################   Initialisations   ########################################
 
-#image_path = "C:/Users/David/Desktop/GTI770/data/data/images/"
-#image_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/images/'
 dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_label_data_set.csv"
-TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
-#dataset_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_label_data_set.csv'
 image_path = "/home/ens/AQ38840/Desktop/data/data/images/"
+# Fichier de sortie
+TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 
-# Nombre d'images total du dataset (training + testing)
-#nb_img = 16000
 # Taille de rognage de l'image
 crop_size = 180
 
 TP1_feat_lignes = []
-X = [] # Contient les features de l'image
+
 # Paramètres de chaque features determinees au TP1
 fft_threshold = 140
 color_center_size = 18
@@ -84,9 +58,6 @@ def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
     
     """
     Features = []
-    
-    # plt.imshow(img)
-    # plt.show()
 
     # Calculs des Features
     f_c = center_color(img,cs_color)
