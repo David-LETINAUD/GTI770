@@ -49,8 +49,28 @@ def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
 
     # Retourne les features calculés
     return Features  
-
-
+"""
+    Fonction qui permet le calcul des meilleur hyper param pour chaque methode employe
+    
+    input :
+        func (ndarray) : fonction appler pour le calcule de leur hyper parametre
+        X_train  (ndarray)  : tableau des features destinées à l'entrainement.
+        X_test   (ndarray)  : tableau des features à tester aux tests.
+        Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
+        Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
+        list_hyper_param (nparray): tableau des hyper paramettre
+    output : 
+        max_acc          : valeur numerique de la valeur la plus haute pour la precision
+        max_f1           : valeur numerique de la valeur la plus haute pour le F1_score
+        elem_acc         : valeur numerique du parametre qui donne la meilleur precision 
+        elem_f1          : valeur numerique du parametre qui donne le meilleur F1_score
+        x_plot (nparray) : liste des paramettre  
+        acc_list(nparray): liste des valeur de la precision
+        f1_list( nparray): liste des maleur pour les F1_score
+           
+        
+    
+    """
 def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
     acc_list = []
     f1_list = []
@@ -77,7 +97,22 @@ def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
             max_f1 = score_
 
     return max_acc, max_f1, elem_acc, elem_f1, x_plot, acc_list, f1_list
-
+"""
+    Fonction qui permet dafficher un graphique avec les valeur pour , parametre, precision et F1_score
+    
+    input :
+        x_plot    (ndarray) : liste des paramettre 
+        acc_plot  (ndarray) : tableau des features destinées à l'entrainement.
+        f1_plot   (ndarray) : tableau des features à tester aux tests.
+        hyper_param    : valeur du hyper parametre .
+        
+    output : 
+      
+        
+        
+        
+    
+    """
 def plot_hyper_param(x_plot, acc_plot, f1_plot, hyper_param) :
     fig, ax = plt.subplots()
     ax.plot(x_plot, acc_plot, "or--", label="accuracy")

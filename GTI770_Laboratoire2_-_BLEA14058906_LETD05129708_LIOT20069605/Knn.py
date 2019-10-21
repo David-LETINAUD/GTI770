@@ -31,7 +31,16 @@ from sklearn.preprocessing import MinMaxScaler
 # dataset_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_label_data_set.csv'
 #dataset_path = "/home/alex/Desktop/GTI770-tp2/csv/galaxy/galaxy_feature_vectors.csv"
 #image_path = "/home/alex/Desktop/GTI770-tp2/csv/images/"
-
+ """
+    Fonction qui permet de calculer la precision de notre matrice de confusion
+    
+    input :
+        matrice (nparray) : matrice de confusion
+        
+    output : 
+        Precision(int)    : suivant le calculte (Tp+Fp)/(Tp+fp+fn+tn)
+    
+    """
 
 def accknn(matrice):
     deno = matrice[0][0] + matrice[1][1]
@@ -40,7 +49,21 @@ def accknn(matrice):
 
     acc = (float(deno) / float(nume))
     return acc
-
+"""
+    Fonction qui permet de calculer la precision et la valeur du F1_score selon un parametre K voisin
+    
+    input :
+        XTrain (nparray):  tableau des tableau des features destinées à l'entrainement.
+        Xtest  (nparray):  tableau des features à tester aux tests.
+        Ytrain (nparray):  tableau des étiquettes associées aux valeurs d'entrainement.
+        Ytest  (nparray):  tableau des étiquettes pour les valeurs de test.
+        k (int):           valeur numerique K pour determiner le nombre de voisin interoge
+        
+    output : 
+        Acc (int)       : precision selon la valeur k 
+        score_(int)     : F1_score selon la valeur k
+    
+    """
 
 def KNN(Xtrain, Xtest, Ytrain, Ytest, k):
     scaler = MinMaxScaler(feature_range=(0, 1), copy=True)  # scale des data entre 0 et 1 par défaut.
