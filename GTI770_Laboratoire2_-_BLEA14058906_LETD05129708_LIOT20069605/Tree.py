@@ -29,7 +29,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
-def zoo_tree(X_train, X_test, Y_train, Y_test, profondeur=None):
+def decision_tree(X_train, X_test, Y_train, Y_test, profondeur=None):
     # Création d'un arbre de décision
 
     clf = tree.DecisionTreeClassifier(max_depth=profondeur)

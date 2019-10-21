@@ -18,9 +18,9 @@ GTI770-A19-01
 """
 
 import csv
-from zoo_tree import zoo_tree
-from zoo_KNN import KNN
-from zoo_BAYES import *
+from Tree import decision_tree
+from Knn import KNN
+from Bayes import bayes_gaussian_noProcess, bayes_mutltinomial_scaleData, bayes_multinomial_kbinDiscretization
 
 
 
@@ -28,12 +28,12 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
 ########################################   Initialisations   ########################################
-#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 #dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
-dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
-#TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
-TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
+TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
+#TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 # Nombre d'images total du dataset (training + testing)
 nb_img = 1600
@@ -51,7 +51,7 @@ with open(dataset_path, 'r') as f:
         TP1_features_list = list(csv.reader(f_TP1, delimiter=','))
         features_list = list(csv.reader(f, delimiter=','))
 
-        # Recuperation des numéros des images dans l'ordre générer par le TP1
+        # Recuperation des numéros des images dans l'ordre généré par le TP1
         TP1_features_list_np = np.array(TP1_features_list)[:,0]
 
         # Lecture ligne par ligne
@@ -95,10 +95,11 @@ print(s0_train/s, s0_test/s)
 
 # hyperparamètres :
 Profondeur = 10
-K = 44
+K = 4
 Var_smoothing = 1e-12
 
-zt = zoo_tree(X_train, X_test, Y_train, Y_test, Profondeur)
+# Tests :
+zt = decision_tree(X_train, X_test, Y_train, Y_test, Profondeur)
 zk = KNN(X_train, X_test, Y_train, Y_test, K)
 zb = bayes_gaussian_noProcess(X_train,X_test,Y_train,Y_test, Var_smoothing)
 
@@ -153,7 +154,7 @@ list_var_smoothing = [i for i in np.linspace(1e-11, 1e-8, 10)]  # On fait varier
 list_scaler = [i for i in np.linspace(0.2, 3, 10)]
 
 nb_img = 16000
-max_acc, max_f1, elem_acc, elem_f1, x_plot, acc_plot, f1_plot = best_hyper_param(zoo_tree,X_train, X_test, Y_train, Y_test, list_zt)
+max_acc, max_f1, elem_acc, elem_f1, x_plot, acc_plot, f1_plot = best_hyper_param(decision_tree,X_train, X_test, Y_train, Y_test, list_zt)
 print("zoo_tree :")
 print("    Best acc :", max_acc, elem_acc)
 print("    Best f1 : ", max_f1, elem_f1)

@@ -6,7 +6,8 @@ scipy		: pip install scipy		ou	conda install scipy
 opencv		: pip install opencv-python	ou	conda install opencv
 matplotlib	: pip install matplotlib	ou	conda install matplotlib
 numpy		: pip install numpy		ou	conda install numpy
+seaborn     : pip install seaborn ou conda install seaborn
 
-pip install scikit-learn scikit-image scipy opencv-python matplotlib numpy
+pip install scikit-learn scikit-image scipy opencv-python matplotlib numpy seaborn
 ou
-conda install scikit-learn scikit-image scipy opencv matplotlib numpy
+conda install scikit-learn scikit-image scipy opencv matplotlib numpy seaborn
