@@ -20,9 +20,8 @@ GTI770-A19-01
 from skimage import io
 
 import csv
-from color import center_color,crop_center
-from fourier_transform import fourier_transform
-from binaryPattern import binaryPatterns
+from color import crop_center
+from main_functions import  FeaturesProcess
 
 ########################################   Initialisations   ########################################
 
@@ -41,35 +40,7 @@ TP1_feat_lignes = []
 fft_threshold = 140
 color_center_size = 18
 bp_calibration = [100,50]
-
-def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
-    """
-    Fonction qui permet le calcul de chaque features d'img
-    
-    input :
-        img (ndarray) : image quelconque
-        cs_color (int) : taille du centre de l'image à prendre en compte pour calculer la moyenne du niveau de gris
-        th_fft (int) : seuil à partir duquel on prend en compte les fréquences (strictement positif)
-        nr_binaryPattern ([int,int]) : 
-                    nr_binaryPattern[0] : nombre de points à prendre en compte sur le périmètre du cercle
-                    nr_binaryPattern[1] : taille du rayon du cercle
-    output : 
-        (list) retourne la liste des features calculées
-    
-    """
-    Features = []
-
-    # Calculs des Features
-    f_c = center_color(img,cs_color)
-    f_fft = fourier_transform(img,th_fft)
-    f_bp = binaryPatterns(img,nr_binaryPattern[0],nr_binaryPattern[1])  
-
-    Features.append(f_c)   
-    Features.append(f_fft)
-    Features.append(f_bp)
-
-    # Retourne les features calculés
-    return Features    
+  
 
 
 ########################################   Lecture   ########################################
