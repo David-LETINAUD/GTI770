@@ -73,7 +73,7 @@ def bayes_mutltinomial_scaleData(X_train, X_test, Y_train, Y_test, scale=1):
 
 # K-Bins discretization + multinomial bayes
 
-def bayes_multinomial_kbinDiscetization(X_train, X_test, Y_train, Y_test, nb_bins=5):
+def bayes_multinomial_kbinDiscretization(X_train, X_test, Y_train, Y_test, nb_bins=5):
     """
     Fonction qui calcule l'accuracy et le f1_score d'un dataset en utilisant la méthode de Bayes multinomial avec une discetisation des données. (KBinDiscretizer)
     input:
@@ -87,8 +87,7 @@ def bayes_multinomial_kbinDiscetization(X_train, X_test, Y_train, Y_test, nb_bin
     [acc_,score_] (list) : Résultat de l'accuracy et du f1_score sous forme de liste.
     """
 
-    pre_proc = preprocessing.KBinsDiscretizer(n_bins=nb_bins, encode='ordinal', strategy='uniform').fit(
-        X)  # Jouer avec les hypers paramètres
+    pre_proc = preprocessing.KBinsDiscretizer(n_bins=nb_bins, encode='ordinal', strategy='uniform').fit(X_train + X_test)  # Jouer avec les hypers paramètres
     X_train_pp = pre_proc.transform(X_train)  # preprocessing des data
     X_test_pp = pre_proc.transform(X_test)
     clf = MultinomialNB()

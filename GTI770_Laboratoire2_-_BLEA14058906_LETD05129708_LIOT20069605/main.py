@@ -20,7 +20,6 @@ GTI770-A19-01
 import csv
 
 import numpy as np
-from sklearn.model_selection import train_test_split
 
 from zoo_tree import zoo_tree
 from zoo_KNN import KNN

@@ -17,9 +17,11 @@ Dl pycharm sur linux
 from sklearn.neighbors import KNeighborsClassifier
 import seaborn as sns
 
-sns.set
+#sns.set
 import sklearn.metrics as metrics
 from sklearn.metrics import confusion_matrix
+
+from sklearn.preprocessing import MinMaxScaler
 
 ########################################   Initialisations   ########################################
 
@@ -27,8 +29,8 @@ from sklearn.metrics import confusion_matrix
 # image_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/images/'
 # dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_label_data_set.csv"
 # dataset_path = '/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_label_data_set.csv'
-dataset_path = "/home/alex/Desktop/GTI770-tp2/csv/galaxy/galaxy_feature_vectors.csv"
-image_path = "/home/alex/Desktop/GTI770-tp2/csv/images/"
+#dataset_path = "/home/alex/Desktop/GTI770-tp2/csv/galaxy/galaxy_feature_vectors.csv"
+#image_path = "/home/alex/Desktop/GTI770-tp2/csv/images/"
 
 
 def accknn(matrice):
@@ -40,11 +42,14 @@ def accknn(matrice):
     return acc
 
 
-def KNN(Xtrain, Xtest, Ytrain, Ytest, k=15):
+def KNN(Xtrain, Xtest, Ytrain, Ytest, k):
+    scaler = MinMaxScaler(feature_range=(0, 1), copy=True)  # scale des data entre 0 et 1 par défaut.
+    X_train_scale = scaler.fit_transform(Xtrain)  # On scale les data d'entrainement
+    X_test_scale = scaler.fit_transform(Xtest)  # On scale les data de test
+
     knn = KNeighborsClassifier(n_neighbors=k, metric='euclidean')
-    knn.fit(Xtrain, Ytrain)
-    y_pred = knn.predict(Xtest)
-    confusion_matrix(Ytest, y_pred)
+    knn.fit(X_train_scale, Ytrain)
+    y_pred = knn.predict(X_test_scale)
     matrice = confusion_matrix(Ytest, y_pred)
 
     acc_ = accknn(matrice)
