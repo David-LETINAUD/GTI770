@@ -17,20 +17,22 @@ Group :
 GTI770-A19-01
 """
 
-from zoo_tree import zoo_tree
-#from zoo_BAYES import bayes_gaussian_noProcess
-
 import csv
 
-from sklearn.model_selection import train_test_split
 import numpy as np
+from sklearn.model_selection import train_test_split
+
+from zoo_tree import zoo_tree
+from zoo_KNN import KNN
+
+# from zoo_BAYES import bayes_gaussian_noProcess
 ########################################   Initialisations   ########################################
-dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 #dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
-#dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 1000
+nb_img = 1600
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
 
@@ -68,9 +70,13 @@ print(s0_train/s, s0_test/s)
 
 # hyperparamètres : 
 profondeur = 5
+K = 25
+
 zt = zoo_tree(X_train, X_test, Y_train, Y_test, profondeur)
+zk = KNN(X_train, X_test, Y_train, Y_test, K)
 #b = bayes_gaussian_noProcess(X_train,X_test,Y_train,Y_test)
 
 print(zt)
+print(zk)
 #print(b)
 
