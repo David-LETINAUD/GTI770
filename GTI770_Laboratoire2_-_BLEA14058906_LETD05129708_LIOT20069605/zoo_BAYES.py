@@ -31,7 +31,7 @@ from zoo_tree import zoo_tree
 dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 100
+nb_img = 1600
 
 # Pourcentage de données utilisées pour l'entrainement 
 ratio_train = 0.7
@@ -116,11 +116,31 @@ x_plot = []
 acc_plot = []
 f1_plot = []
 
+max_acc = 0
+max_f1 = 0
+elem_acc = 0
+elem_f1 = 0
+best_acc = []
+best_f1 = []
+
 for ele in list_var_smoothing:
     acc_,score_ = bayes_gaussian_noProcess(X_train,X_test,Y_train,Y_test,var_smooth = ele)
     x_plot.append(ele)
     acc_plot.append(acc_)
     f1_plot.append(score_)
+    if acc_ > max_acc:
+        elem_acc = ele
+        max_acc = acc_
+    if score_ > max_f1:
+        elem_f1 = ele
+        max_f1 = score_
+
+
+best_acc.append([elem_acc,max_acc])
+best_f1.append([elem_f1,max_f1])
+
+print("la meilleure accuracy pour bayes gaussien sans prétraitement est [var_smoothing,accuracy]", best_acc)
+print("le meilleur f1_score  pour bayes gaussien sans prétraitement est [var_smoothing,F1_score]", best_f1)
 
 #print(acc_plot)
 #print(f1_plot)
@@ -130,6 +150,7 @@ ax.plot(x_plot,f1_plot,"xb",label = "f1_score")
 ax.set(xlabel='var_smooting', ylabel='f1_score et accuracy',title='f1_score et accuracy en fonction de var_smoothing')
 ax.grid()
 plt.legend()
+
 
 
 
@@ -169,17 +190,37 @@ def bayes_mutltinomial_scaleData(X_train,X_test,Y_train,Y_test,scale = 1):
 #print(bayes_mutltinomial_scaleData(X_train,X_test,Y_train,Y_test,1))
 #print("================================")
 
-list_scaler = [i for i in np.linspace(0.2,1,10)]
+list_scaler = [i for i in np.linspace(0.2,3,10)]
 x_plot = []
 acc_plot = []
 f1_plot = []
+
+max_acc = 0
+max_f1 = 0
+elem_acc = 0
+elem_f1 = 0
+best_acc = []
+best_f1 = []
 
 for ele in list_scaler:
     acc_, score_ = bayes_mutltinomial_scaleData(X_train,X_test,Y_train,Y_test,ele)
     x_plot.append(ele)
     acc_plot.append(acc_)
     f1_plot.append(score_)
-    
+    if acc_ > max_acc:
+        elem_acc = ele
+        max_acc = acc_
+    if score_ > max_f1:
+        elem_f1 = ele
+        max_f1 = score_
+
+
+best_acc.append([elem_acc,max_acc])
+best_f1.append([elem_f1,max_f1])
+
+print("la meilleure accuracy pour bayes multinomial avec scale est [scale,accuracy]", best_acc)
+print("le meilleur f1_score  pour bayes multinomial avec scale est [scale,F1_score]", best_f1)
+
 #print(acc_plot)
 #print(f1_plot)
 
@@ -228,16 +269,36 @@ def bayes_multinomial_kbinDiscetization(X_train,X_test,Y_train,Y_test,nb_bins = 
 #print(bayes_multinomial_kbinDiscetization(X_train,X_test,Y_train,Y_test,10))
 #print("==================")
 
-list_nbins = np.arange(3,10,1)
+list_nbins = np.arange(3,15,1)
 x_plot = []
 acc_plot = []
 f1_plot = []
+
+max_acc = 0
+max_f1 = 0
+elem_acc = 0
+elem_f1 = 0
+best_acc = []
+best_f1 = []
 
 for bin in list_nbins:
     acc_, score_ = bayes_multinomial_kbinDiscetization(X_train,X_test,Y_train,Y_test,bin)
     x_plot.append(bin)
     acc_plot.append(acc_)
     f1_plot.append(score_)
+    if acc_ > max_acc:
+        elem_acc = bin
+        max_acc = acc_
+    if score_ > max_f1:
+        elem_f1 = bin
+        max_f1 = score_
+
+
+best_acc.append([elem_acc,max_acc])
+best_f1.append([elem_f1,max_f1])
+
+print("la meilleure accuracy pour bayes multinomial avec discretisation est [nb_bin,accuracy]", best_acc)
+print("le meilleur f1_score  pour bayes multinomial avec discretization est [nb_bin,F1_score]", best_f1)
 
 
 #print(acc_plot)
