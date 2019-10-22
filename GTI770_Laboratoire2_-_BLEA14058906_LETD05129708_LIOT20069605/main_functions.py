@@ -54,19 +54,19 @@ def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
     
     input :
         func (ndarray) : fonction appler pour le calcule de leur hyper parametre
-        X_train  (ndarray)  : tableau des features destinées à l'entrainement.
-        X_test   (ndarray)  : tableau des features à tester aux tests.
-        Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
+        X_train  (ndarray)  : tableau des features destiné à l'entrainement.
+        X_test   (ndarray)  : tableau des features destiné aux tests.
+        Y_train  (ndarray)  : tableau des étiquettes associé aux valeurs d'entrainement.
         Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
         list_hyper_param (nparray): tableau des hyper paramettre
     output : 
-        max_acc          : valeur numerique de la valeur la plus haute pour la precision
+        max_acc          : valeur numerique de la valeur la plus haute pour la précision
         max_f1           : valeur numerique de la valeur la plus haute pour le F1_score
         elem_acc         : valeur numerique du parametre qui donne la meilleur precision 
         elem_f1          : valeur numerique du parametre qui donne le meilleur F1_score
-        x_plot (nparray) : liste des paramettre  
-        acc_list(nparray): liste des valeur de la precision
-        f1_list( nparray): liste des maleur pour les F1_score
+        x_plot (nparray) : liste des paramètre  
+        acc_list(nparray): liste des valeurs de la précision
+        f1_list( nparray): liste des valeurs pour les F1_score
            
         
     
