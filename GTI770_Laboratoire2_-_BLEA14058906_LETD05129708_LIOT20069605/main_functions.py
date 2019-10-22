@@ -101,8 +101,8 @@ def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
     Fonction qui permet dafficher un graphique avec les valeur pour , parametre, precision et F1_score
     
     input :
-        x_plot    (ndarray) : liste des paramettre 
-        acc_plot  (ndarray) : tableau des features destinées à l'entrainement.
+        x_plot    (ndarray) : liste des paramètres 
+        acc_plot  (ndarray) : tableau des features destiné à l'entrainement.
         f1_plot   (ndarray) : tableau des features à tester aux tests.
         hyper_param    : valeur du hyper parametre .
         
