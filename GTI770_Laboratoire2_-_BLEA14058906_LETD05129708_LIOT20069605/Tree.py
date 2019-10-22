@@ -28,27 +28,24 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_sco
 import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
-    return max_acc, max_f1, elem_acc, elem_f1, x_plot, acc_list, f1_list
 
-
-"""
-    fonction qui retourne les valeur de precision et le F1_scroe en fonction de la profondeur de notre arbre de decision
-    
-    input :
-        X_train  (ndarray)  : tableau des features destinées à l'entrainement.
-        X_test   (ndarray)  : tableau des features à tester aux tests.
-        Y_train  (ndarray)  : tableau des étiquettes associées aux valeurs d'entrainement.
-        Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
-        profondeur          : valeur numerique qui determine la profondeur de l'arbre (par default on le laisse a "None" 
-        
-    output : 
-      
-        acc                 : valeur numerique de la precision selon la profondeur
-        score_              : valeur numerique du F1_score selon la profondeur
-        
-    
-    """
 def decision_tree(X_train, X_test, Y_train, Y_test, profondeur=None):
+    """
+    fonction qui retourne les valeur de precision et le F1_scroe en fonction de la profondeur de notre arbre de decision
+
+    input :
+        X_train  (ndarray)  : tableau des features destiné à l'entrainement.
+        X_test   (ndarray)  : tableau des features destiné aux tests.
+        Y_train  (ndarray)  : tableau des étiquettes associé aux valeurs d'entrainement.
+        Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
+        profondeur          : valeur numerique qui détermine la profondeur de l'arbre (par defaut on le laisse a "None") 
+
+    output : 
+
+        acc                 : valeur numérique de la précision selon la profondeur
+        score_              : valeur numérique du F1_score selon la profondeur
+
+    """
     # Création d'un arbre de décision
 
     clf = tree.DecisionTreeClassifier(max_depth=profondeur)
