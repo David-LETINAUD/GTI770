@@ -49,29 +49,27 @@ def FeaturesProcess(img,cs_color,th_fft,nr_binaryPattern):
 
     # Retourne les features calculés
     return Features  
-"""
-    Fonction qui permet le calcul des meilleur hyper param pour chaque methode employe
+
+def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
+    """
+    Fonction qui permet le calcul des meilleurs hyper param pour chaque méthode employée
     
     input :
-        func (ndarray) : fonction appler pour le calcule de leur hyper parametre
+        func (ndarray) : fonction appelée pour le calcul de leur hyperparamètre
         X_train  (ndarray)  : tableau des features destiné à l'entrainement.
         X_test   (ndarray)  : tableau des features destiné aux tests.
         Y_train  (ndarray)  : tableau des étiquettes associé aux valeurs d'entrainement.
         Y_test   (ndarray)  : tableau des étiquettes pour les valeurs de test.
-        list_hyper_param (nparray): tableau des hyper paramettre
+        list_hyper_param (nparray): tableau des hyperparamètres
     output : 
         max_acc          : valeur numerique de la valeur la plus haute pour la précision
         max_f1           : valeur numerique de la valeur la plus haute pour le F1_score
-        elem_acc         : valeur numerique du parametre qui donne la meilleur precision 
-        elem_f1          : valeur numerique du parametre qui donne le meilleur F1_score
+        elem_acc         : valeur numerique du paramètre qui donne la meilleur précision 
+        elem_f1          : valeur numerique du paramètre qui donne le meilleur F1_score
         x_plot (nparray) : liste des paramètre  
         acc_list(nparray): liste des valeurs de la précision
         f1_list( nparray): liste des valeurs pour les F1_score
-           
-        
-    
     """
-def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
     acc_list = []
     f1_list = []
     x_plot = []
@@ -97,23 +95,19 @@ def best_hyper_param(func, X_train, X_test, Y_train, Y_test, list_hyper_param):
             max_f1 = score_
 
     return max_acc, max_f1, elem_acc, elem_f1, x_plot, acc_list, f1_list
-"""
-    Fonction qui permet dafficher un graphique avec les valeur pour , parametre, precision et F1_score
+
+def plot_hyper_param(x_plot, acc_plot, f1_plot, hyper_param) :
+    """
+    Fonction qui permet de tracer la precision et F1_score en fonction de l'hyperparamètre
     
     input :
         x_plot    (ndarray) : liste des paramètres 
         acc_plot  (ndarray) : tableau des features destiné à l'entrainement.
-        f1_plot   (ndarray) : tableau des features à tester aux tests.
-        hyper_param    : valeur du hyper parametre .
-        
-    output : 
-      
-        
-        
-        
-    
+        f1_plot   (ndarray) : tableau des features destiné aux tests.
+        hyper_param    : valeur de l'hyperparamètre
+
     """
-def plot_hyper_param(x_plot, acc_plot, f1_plot, hyper_param) :
+    
     fig, ax = plt.subplots()
     ax.plot(x_plot, acc_plot, "or--", label="accuracy")
     ax.plot(x_plot, f1_plot, "xb--", label="f1_score")
