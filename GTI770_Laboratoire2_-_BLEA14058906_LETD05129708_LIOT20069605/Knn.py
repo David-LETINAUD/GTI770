@@ -35,10 +35,12 @@ from sklearn.preprocessing import MinMaxScaler
       Precision(int)    : suivant le calcul (Tp+Fp)/(Tp+fp+fn+tn)
 
   """
-    deno = matrice[0][0] + matrice[1][1]
+    #machre mieux pour les mail
+    #deno = matrice[0][0] + matrice[1][1]
 
-    nume = matrice[0][0] + matrice[0][1] + matrice[1][0] + matrice[1][1]
-
+    #nume = matrice[0][0] + matrice[0][1] + matrice[1][0] + matrice[1][1]
+    deno = matrice[0][0]
+    nume = matrice[0][0] + matrice[1][1]
     acc = (float(deno) / float(nume))
     return acc
 
