@@ -69,11 +69,12 @@ Y_train = np.array(Y_train)
 Y_test = np.array(Y_test)
 
 
-# stratify ok
-s = np.size(Y_train)
-s0_train = np.size(np.where(Y_train ==0))
-s0_test = np.size(np.where(Y_train ==0))
-print(s0_train/s, s0_test/s)
+den_train = np.size(Y_train)
+den_test = np.size(Y_test)
+num_train = np.size(np.where(Y_train ==0))
+num_test = np.size(np.where(Y_test ==0))
+print(num_train/den_train, num_test/den_test)
+
 
 # hyperparamètres :
 Profondeur = 10
