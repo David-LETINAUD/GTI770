@@ -46,10 +46,9 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-
 image_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/images/"
-
 mail_data_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/spam/spam.csv"
+
 
 nb_img = 100
 
@@ -92,8 +91,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
 #pyt    % matplotlib inline
-C = [0.001, 0.1, 1, 10]
-gamma = [0.001, 0.1, 1.0, 10.0]
+C_tab = [0.001, 0.1, 1, 10]
+gamma_tab = [0.001, 0.1, 1.0, 10.0]
 # kernel=['linear','rbf']
 
 
@@ -117,12 +116,12 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     print(classification_report(Y_test, y_pred))
 
 
-for c in C:
+for c in C_tab:
     print("Kernel Type kernel",  "valeur c", c)
     SVCLine(X_train, Y_train, X_test, Y_test,c)
-for g in gamma:
+for g in gamma_tab:
 
-    for c in C:
+    for c in C_tab:
         print("Kernel Type rbf", "valeur c", c, "valeur gamma", g)
         SVC_rbf(X_train, Y_train, X_test, Y_test,c,g)
     # %%
