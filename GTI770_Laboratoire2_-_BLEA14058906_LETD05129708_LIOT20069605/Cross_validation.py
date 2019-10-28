@@ -105,26 +105,30 @@ clf = GaussianNB(priors=None, var_smoothing=1e-09) #REMPLACER PAR MEILLEUR METHO
 
 
 #profondeur à changer = 10
-
-    clf = tree.DecisionTreeClassifier(max_depth=profondeur)
-    clf = clf.fit(X_train, Y_train)
+profondeur=10
+clf = tree.DecisionTreeClassifier(max_depth=profondeur)
+clf = clf.fit(X_train, Y_train)
     # plot_tree(clf, filled=True)                                                                                                                                                    
     # plt.show()                                                                                                                                                                     
 
     # Prévoir la réponse pour l'ensemble de données de test                                                                                                                          
-    Y_pred = clf.predict(X_test)
-
-    acc_ = metrics.accuracy_score(Y_test, Y_pred)
-    score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+Y_pred = clf.predict(X_test)
+acc_ = metrics.accuracy_score(Y_test, Y_pred)
+score_ = metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
 ############
+
+
+
 #Mail
+scaler = MinMaxScaler(feature_range=(0, 1))
 X_mail = scaler.fit_transform(X_mail) #X devient un ndarray
-Y_mail = np.array(Y)
+Y_mail = np.array(Y_mail)
 
 #profondeur à changer = 5
-clf = tree.DecisionTreeClassifier(max_depth=profondeur)
-
+profondeur_mail=5
+clf = tree.DecisionTreeClassifier(max_depth=profondeur_mail)
+clf = clf.fit(X_mail_train, Y_mail_train)
 scores = []
 accuracy = []
 kf = KFold(n_splits=10) #K=10 dans l'énoncé
@@ -147,12 +151,12 @@ print("moyenne des f1_score(galaxie :",np.mean(scores),"les f1_scores sont de : 
 
 for train_index, test_index in kf.split(X_mail):
     #print("TRAIN:", train_index, "TEST:", test_index)                                                                                                                               
-    X_train, X_test = X[train_index], X[test_index]
-    Y_train, Y_test = Y[train_index], Y[test_index]
-    clf.fit(X_train,Y_train)
-    Y_pred = clf.predict(X_test)
-    scores.append(metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None))
-    accuracy.append(metrics.accuracy_score(Y_test, Y_pred))
+    X_mail_train, X_mail_test = X_mail[train_index], X_mail[test_index]
+    Y_mail_train, Y_mail_test = Y_mail[train_index], Y_mail[test_index]
+    clf.fit(X_mail_train,Y_mail_train)
+    Y_pred = clf.predict(X_mail_test)
+    scores.append(metrics.f1_score(Y_mail_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None))
+    accuracy.append(metrics.accuracy_score(Y_mail_test, Y_pred))
 
 
 print("moyenne des accuracy(mail) :",np.mean(accuracy),"les accuracy sont de : ",accuracy)
