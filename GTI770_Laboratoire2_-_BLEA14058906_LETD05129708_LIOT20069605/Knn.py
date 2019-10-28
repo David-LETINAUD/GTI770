@@ -24,7 +24,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import MinMaxScaler
 
 
- def accknn(matrice):
+def accknn(matrice):
   """
   Fonction qui permet de calculer la precision de notre matrice de confusion
 
@@ -35,42 +35,42 @@ from sklearn.preprocessing import MinMaxScaler
       Precision(int)    : suivant le calcul (Tp+Fp)/(Tp+fp+fn+tn)
 
   """
-    #machre mieux pour les mail
-    #deno = matrice[0][0] + matrice[1][1]
+  #machre mieux pour les mail
+  #deno = matrice[0][0] + matrice[1][1]
 
-    #nume = matrice[0][0] + matrice[0][1] + matrice[1][0] + matrice[1][1]
-    deno = matrice[0][0]
-    nume = matrice[0][0] + matrice[1][1]
-    acc = (float(deno) / float(nume))
-    return acc
+  #nume = matrice[0][0] + matrice[0][1] + matrice[1][0] + matrice[1][1]
+  deno = matrice[0][0]
+  nume = matrice[0][0] + matrice[1][1]
+  acc = (float(deno) / float(nume))
+  return acc
 
 
 def KNN(Xtrain, Xtest, Ytrain, Ytest, k):
- """
- Fonction qui permet de calculer la precision et la valeur du F1_score selon un parametre K voisin
+  """
+  Fonction qui permet de calculer la precision et la valeur du F1_score selon un parametre K voisin
 
- input :
+  input :
      XTrain (nparray):  tableau des features destiné à l'entrainement.
      Xtest  (nparray):  tableau des features destiné aux tests.
      Ytrain (nparray):  tableau des étiquettes associée aux valeurs d'entrainement.
      Ytest  (nparray):  tableau des étiquettes pour les valeurs de test.
      k (int):           valeur numerique K pour determiner le nombre de voisin interogé
 
- output : 
+  output : 
      Acc (int)       : précision selon la valeur k 
      score_(int)     : F1_score selon la valeur k
 
- """
-    scaler = MinMaxScaler(feature_range=(0, 1), copy=True)  # scale des data entre 0 et 1 par défaut.
-    X_train_scale = scaler.fit_transform(Xtrain)  # On scale les data d'entrainement
-    X_test_scale = scaler.fit_transform(Xtest)  # On scale les data de test
+  """
+  scaler = MinMaxScaler(feature_range=(0, 1), copy=True)  # scale des data entre 0 et 1 par défaut.
+  X_train_scale = scaler.fit_transform(Xtrain)  # On scale les data d'entrainement
+  X_test_scale = scaler.fit_transform(Xtest)  # On scale les data de test
 
-    knn = KNeighborsClassifier(n_neighbors=k, metric='euclidean')
-    knn.fit(X_train_scale, Ytrain)
-    y_pred = knn.predict(X_test_scale)
-    matrice = confusion_matrix(Ytest, y_pred)
+  knn = KNeighborsClassifier(n_neighbors=k, metric='euclidean')
+  knn.fit(X_train_scale, Ytrain)
+  y_pred = knn.predict(X_test_scale)
+  matrice = confusion_matrix(Ytest, y_pred)
 
-    acc_ = accknn(matrice)
-    score_ = metrics.f1_score(Ytest, y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
+  acc_ = accknn(matrice)
+  score_ = metrics.f1_score(Ytest, y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None)
 
-    return ([acc_, score_])
+  return ([acc_, score_])
