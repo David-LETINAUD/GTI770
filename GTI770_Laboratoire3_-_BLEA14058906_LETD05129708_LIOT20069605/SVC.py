@@ -41,6 +41,7 @@ import random
 import math
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import StratifiedShuffleSplit,GridSearchCV
 
 ########################################   Initialisations   ########################################
 
@@ -80,9 +81,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train
                                                     random_state=1)  # 70% training and 30% test
 
 ########################################   fin separation   ########################################
-nb_mail = 100
-X_mail = []
-Y_mail = []
+
 
 #
 from sklearn import svm
@@ -91,12 +90,26 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
+
 #pyt    % matplotlib inline
 C = [0.001, 0.1, 1, 10]
 gamma = [0.001, 0.1, 1.0, 10.0]
 # kernel=['linear','rbf']
 
+def Stratified(n_split,size,radom):
+    Split = StratifiedShuffleSplit(n_split=n_split,test_size=size,random_state=random)
+    return Split
+#utriliser plus tard de la faacon suivant
+# valeur de retour.split(X,Y)
+#fair une for pour chaque element si on veut les utiliser
 
+def GridSearch_bestparam(X_train,Y_train):
+    param = {'kernel':("linear","rbf"), 'C':[0.001,10]}
+    svc =svm.SCV(gamma= "scale")
+    clf = GridSearchCV(csv,param, cv=5)
+    clf.fit(X_train,Y_train)
+    return sorted(clf.cv_result_.key())
+        
 
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
     print("test 1")
