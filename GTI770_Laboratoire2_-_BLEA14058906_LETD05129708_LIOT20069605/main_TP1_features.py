@@ -53,7 +53,8 @@ with open(dataset_path) as f:
     for ligne in f_csv:#,i in zip(f_csv,range(nb_img)):
         l_CSV = []
         # Lecture et rognage de l'image
-        image = crop_center(io.imread( image_path + ligne[0] + ".jpg" ),crop_size,crop_size)
+	ID = str(int(float(ligne[0])) # Correction format pour MAC et Windows
+        image = crop_center(io.imread( image_path + ID + ".jpg" ),crop_size,crop_size)
         X = FeaturesProcess(image, color_center_size, fft_threshold, bp_calibration)
 	
         l_CSV.append(ligne[0])

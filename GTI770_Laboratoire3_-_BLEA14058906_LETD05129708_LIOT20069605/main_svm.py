@@ -97,28 +97,45 @@ nb_mail=1000
 X_mail=[]
 Y_mail=[]  
     
-########################################   Lecture Spam   ######################################## 
-with open(mail_data_path, 'r') as f:
-    mail_features_list = list(csv.reader(f, delimiter=','))
+########################################   Lecture   ########################################
+# Lecture du fichier CSV
+with open(dataset_path, 'r') as f:
+    with open(TP1_features_path, 'r') as f_TP1:
+        TP1_features_list = list(csv.reader(f_TP1, delimiter=','))
+        features_list = list(csv.reader(f, delimiter=','))
 
+        # Recuperation des numéros des images dans l'ordre généré par le TP1
+        TP1_features_list_np = np.array(TP1_features_list)[:,0]
 
-    # Lecture ligne par ligne                                                                                                                                                        
-    for c in range(nb_mail):
-        mail_features = [float(i) for i in mail_features_list[0][0:57]]
-        mail_class = int(float( mail_features_list[0][57]))
-        mail_features_list.pop(0)
-                                                                                                                                   
+        # Lecture ligne par ligne
+        for c in range(nb_img):
+            features = [float(i) for i in features_list[0][1:75]]
 
-        X_mail.append(mail_features)
-        Y_mail.append(mail_class)
-        #print(X_mail)
-        #print("--------------Ymail--------------")
-        #print( Y_mail)
-        
+            num_img = str(int(float(features_list[0][0])))
+
+            try :
+                # Cherche l'index de l'image num_img dans TP1_features_list
+                # pour faire correspondre les features du TP1 avec les nouveaux features
+                index = np.where(TP1_features_list_np==num_img)[0]
+
+                features_TP1 = [float(i) for i in TP1_features_list[index[0]][1:4]]
+
+                # concatenation des features
+                features = features_TP1 + features
+
+                galaxy_class = int(float(features_list[0][75]))
+
+                X.append(features)
+                Y.append(galaxy_class)
+            except :
+                print("Image {} not find".format(num_img) )
+
+            features_list.pop(0)
+            #print(type(features),type(galaxy_class))
 ############## FIN LECTURE SPAM #########################            
         
 ########################################   Separation mail   ######################################## 
-X_mail_train, X_mail_test, Y_mail_train, Y_mail_test = train_test_split(X_mail, Y_mail, train_size=ratio_train, random_state=1) # 70% training and 30% test
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train, random_state=1) # 70% training and 30% test
 
 ############## FIN separation mail#########################  
 
