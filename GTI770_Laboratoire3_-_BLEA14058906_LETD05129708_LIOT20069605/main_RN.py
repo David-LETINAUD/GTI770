@@ -20,9 +20,10 @@ GTI770-A19-01
 import csv
 from sklearn.model_selection import train_test_split
 import numpy as np
+from sklearn import preprocessing
 #import tensorflow as tf
 from RN_model import *
-from sklearn.metrics import f1_score, accuracy_score, recall_score
+from sklearn.metrics import f1_score, accuracy_score, recall_score, average_precision_score
 import time
 import matplotlib.pyplot as plt
 ########################################   Initialisations   ########################################
@@ -34,43 +35,20 @@ TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_feat
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 16000
+#nb_img = 16000
+nb_img = 1600
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
 
 X=[]
 Y=[]
 ########################################  Functions
-def perf_mesure(y_hat, y_test):
-    f1 = f1_score(y_hat, y_test, average='weighted')
-    acc = accuracy_score(y_hat, y_test)
-    rec = recall_score(y_hat, y_test, average='weighted')  
-    return [acc,rec, f1]
-
-def plot_perf(perf, hyperParam_range, delays,title  ):
-    #delays = np.array(delays).transpose(1,0)
-
-    fig, axs = plt.subplots(1,3)
-    plt.suptitle(title, fontsize=16)
-    
-    axs[0].title.set_text('Peformances du modèle sur dataset de test')
-    axs[0].plot(hyperParam_range, perf, 'x--')
-    axs[0].set_ylabel('Accuracy Recall and F1-score')
-    axs[0].set_xlabel('Hyperparameter')
-    axs[0].legend(['Précision', 'Rappel', 'F1_score'])
-    
-    axs[1].title.set_text('Temps d\'apprentissage')
-    axs[1].plot(hyperParam_range, delays[0], 'x--')
-    axs[1].set_ylabel('Delays (s)')
-    axs[1].set_xlabel('Hyperparameter')
-    #axs[1].legend(['predicting_delay'])
-
-    axs[2].title.set_text('Temps de prédiction')
-    axs[2].plot(hyperParam_range, delays[1], 'x--')
-    axs[2].set_ylabel('Delays (s)')
-    axs[2].set_xlabel('Hyperparameter')
-    #axs[2].legend(['testing_delay'])
-    plt.show()
+def perf_mesure(y_pred, y_test):
+    #f1 = f1_score(y_pred, y_test, average='weighted')
+    acc = accuracy_score(y_pred, y_test)
+    val_acc = np.sum( np.absolute(y_pred - y_test))
+    #rec = recall_score(y_pred, y_test, average='weighted')  
+    return [acc,val_acc]
 
 ########################################   Lecture   ########################################
 # Lecture du fichier CSV
@@ -108,6 +86,7 @@ with open(dataset_path, 'r') as f:
             features_list.pop(0)
             #print(type(features),type(galaxy_class))
 
+X = preprocessing.normalize(X, norm='l2')
 X = np.array(X)
 Y = np.array(Y)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train,random_state=1, stratify=Y)  # 70% training and 30% test
@@ -128,12 +107,12 @@ predicting_delay_RN = []
 perf_RN = []
 best_index_RN = 0
 best_y_test_RN =  []
-
+history_obj = []
 #l_rate_range = np.arange(0.0001,0.04,0.0005) #A garder
 # l_rate_range = np.logspace(0.0001, 0.004, 1, endpoint=False)
-l_rate_range = [0.000001,0.00005, 0.0005, 0.001, 0.01, 0.02, 0.03, 0.05]
+#l_rate_range = [0.000001,0.00005, 0.0005, 0.001, 0.01, 0.02, 0.03, 0.05]
 #l_rate_range = [0.0005,0.0008, 0.001]
-#l_rate_range = [0.000001,0.00005, 0.0005,0.0008, 0.001,0.003, 0.005, 0.01,0.012]
+l_rate_range = [0.000001,0.00005, 0.0005,0.0008, 0.001,0.003, 0.005, 0.01,0.012]
 #l_rate_range = np.arange(0.002,0.04,0.002) #A garder
 #l_rate_range = np.arange(0.4,1,0.2)
 cpt = 0
@@ -142,14 +121,19 @@ for l_rate in l_rate_range:
     model = RN_model(layer_sizes, dropout, l_rate)
     #### Apprentissage
     start = time.time()
-    model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+    #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+    hist_obj = model.fit(X_train, Y_train, batch_size = 10, epochs = 60, validation_data=(X_test, Y_test))
+    
     end = time.time()
     training_delay_RN.append(end - start)
+
+    history_obj.append( list(hist_obj.history.values()))
 
     #### Prédiction
     start = time.time()
     
     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+
     end = time.time()
     predicting_delay_RN.append(end - start)
 
@@ -169,4 +153,24 @@ for l_rate in l_rate_range:
 print("Best accuracy : {} for learning_rate = {}".format(perf_RN[best_index_RN][0] , l_rate_range[best_index_RN] ) )
 print("Learning delay : {} | predicting delay = {}".format(training_delay_RN[best_index_RN] , predicting_delay_RN[best_index_RN] ) )
 
-plot_perf(perf_RN,l_rate_range,[training_delay_RN,predicting_delay_RN], "RN : Hyperparameter = learning rate")
+ho = np.array(history_obj)
+ho = ho.transpose(1,2,0) 
+leg = [str(i) for i in l_rate_range]
+title_ = ['loss','acc','val_loss','val_acc']
+x_lab = "epochs"
+
+def plot_perf(histo,legende,titre,sous_titre):    
+    fig, axs = plt.subplots(2,2)
+    plt.suptitle(titre, fontsize=16)
+    cpt = 0
+    for ax in axs:     
+        for ax_i in ax:   
+            ax_i.title.set_text(sous_titre[cpt])
+            #ax_i.set_xlabel("epochs")
+            ax_i.legend(legende)
+            ax_i.plot( histo[cpt], 'x--')
+            cpt+=1
+
+    plt.show()
+
+plot_perf(ho, leg, "RN : étude du learning_rate ",title_)

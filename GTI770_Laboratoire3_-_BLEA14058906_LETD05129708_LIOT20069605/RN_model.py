@@ -45,7 +45,7 @@ def RN_model(layer_sizes, dropout, learning_rate):
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
     adam = Adam(lr = learning_rate)
-    model.compile(optimizer = adam, loss = 'binary_crossentropy')
+    model.compile(optimizer = adam, loss = 'binary_crossentropy',metrics=['accuracy'])
     return model
 
 
