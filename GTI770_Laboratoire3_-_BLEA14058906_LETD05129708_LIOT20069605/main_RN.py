@@ -36,9 +36,9 @@ TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_feat
 
 # Nombre d'images total du dataset (training + testing)
 #nb_img = 16000
-nb_img = 1600
+nb_img = 16000
 # Pourcentage de données utilisées pour l'entrainement
-ratio_train = 0.8
+ratio_train = 0.7
 
 X=[]
 Y=[]
@@ -86,7 +86,9 @@ with open(dataset_path, 'r') as f:
             features_list.pop(0)
             #print(type(features),type(galaxy_class))
 
-X = preprocessing.normalize(X, norm='l2')
+print(X[0])
+X = preprocessing.normalize(X, norm='max',axis = 0)
+print(X[0])
 X = np.array(X)
 Y = np.array(Y)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train,random_state=1, stratify=Y)  # 70% training and 30% test
@@ -111,10 +113,9 @@ history_obj = []
 #l_rate_range = np.arange(0.0001,0.04,0.0005) #A garder
 # l_rate_range = np.logspace(0.0001, 0.004, 1, endpoint=False)
 #l_rate_range = [0.000001,0.00005, 0.0005, 0.001, 0.01, 0.02, 0.03, 0.05]
-#l_rate_range = [0.0005,0.0008, 0.001]
-l_rate_range = [0.000001,0.00005, 0.0005,0.0008, 0.001,0.003, 0.005, 0.01,0.012]
-#l_rate_range = np.arange(0.002,0.04,0.002) #A garder
-#l_rate_range = np.arange(0.4,1,0.2)
+#l_rate_range = [0.00001,0.0005,0.001]
+l_rate_range = [0.0005]
+
 cpt = 0
 best_accuracy_RN = 0
 for l_rate in l_rate_range:
