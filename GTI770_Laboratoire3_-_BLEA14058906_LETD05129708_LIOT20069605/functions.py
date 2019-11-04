@@ -102,7 +102,7 @@ def plot_perf(histo,legende,titre,sous_titre):
             #ax_i.set_xlabel("epochs")
             #ax_i.set_legend(legende)
             
-            ax_i.plot( histo[cpt], 'x--')#, label=legende)
+            ax_i.plot( histo[cpt], '--')#, label=legende)
             #ax_i.legend(loc="upper right")
             cpt+=1
 

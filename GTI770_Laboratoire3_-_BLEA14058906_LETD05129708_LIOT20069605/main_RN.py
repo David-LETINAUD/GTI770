@@ -36,26 +36,15 @@ dropout = 0.5
 training_delay_RN = []
 predicting_delay_RN = []
 history_obj = []
+cpt = 0
+best_accuracy_RN = 0
 # Faire 1 test à la fois ou réinitialiser les 3 lists
 
 ################################## Nombres de couches
+layer_sizes_range = [[100],[100, 100, 2],[100, 100, 100, 100, 2]]
 
-################################## Nombres de perceptrons
-
-################################## Nombres d'iterations
-
-################################## Learning rate 
-
-#l_rate_range = np.arange(0.0001,0.04,0.0005) #A garder
-# l_rate_range = np.logspace(0.0001, 0.004, 1, endpoint=False)
-#l_rate_range = [0.000001,0.00005, 0.0005, 0.001, 0.01, 0.02, 0.03, 0.05]
-l_rate_range = [0.00001,0.0005,0.001]
-#l_rate_range = [0.0005]
-
-cpt = 0
-best_accuracy_RN = 0
-for l_rate in l_rate_range:
-    model = RN_model(layer_sizes, dropout, l_rate)
+for layer_s in layer_sizes_range:
+    model = RN_model(layer_s, dropout, learning_rate)
     #### Apprentissage
     start = time.time()
     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
@@ -73,10 +62,41 @@ for l_rate in l_rate_range:
 
     end = time.time()
     predicting_delay_RN.append(end - start)
+################################## Nombres de perceptrons
+
+################################## Nombres d'iterations
+
+################################## Learning rate 
+# l_rate_range = [0.00001,0.0005,0.001]
+# #l_rate_range = [0.0005]
+
+
+# for l_rate in l_rate_range:
+#     model = RN_model(layer_sizes, dropout, l_rate)
+#     #### Apprentissage
+#     start = time.time()
+#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
+    
+#     end = time.time()
+#     training_delay_RN.append(end - start)
+
+#     history_obj.append( list(hist_obj.history.values()))
+
+#     #### Prédiction
+#     start = time.time()
+    
+#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
+
 
 ho = np.array(history_obj)
 ho = ho.transpose(1,2,0) 
-leg = [str(i) for i in l_rate_range]
+#leg = [str(i) for i in l_rate_range]
+leg = [str(i) for i in layer_sizes_range]
+
 sub_title = ['loss','acc','f1','val_loss','val_acc', 'val_f1']
 x_lab = "epochs"
 
