@@ -93,15 +93,35 @@ def get_data():
 
 
 def plot_perf(histo,legende,titre,sous_titre):    
-    fig, axs = plt.subplots(2,2)
+    fig, axs = plt.subplots(2,3)
     plt.suptitle(titre, fontsize=16)
     cpt = 0
     for ax in axs:     
         for ax_i in ax:   
             ax_i.title.set_text(sous_titre[cpt])
             #ax_i.set_xlabel("epochs")
-            ax_i.legend(legende)
-            ax_i.plot( histo[cpt], 'x--')
+            #ax_i.set_legend(legende)
+            
+            ax_i.plot( histo[cpt], 'x--')#, label=legende)
+            #ax_i.legend(loc="upper right")
             cpt+=1
-    
+
+    plt.legend(legende)
+    plt.show()
+
+def plot_delay(train_delay,test_delay,titre):    
+    fig, axs = plt.subplots(1,2)
+    plt.suptitle(titre, fontsize=16)
+
+    axs[0].title.set_text("Training delay")
+    axs[0].set_xlabel("hyperparameter")
+    axs[0].set_ylabel("time (s)")
+    axs[0].plot(train_delay,'x--')
+
+    axs[1].title.set_text("Predicting delay")
+    axs[1].set_xlabel("hyperparameter")
+    axs[1].set_ylabel("time (s)")
+    axs[1].plot(test_delay,'x--')
+
+    #plt.legend(legende)
     plt.show()

@@ -23,9 +23,30 @@ tf.disable_v2_behavior()
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation, Dropout
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import backend as K
 import math
 import numpy as np
 # from sklearn.metrics import f1_score
+
+# Inspiré de : https://datascience.stackexchange.com/questions/45165/how-to-get-accuracy-f1-precision-and-recall-for-a-keras-model
+def recall_m(y_true, y_pred):
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+        recall = true_positives / (possible_positives + K.epsilon())
+        return recall
+
+def precision_m(y_true, y_pred):
+        true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+        predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+        precision = true_positives / (predicted_positives + K.epsilon())
+        return precision
+        #return m.update_state()
+
+def f1(y_true, y_pred):
+    #precision = #m.update_state() # precision_m(y_true, y_pred)
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 # Inspiré de : https://github.com/LeighWeston86/multilayer_perceptron
 def RN_model(layer_sizes, dropout, learning_rate):
@@ -37,16 +58,19 @@ def RN_model(layer_sizes, dropout, learning_rate):
     :return: keras model; compiled model for multilayer perceptron
     '''
     model = Sequential()
+    model.add(Dense(77)) # couche entrée
+    model.add(Activation('relu'))
+
     for size in layer_sizes:
         model.add(Dense(size))
         model.add(Activation('relu'))
         model.add(Dropout(dropout))
         
-    model.add(Dense(1,input_dim=77))
-    model.add(Activation('sigmoid'))
+    model.add(Dense(1))
+    model.add(Activation('sigmoid')) # couche de sortie
     adam = Adam(lr = learning_rate)
 
-    model.compile(optimizer = adam, loss = 'binary_crossentropy',metrics=['accuracy'])
+    model.compile(optimizer = adam, loss = 'binary_crossentropy',metrics=['accuracy',f1])
     return model
 
 
