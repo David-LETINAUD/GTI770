@@ -42,7 +42,7 @@ def RN_model(layer_sizes, dropout, learning_rate):
         model.add(Activation('relu'))
         model.add(Dropout(dropout))
         
-    model.add(Dense(1))
+    model.add(Dense(1,input_dim=77))
     model.add(Activation('sigmoid'))
     adam = Adam(lr = learning_rate)
 
