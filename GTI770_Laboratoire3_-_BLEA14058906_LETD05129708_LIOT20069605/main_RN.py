@@ -41,7 +41,29 @@ best_accuracy_RN = 0
 # Faire 1 test à la fois ou réinitialiser les 3 lists
 
 ################################## Nombres de couches
-layer_sizes_range = [[100],[100, 100, 2],[100, 100, 100, 100, 2]]
+# layer_sizes_range = [[100],[100, 100, 2],[100, 100, 100, 100, 2]]
+
+# for layer_s in layer_sizes_range:
+#     model = RN_model(layer_s, dropout, learning_rate)
+#     #### Apprentissage
+#     start = time.time()
+#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
+    
+#     end = time.time()
+#     training_delay_RN.append(end - start)
+
+#     history_obj.append( list(hist_obj.history.values()))
+
+#     #### Prédiction
+#     start = time.time()
+    
+#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
+################################## Nombres de perceptrons
+layer_sizes_range = [[2, 2, 2],[100, 100, 2],[500, 500, 2]]
 
 for layer_s in layer_sizes_range:
     model = RN_model(layer_s, dropout, learning_rate)
@@ -62,7 +84,6 @@ for layer_s in layer_sizes_range:
 
     end = time.time()
     predicting_delay_RN.append(end - start)
-################################## Nombres de perceptrons
 
 ################################## Nombres d'iterations
 
