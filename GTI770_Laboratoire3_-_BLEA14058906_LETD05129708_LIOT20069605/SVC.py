@@ -42,6 +42,10 @@ import math
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedShuffleSplit,GridSearchCV
+import tensorflow as tf
+from sklearn.metrics import make_scorer
+from sklearn.metrics import accuracy_score
+import pandas as pd
 
 ########################################   Initialisations   ########################################
 
@@ -85,6 +89,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=ratio_train
 
 #
 from sklearn import svm
+
 from sklearn.svm import SVC
 
 from sklearn.metrics import classification_report, confusion_matrix
@@ -96,19 +101,32 @@ C = [0.001, 0.1, 1, 10]
 gamma = [0.001, 0.1, 1.0, 10.0]
 # kernel=['linear','rbf']
 
-def Stratified(n_split,size,radom):
-    Split = StratifiedShuffleSplit(n_split=n_split,test_size=size,random_state=random)
-    return Split
+#def Stratified(n_split,size,radom):
+ #   # faire un  split # test a 20 %
+  #  Split = StratifiedShuffleSplit(n_split=n_split,test_size=size,random_state=random)
+   # return Split
+
 #utriliser plus tard de la faacon suivant
 # valeur de retour.split(X,Y)
 #fair une for pour chaque element si on veut les utiliser
 
+
+#finir les modification pe fair eune 2e, methode pour rdf.
+
 def GridSearch_bestparam(X_train,Y_train):
-    param = {'kernel':("linear","rbf"), 'C':[0.001,10]}
-    svc =svm.SCV(gamma= "scale")
-    clf = GridSearchCV(csv,param, cv=5)
+    print('ca commence')
+    param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
+    scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
+   # param = [{'kernel': ("rbf"), 'gamma': [0.001, 0.1, 1, 10], 'C': [0.001, 0.1, 1, 10]},{'kernel': ( "linear"),'C': [0.001, 0.1, 1, 10]}]
+    svc =svm.SVC(gamma= "scale")
+    clf = GridSearchCV(svc,param,scoring=scoring, cv=5,refit = 'AUC', return_train_score=True)
     clf.fit(X_train,Y_train)
-    return sorted(clf.cv_result_.key())
+
+    #return clf
+    print('ca fini')
+    #pandas dataframe
+    return clf.cv_results_
+    #return sorted(clf.cv_result_.key())
         
 
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
@@ -130,12 +148,21 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     print(classification_report(Y_test, y_pred))
 
 
-for c in C:
-    print("Kernel Type kernel",  "valeur c", c)
-    SVCLine(X_train, Y_train, X_test, Y_test,c)
-for g in gamma:
+#for c in C:
+ #   print("Kernel Type kernel",  "valeur c", c)
+  #  SVCLine(X_train, Y_train, X_test, Y_test,c)
+#for g in gamma:
 
-    for c in C:
-        print("Kernel Type rbf", "valeur c", c, "valeur gamma", g)
-        SVC_rbf(X_train, Y_train, X_test, Y_test,c,g)
+ #   for c in C:
+  #      print("Kernel Type rbf", "valeur c", c, "valeur gamma", g)
+   #     SVC_rbf(X_train, Y_train, X_test, Y_test,c,g)
     # %%
+
+
+#X_train_Data=tf.data.Dataset.from_tensor_slices((X_train,Y_train))
+#print(X_train_Data)
+Grid = GridSearch_bestparam(X_train,Y_train)
+#print(Grid)
+
+df = pd.DataFrame(data=Grid)
+print(df)
