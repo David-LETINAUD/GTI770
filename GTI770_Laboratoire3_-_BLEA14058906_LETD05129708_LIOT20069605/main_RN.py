@@ -63,19 +63,46 @@ best_accuracy_RN = 0
 #     end = time.time()
 #     predicting_delay_RN.append(end - start)
 ################################## Nombres de perceptrons
-layer_sizes_range = [[2, 2, 2],[100, 100, 2],[500, 500, 2]]
+# layer_sizes_range = [[2, 2, 2],[100, 100, 2],[500, 500, 2]]
 
-for layer_s in layer_sizes_range:
-    model = RN_model(layer_s, dropout, learning_rate)
+# for layer_s in layer_sizes_range:
+#     model = RN_model(layer_s, dropout, learning_rate)
+#     #### Apprentissage
+#     start = time.time()
+#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
+    
+#     end = time.time()
+#     training_delay_RN.append(end - start)
+
+#     history_obj.append( list(hist_obj.history.values()))
+
+#     #### Prédiction
+#     start = time.time()
+    
+#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
+
+################################## Nombres d'iterations
+epochs_range = [30,60, 120]#[10,60,500]
+max_ep = max(epochs_range)
+
+for ep in epochs_range:
+    model = RN_model(layer_sizes, dropout, learning_rate)
     #### Apprentissage
     start = time.time()
     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
-    hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
+    hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = ep, validation_data=(X_test, Y_test))
     
     end = time.time()
     training_delay_RN.append(end - start)
 
-    history_obj.append( list(hist_obj.history.values()))
+    ho_tmp = list(hist_obj.history.values())
+    ho_tmp = [i + [np.nan for _ in range(max_ep-ep)] for i in ho_tmp ] 
+    history_obj.append(ho_tmp)
+
 
     #### Prédiction
     start = time.time()
@@ -84,8 +111,6 @@ for layer_s in layer_sizes_range:
 
     end = time.time()
     predicting_delay_RN.append(end - start)
-
-################################## Nombres d'iterations
 
 ################################## Learning rate 
 # l_rate_range = [0.00001,0.0005,0.001]
@@ -113,15 +138,24 @@ for layer_s in layer_sizes_range:
 #     predicting_delay_RN.append(end - start)
 
 
+
+# A faire sauf pour epochs
 ho = np.array(history_obj)
 ho = ho.transpose(1,2,0) 
-#leg = [str(i) for i in l_rate_range]
-leg = [str(i) for i in layer_sizes_range]
+
 
 sub_title = ['loss','acc','f1','val_loss','val_acc', 'val_f1']
 x_lab = "epochs"
 
 
-plot_perf(ho, leg, "RN : étude du learning_rate ",sub_title)
+#leg = [str(i) for i in layer_sizes_range]
+leg = [str(i) for i in epochs_range]
+#leg = [str(i) for i in l_rate_range]
 
-plot_delay(training_delay_RN,predicting_delay_RN,"RN : HyperParam = learning_rate")
+# titre = "RN : HyperParam = number of layer"
+# titre = "RN : HyperParam = layer size"
+titre = "RN : HyperParam = number of epochs"
+# titre = "RN : HyperParam = learning rate"
+
+plot_perf(ho, leg, titre ,sub_title)
+plot_delay(training_delay_RN,predicting_delay_RN,titre)
