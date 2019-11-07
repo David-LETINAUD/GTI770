@@ -49,14 +49,17 @@ import pandas as pd
 
 ########################################   Initialisations   ########################################
 
-
-dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+####path ordi ETS
+#dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 image_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/images/"
 
 mail_data_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/spam/spam.csv"
 
-nb_img = 100
+### path ordi Alex
+dataset_path = "/home/alex/Desktop/lab3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "/home/alex/Desktop/lab3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/data/csv/galaxy/TP1_features.csv"
+nb_img = 50
 
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.7
@@ -115,16 +118,23 @@ gamma = [0.001, 0.1, 1.0, 10.0]
 
 def GridSearch_bestparam(X_train,Y_train):
     print('ca commence')
-    param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
+
+    param = [{'C':[0.001,0.1,1,10],'kernel':['linear']},
+             {'C': [0.001, 0.1, 1,10],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
+    #param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
+    ##param= {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1, 1 ], 'kernel': ['rbf']}
     scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
    # param = [{'kernel': ("rbf"), 'gamma': [0.001, 0.1, 1, 10], 'C': [0.001, 0.1, 1, 10]},{'kernel': ( "linear"),'C': [0.001, 0.1, 1, 10]}]
     svc =svm.SVC(gamma= "scale")
     clf = GridSearchCV(svc,param,scoring=scoring, cv=5,refit = 'AUC', return_train_score=True)
     clf.fit(X_train,Y_train)
+    print("value")
+    print(clf.cv_results_.keys())
 
     #return clf
     print('ca fini')
     #pandas dataframe
+
     return clf.cv_results_
     #return sorted(clf.cv_result_.key())
         
@@ -165,4 +175,5 @@ Grid = GridSearch_bestparam(X_train,Y_train)
 #print(Grid)
 
 df = pd.DataFrame(data=Grid)
+df[['param_kernel','param_C','param_gamma','mean_train_Accuracy','mean_fit_time','mean_score_time']]
 print(df)
