@@ -40,69 +40,20 @@ cpt = 0
 best_accuracy_RN = 0
 # Faire 1 test à la fois ou réinitialiser les 3 lists
 
-################################## Nombres de couches
-# layer_sizes_range = [[100],[100, 100, 2],[100, 100, 100, 100, 2]]
+################################## Nombres de couches cachees
+layer_sizes_range = [[100],[100, 100, 2],[100, 100, 100, 100, 100, 2]]
 
-# for layer_s in layer_sizes_range:
-#     model = RN_model(layer_s, dropout, learning_rate)
-#     #### Apprentissage
-#     start = time.time()
-#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
-#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
-    
-#     end = time.time()
-#     training_delay_RN.append(end - start)
-
-#     history_obj.append( list(hist_obj.history.values()))
-
-#     #### Prédiction
-#     start = time.time()
-    
-#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
-
-#     end = time.time()
-#     predicting_delay_RN.append(end - start)
-################################## Nombres de perceptrons
-# layer_sizes_range = [[2, 2, 2],[100, 100, 2],[500, 500, 2]]
-
-# for layer_s in layer_sizes_range:
-#     model = RN_model(layer_s, dropout, learning_rate)
-#     #### Apprentissage
-#     start = time.time()
-#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
-#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
-    
-#     end = time.time()
-#     training_delay_RN.append(end - start)
-
-#     history_obj.append( list(hist_obj.history.values()))
-
-#     #### Prédiction
-#     start = time.time()
-    
-#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
-
-#     end = time.time()
-#     predicting_delay_RN.append(end - start)
-
-################################## Nombres d'iterations
-epochs_range = [30,60, 120]#[10,60,500]
-max_ep = max(epochs_range)
-
-for ep in epochs_range:
-    model = RN_model(layer_sizes, dropout, learning_rate)
+for layer_s in layer_sizes_range:
+    model = RN_model(layer_s, dropout, learning_rate)
     #### Apprentissage
     start = time.time()
     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
-    hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = ep, validation_data=(X_test, Y_test))
+    hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
     
     end = time.time()
     training_delay_RN.append(end - start)
 
-    ho_tmp = list(hist_obj.history.values())
-    ho_tmp = [i + [np.nan for _ in range(max_ep-ep)] for i in ho_tmp ] 
-    history_obj.append(ho_tmp)
-
+    history_obj.append( list(hist_obj.history.values()))
 
     #### Prédiction
     start = time.time()
@@ -111,10 +62,59 @@ for ep in epochs_range:
 
     end = time.time()
     predicting_delay_RN.append(end - start)
+################################## Nombres de perceptrons
+# layer_sizes_range = [[5, 4, 4],[100, 100, 2],[500, 500, 500]]
+#
+# for layer_s in layer_sizes_range:
+#     model = RN_model(layer_s, dropout, learning_rate)
+#     #### Apprentissage
+#     start = time.time()
+#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
+#
+#     end = time.time()
+#     training_delay_RN.append(end - start)
+#
+#     history_obj.append( list(hist_obj.history.values()))
+#
+#     #### Prédiction
+#     start = time.time()
+#
+#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+#
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
+
+################################## Nombres d'iterations
+# epochs_range = [30,60, 120]#[10,60,500]
+# max_ep = max(epochs_range)
+#
+# for ep in epochs_range:
+#     model = RN_model(layer_sizes, dropout, learning_rate)
+#     #### Apprentissage
+#     start = time.time()
+#     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
+#     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = ep, validation_data=(X_test, Y_test))
+#
+#     end = time.time()
+#     training_delay_RN.append(end - start)
+#
+#     ho_tmp = list(hist_obj.history.values())
+#     ho_tmp = [i + [np.nan for _ in range(max_ep-ep)] for i in ho_tmp ]
+#     history_obj.append(ho_tmp)
+#
+#
+#     #### Prédiction
+#     start = time.time()
+#
+#     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
+#
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
 
 ################################## Learning rate 
-# l_rate_range = [0.00001,0.0005,0.001]
-# #l_rate_range = [0.0005]
+#l_rate_range = [0.00001,0.0005,0.1]
+#l_rate_range = [0.0005]
 
 
 # for l_rate in l_rate_range:
@@ -123,20 +123,20 @@ for ep in epochs_range:
 #     start = time.time()
 #     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
 #     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test))
-    
+#
 #     end = time.time()
 #     training_delay_RN.append(end - start)
-
+#
 #     history_obj.append( list(hist_obj.history.values()))
-
+#
 #     #### Prédiction
 #     start = time.time()
-    
+#
 #     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
-
+#
 #     end = time.time()
 #     predicting_delay_RN.append(end - start)
-
+#
 
 
 # A faire sauf pour epochs
@@ -148,14 +148,14 @@ sub_title = ['loss','acc','f1','val_loss','val_acc', 'val_f1']
 x_lab = "epochs"
 
 
-#leg = [str(i) for i in layer_sizes_range]
-leg = [str(i) for i in epochs_range]
+leg = [str(i) for i in layer_sizes_range]
+#leg = [str(i) for i in epochs_range]
 #leg = [str(i) for i in l_rate_range]
 
-# titre = "RN : HyperParam = number of layer"
-# titre = "RN : HyperParam = layer size"
-titre = "RN : HyperParam = number of epochs"
-# titre = "RN : HyperParam = learning rate"
+titre = "RN : HyperParam = number of layer"
+#titre = "RN : HyperParam = layer size"
+#titre = "RN : HyperParam = number of epochs"
+#titre = "RN : HyperParam = learning rate"
 
 plot_perf(ho, leg, titre ,sub_title)
 plot_delay(training_delay_RN,predicting_delay_RN,titre)
