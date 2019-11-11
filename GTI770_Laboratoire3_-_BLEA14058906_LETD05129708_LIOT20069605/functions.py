@@ -27,16 +27,18 @@ import matplotlib.pyplot as plt
 
 
 ########################################   Initialisations   ########################################
-dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-#dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
-#dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
-TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
-#TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
+
+#dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
+
+#TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
+TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 # Nombre d'images total du dataset (training + testing)
 #nb_img = 16000
-nb_img = 1600
+nb_img = 16000
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
 
@@ -93,15 +95,35 @@ def get_data():
 
 
 def plot_perf(histo,legende,titre,sous_titre):    
-    fig, axs = plt.subplots(2,2)
+    fig, axs = plt.subplots(2,3)
     plt.suptitle(titre, fontsize=16)
     cpt = 0
     for ax in axs:     
         for ax_i in ax:   
             ax_i.title.set_text(sous_titre[cpt])
             #ax_i.set_xlabel("epochs")
-            ax_i.legend(legende)
-            ax_i.plot( histo[cpt], 'x--')
+            #ax_i.set_legend(legende)
+            
+            ax_i.plot( histo[cpt], '-')#, label=legende)
+            #ax_i.legend(loc="upper right")
             cpt+=1
-    
+
+    plt.legend(legende)
+    plt.show()
+
+def plot_delay(train_delay,test_delay,titre):    
+    fig, axs = plt.subplots(1,2)
+    plt.suptitle(titre, fontsize=16)
+
+    axs[0].title.set_text("Training delay")
+    axs[0].set_xlabel("hyperparameter")
+    axs[0].set_ylabel("time (s)")
+    axs[0].plot(train_delay,'x--')
+
+    axs[1].title.set_text("Predicting delay")
+    axs[1].set_xlabel("hyperparameter")
+    axs[1].set_ylabel("time (s)")
+    axs[1].plot(test_delay,'x--')
+
+    #plt.legend(legende)
     plt.show()
