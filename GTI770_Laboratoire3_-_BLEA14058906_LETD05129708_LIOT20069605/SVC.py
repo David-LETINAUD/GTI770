@@ -42,22 +42,25 @@ import math
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedShuffleSplit,GridSearchCV
+import seaborn as sns
+from sklearn.svm import SVC
 import tensorflow as tf
 from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
 import pandas as pd
 
+
 ########################################   Initialisations   ########################################
 
 ####path ordi ETS
-#dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 image_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/images/"
 
 mail_data_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/spam/spam.csv"
 
 ### path ordi Alex
-dataset_path = "/home/alex/Desktop/lab3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "/home/alex/Desktop/lab3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/data/csv/galaxy/galaxy_feature_vectors.csv"
 #dataset_path = "/home/alex/Desktop/lab3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/data/csv/galaxy/TP1_features.csv"
 nb_img = 50
 
@@ -126,16 +129,22 @@ def GridSearch_bestparam(X_train,Y_train):
     scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
    # param = [{'kernel': ("rbf"), 'gamma': [0.001, 0.1, 1, 10], 'C': [0.001, 0.1, 1, 10]},{'kernel': ( "linear"),'C': [0.001, 0.1, 1, 10]}]
     svc =svm.SVC(gamma= "scale")
-    clf = GridSearchCV(svc,param,scoring=scoring, cv=5,refit = 'AUC', return_train_score=True)
+  #  clf = GridSearchCV(svc,param,scoring=scoring, cv=5,refit = 'AUC', return_train_score=True)
+    clf = GridSearchCV(svc, param, scoring=scoring, cv=5, refit='AUC', return_train_score=True)
     clf.fit(X_train,Y_train)
+    print(clf.best_score_)
     print("value")
     print(clf.cv_results_.keys())
 
     #return clf
-    print('ca fini')
+    #print('ca fini')
     #pandas dataframe
+    #print('grid test')
+    print(clf.best_params_)
 
-    return clf.cv_results_
+    return clf
+    #return clf.cv_results_
+
     #return sorted(clf.cv_result_.key())
         
 
@@ -159,20 +168,22 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
 
-def Grid_1(cv_result,grid_param_1,grid_param_2,name_1,name_2):
-    score_1 =cv.result['mean_train_Accuracy']
-    score_1 = np.array(score_1).reshape(len(grid_param_2,len(grid_param_1)))
-    score_2 = cv.result['param_C']
-    score_2 = np.array(score_2).reshape(len(grid_param_2, len(grid_param_1)))
 
-    _,ax = plt.subplot(1,1)
-    for idx,val in enumerate(grid_param_2):
-        ax.plot(grid_param_1,score_1[idx,:], '-o', label=name_2+': ' + str(val))
-        ax.set_title("Grid search param", fontsize=20, fontweight ='bold')
-        ax.set_xlabel(name_1,fontsize=16)
-        ax.set_ylabel("Meilleur gamma", fontsize=16)
-        ax.legend(loc="best", fontsize=15)
-        ax.grid('on')
+
+#def Grid_1(cv_result,grid_param_1,grid_param_2,name_1,name_2):
+ #   score_1 =cv.result['mean_fit_time']
+  #  score_1 = np.array(score_1).reshape(len(grid_param_2,len(grid_param_1)))
+   # score_2 = cv.result['mean_train_Accuracy']
+    #score_2 = np.array(score_2).reshape(len(grid_param_2, len(grid_param_1)))
+
+    #_,ax = plt.subplot(1,1)
+    #for idx,val in enumerate(grid_param_2):
+     #   ax.plot(grid_param_1,score_1[idx,:], '-o', label=name_2+': ' + str(val))
+    #ax.set_title("Grid search param", fontsize=20, fontweight ='bold')
+    #ax.set_xlabel(name_1,fontsize=16)
+    #ax.set_ylabel("Meilleur gamma", fontsize=16)
+    #ax.legend(loc="best", fontsize=15)
+    #ax.grid('on')
 #for c in C:
  #   print("Kernel Type kernel",  "valeur c", c)
   #  SVCLine(X_train, Y_train, X_test, Y_test,c)
@@ -188,8 +199,53 @@ def Grid_1(cv_result,grid_param_1,grid_param_2,name_1,name_2):
 #print(X_train_Data)
 Grid = GridSearch_bestparam(X_train,Y_train)
 #print(Grid)
+result = Grid.cv_results_
 
-df = pd.DataFrame(data=Grid)
+df = pd.DataFrame(data=result)
+
 df[['param_kernel','param_C','param_gamma','mean_train_Accuracy','mean_fit_time','mean_score_time']]
 print(df)
-Grid_1(df,n_estimator,max_features,"estimator","Param 2 test")
+#print(df.get_values(1,'mean_train_Accuracy'))
+list_accuracy=[]
+list_time=[]
+list_Param_C=[]
+list_gamma=[]
+list_kernel=[]
+
+for i in range(15):
+    list_accuracy.append(df.get_value(i,35,'mean_train_Accuracy'))
+    list_time.append(df.get_value(i,0,'mean_fit_time'))
+    list_Param_C.append(df.get_value(i,4,'param_C'))
+    list_gamma.append(df.get_value(i,6,'param_gamma'))
+    list_kernel.append(df.get_value(i,5,'param_kernel'))
+
+
+print(list_accuracy)
+print(list_time)
+print(list_Param_C)
+print(list_gamma)
+print(list_kernel)
+
+# print(Grid.cv_results_)
+# print(Grid)
+# print(type(Grid.cv_results_))
+
+
+
+#Grid_1(Grid,mean_train_Accuracy ,mean_fit_time,"estimator","Param 2 test")
+
+plt.plot(list_kernel,list_accuracy)
+
+plt.xlabel('Accuracy')
+plt.ylabel('Kernel')
+plt.title('Accuracy en fonction Du Kernel')
+plt.show()
+
+
+plt.plot(list_time,list_accuracy)
+
+plt.xlabel('Accuracy')
+plt.ylabel('temps de calcule')
+plt.title('Accuracy en fonction du temps de calcule')
+plt.show()
+
