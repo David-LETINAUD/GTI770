@@ -119,8 +119,8 @@ gamma = [0.001, 0.1, 1.0, 10.0]
 def GridSearch_bestparam(X_train,Y_train):
     print('ca commence')
 
-    param = [{'C':[0.001,0.1,1,10],'kernel':['linear']},
-             {'C': [0.001, 0.1, 1,10],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
+    param = [{'C':[0.001,0.1,1],'kernel':['linear']},
+             {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
     #param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
     ##param= {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1, 1 ], 'kernel': ['rbf']}
     scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
@@ -138,6 +138,8 @@ def GridSearch_bestparam(X_train,Y_train):
     return clf.cv_results_
     #return sorted(clf.cv_result_.key())
         
+
+
 
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
     print("test 1")
@@ -157,7 +159,20 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
 
+def Grid_1(cv_result,grid_param_1,grid_param_2,name_1,name_2):
+    score_1 =cv.result['mean_train_Accuracy']
+    score_1 = np.array(score_1).reshape(len(grid_param_2,len(grid_param_1)))
+    score_2 = cv.result['param_C']
+    score_2 = np.array(score_2).reshape(len(grid_param_2, len(grid_param_1)))
 
+    _,ax = plt.subplot(1,1)
+    for idx,val in enumerate(grid_param_2):
+        ax.plot(grid_param_1,score_1[idx,:], '-o', label=name_2+': ' + str(val))
+        ax.set_title("Grid search param", fontsize=20, fontweight ='bold')
+        ax.set_xlabel(name_1,fontsize=16)
+        ax.set_ylabel("Meilleur gamma", fontsize=16)
+        ax.legend(loc="best", fontsize=15)
+        ax.grid('on')
 #for c in C:
  #   print("Kernel Type kernel",  "valeur c", c)
   #  SVCLine(X_train, Y_train, X_test, Y_test,c)
@@ -177,3 +192,4 @@ Grid = GridSearch_bestparam(X_train,Y_train)
 df = pd.DataFrame(data=Grid)
 df[['param_kernel','param_C','param_gamma','mean_train_Accuracy','mean_fit_time','mean_score_time']]
 print(df)
+Grid_1(df,n_estimator,max_features,"estimator","Param 2 test")
