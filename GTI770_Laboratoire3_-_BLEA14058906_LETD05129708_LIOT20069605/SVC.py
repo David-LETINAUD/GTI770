@@ -30,7 +30,7 @@ import sklearn.metrics as metrics
 # from sklearn.metric import accuracy_score, f1_score
 import csv
 import matplotlib.pyplot as plt
-
+from mpl_toolkits import mplot3d
 # from color import center_color,crop_center
 # from fourier_transform import fourier_transform
 # from binaryPattern import binaryPatterns
@@ -42,6 +42,7 @@ import math
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import StratifiedShuffleSplit,GridSearchCV
+from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
 from sklearn.svm import SVC
 import tensorflow as tf
@@ -122,8 +123,8 @@ gamma = [0.001, 0.1, 1.0, 10.0]
 def GridSearch_bestparam(X_train,Y_train):
     print('ca commence')
 
-    param = [{'C':[0.001,0.1,1],'kernel':['linear']},
-             {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
+    param = [{'C':[0.001,0.1,1,10],'kernel':['linear']},
+             {'C': [0.001, 0.1,1,10],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
     #param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
     ##param= {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1, 1 ], 'kernel': ['rbf']}
     scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
@@ -170,33 +171,7 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
 
 
 
-#def Grid_1(cv_result,grid_param_1,grid_param_2,name_1,name_2):
- #   score_1 =cv.result['mean_fit_time']
-  #  score_1 = np.array(score_1).reshape(len(grid_param_2,len(grid_param_1)))
-   # score_2 = cv.result['mean_train_Accuracy']
-    #score_2 = np.array(score_2).reshape(len(grid_param_2, len(grid_param_1)))
 
-    #_,ax = plt.subplot(1,1)
-    #for idx,val in enumerate(grid_param_2):
-     #   ax.plot(grid_param_1,score_1[idx,:], '-o', label=name_2+': ' + str(val))
-    #ax.set_title("Grid search param", fontsize=20, fontweight ='bold')
-    #ax.set_xlabel(name_1,fontsize=16)
-    #ax.set_ylabel("Meilleur gamma", fontsize=16)
-    #ax.legend(loc="best", fontsize=15)
-    #ax.grid('on')
-#for c in C:
- #   print("Kernel Type kernel",  "valeur c", c)
-  #  SVCLine(X_train, Y_train, X_test, Y_test,c)
-#for g in gamma:
-
- #   for c in C:
-  #      print("Kernel Type rbf", "valeur c", c, "valeur gamma", g)
-   #     SVC_rbf(X_train, Y_train, X_test, Y_test,c,g)
-    # %%
-
-
-#X_train_Data=tf.data.Dataset.from_tensor_slices((X_train,Y_train))
-#print(X_train_Data)
 Grid = GridSearch_bestparam(X_train,Y_train)
 #print(Grid)
 result = Grid.cv_results_
@@ -212,7 +187,7 @@ list_Param_C=[]
 list_gamma=[]
 list_kernel=[]
 
-for i in range(15):
+for i in range(19):
     list_accuracy.append(df.get_value(i,35,'mean_train_Accuracy'))
     list_time.append(df.get_value(i,0,'mean_fit_time'))
     list_Param_C.append(df.get_value(i,4,'param_C'))
@@ -234,18 +209,54 @@ print(list_kernel)
 
 #Grid_1(Grid,mean_train_Accuracy ,mean_fit_time,"estimator","Param 2 test")
 
-plt.plot(list_kernel,list_accuracy)
 
-plt.xlabel('Accuracy')
-plt.ylabel('Kernel')
-plt.title('Accuracy en fonction Du Kernel')
+
+
+plt.plot(list_Param_C[0:5],list_accuracy[0:5],'x',label = "Param C linear" )
+
+plt.xlabel('Param C')
+plt.ylabel('accuracy')
+plt.title('Meilleur accuracy en fonction de C Linear')
+
+
+
+
+
+
+plt.legend()
+
+plt.show()
+
+plt.plot(list_time[0:5],list_Param_C[0:5],'x',label = "Temps linear " )
+plt.xlabel('temps')
+plt.ylabel('accuracy')
+plt.title('Meilleur accuracy en fonction du temps de calcule Linear')
+plt.legend()
 plt.show()
 
 
-plt.plot(list_time,list_accuracy)
 
-plt.xlabel('Accuracy')
-plt.ylabel('temps de calcule')
-plt.title('Accuracy en fonction du temps de calcule')
+
+
+
+
+
+
+
+
+
+x_line,y_line = np.meshgrid(list_gamma[5:19],list_Param_C[5:19])
+z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
+ax.set_xlabel('param Gamma')
+ax.set_ylabel('Param C')
+ax.set_zlabel('Accuracy')
+
+ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
+ax.set_title('Accurace en fonction de C et gamma ')
+
 plt.show()
+
 
