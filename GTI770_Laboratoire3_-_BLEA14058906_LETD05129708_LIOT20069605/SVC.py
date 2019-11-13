@@ -230,7 +230,7 @@ plt.show()
 plt.plot(list_time[0:5],list_Param_C[0:5],'x',label = "Temps linear " )
 plt.xlabel('temps')
 plt.ylabel('accuracy')
-plt.title('Meilleur accuracy en fonction du temps de calcule Linear')
+plt.title('Meilleur accuracy en fonction du temps de calcul Linear')
 plt.legend()
 plt.show()
 
@@ -250,12 +250,12 @@ z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 
-ax.set_xlabel('param Gamma')
+ax.set_xlabel('Param Gamma')
 ax.set_ylabel('Param C')
 ax.set_zlabel('Accuracy')
 
 ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
-ax.set_title('Accurace en fonction de C et gamma ')
+ax.set_title('Accuracy en fonction de C et gamma ')
 
 plt.show()
 
