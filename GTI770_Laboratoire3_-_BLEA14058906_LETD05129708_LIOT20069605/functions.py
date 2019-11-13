@@ -23,6 +23,7 @@ import numpy as np
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import pandas as pd
+from textable import textable
 #import tensorflow as tf
 
 
@@ -200,10 +201,12 @@ def plot_Linear_acc(Grid):
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
 
-    plt.plot(list_Param_C[0:5],list_accuracy[0:5],'x',label = "Param C linear" )
-
+    plt.plot(list_Param_C[0:4],list_accuracy[0:4],label = "Param C linear" )
+    plt.scatter(list_Param_C[0:4],list_accuracy[0:4],c='r', label='Precision pour valur de C')
     plt.xlabel('Param C')
     plt.ylabel('accuracy')
+    plt.xlim(0.001,10)
+    plt.ylim(0,1)
     plt.title('Meilleur accuracy en fonction de C Linear')
 
 
@@ -211,10 +214,13 @@ def plot_Linear_acc(Grid):
 
     plt.show()
 
-    plt.plot(list_time[0:5],list_Param_C[0:5],'x',label = "Temps linear " )
-    plt.xlabel('temps')
-    plt.ylabel('accuracy')
-    plt.title('Meilleur accuracy en fonction du temps de calcule Linear')
+    plt.plot(list_time[0:4],list_Param_C[0:4],label = "Temps de calcule linear " )
+    plt.scatter(list_time[0:4],list_Param_C[0:4],c='r', label='Temps pour valur de C')
+    plt.xlabel('temps en secondes')
+    plt.ylabel('Param C')
+    plt.xlim(0, 60)
+    plt.ylim(0.001, 10)
+    plt.title('Meilleur temps de traitement en fonction du paramettre C')
     plt.legend()
     plt.show()
 
@@ -240,30 +246,67 @@ def plot_RBF_acc(Grid):
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
 
-    x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
-    z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
-    fig = plt.figure()
+    # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
+    # z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
+    # fig = plt.figure()
     ax = plt.axes(projection='3d')
-
+    x_line=list_gamma[5:19]
+    y_line= list_Param_C[5:19]
+    z_line=list_accuracy[5:19]
     ax.set_xlabel('Param Gamma')
     ax.set_ylabel('Param C')
     ax.set_zlabel('Precision')
+    #ax.plot3D(x_line,y_line,z_line, 'gray')
 
-    ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
+
+    # ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
+    ax.scatter3D(x_line,y_line,z_line,cmap='Green',label='Precision selon Gamma et C')
     ax.set_title('Precision en fonction de C et gamma ')
 
     plt.show()
 
-    x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
-    z_line = np.tile( list_time[5:19], (len( list_time[5:19]), 1))
+    # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
+    # z_line = np.tile( list_time[5:19], (len( list_time[5:19]), 1))
+    #
+    x_line=list_gamma[5:19]
+    y_line=list_Param_C[5:19]
+    z_line=list_time[5:19]
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
     ax.set_xlabel('param Gamma')
     ax.set_ylabel('Param C')
-    ax.set_zlabel('Temps de traitment')
-
-    ax.plot_surface(x_line, y_line, z_line, cmap='ocean')
+    ax.set_zlabel('Temps de traitment en seconde')
+    #ax.plot3D(x_line, y_line, z_line, 'gray')
+    # ax.plot_surface(x_line, y_line, z_line, cmap='ocean')
     ax.set_title('Temps de traitement en fonction de C et gamma ')
-
+    ax.scatter3D(x_line, y_line, z_line, cmap='Green',label='Temps de traitement selon Gamma et C')
     plt.show()
+
+def plot_analyse(Grid):
+    result = Grid.cv_results_
+    df = pd.DataFrame(data=result)
+    list_accuracy = []
+    list_time = []
+    list_Param_C = []
+    list_gamma = []
+    list_kernel = []
+    list_test_acc = []
+    list_std_train_acc = []
+
+    for i in range(19):
+        list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
+        list_time.append(df.get_value(i, 0, 'mean_fit_time'))
+        list_Param_C.append(df.get_value(i, 4, 'param_C'))
+        list_gamma.append(df.get_value(i, 6, 'param_gamma'))
+        list_kernel.append(df.get_value(i, 5, 'param_kernel'))
+        list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
+        list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
+
+    dash= '_'* 80
+    print(dash)
+    print('{:<10s}{:>14s}{:>14s}{:>30s}{:>20s}'.format('Kernel', 'Param C', 'Param Gamma', 'Precision', 'Temps de traitement'))
+    print(dash)
+    for i in range(19):
+
+        print('{:<10s}{:>14}{:>20}{:>30}{:>20}'.format(list_kernel[i],list_Param_C[i],list_gamma[i], list_accuracy[i],list_time[i]))

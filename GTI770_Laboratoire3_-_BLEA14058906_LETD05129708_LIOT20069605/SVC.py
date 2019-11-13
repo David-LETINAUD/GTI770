@@ -99,7 +99,7 @@ from sklearn import svm
 
 from sklearn.svm import SVC
 
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix,f1_score
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -151,7 +151,6 @@ def GridSearch_bestparam(X_train,Y_train):
     #return clf.cv_results_
 
     #return sorted(clf.cv_result_.key())
-        
 
 
 
