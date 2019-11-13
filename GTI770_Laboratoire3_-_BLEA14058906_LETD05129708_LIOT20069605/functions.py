@@ -22,20 +22,26 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
+import pandas as pd
 #import tensorflow as tf
 
 
 
 ########################################   Initialisations   ########################################
 #dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#Data de David
+
+#dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 
 #dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 #TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
-TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
-
+#Data de david
+#TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
+#data de PC alex
+dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+TP1_features_path ="/home/ens/AN03460/Desktop/tp3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
 # Nombre d'images total du dataset (training + testing)
 #nb_img = 16000
 nb_img = 16000
@@ -126,4 +132,138 @@ def plot_delay(train_delay,test_delay,titre):
     axs[1].plot(test_delay,'x--')
 
     #plt.legend(legende)
+    plt.show()
+
+
+def get_data_GridSearch():
+    X_Grid = []
+    Y_Grid = []
+    with open(dataset_path, 'r') as f:
+        with open(TP1_features_path, 'r') as f_TP1:
+            TP1_features_list = list(csv.reader(f_TP1, delimiter=','))
+            features_list = list(csv.reader(f, delimiter=','))
+
+            # Recuperation des numéros des images dans l'ordre généré par le TP1
+            TP1_features_list_np = np.array(TP1_features_list)[:,0]
+
+            # Lecture ligne par ligne
+            for c in range(nb_img):
+                features = [float(i) for i in features_list[0][1:75]]
+
+                num_img = str(int(float(features_list[0][0])))
+
+                try :
+                    # Cherche l'index de l'image num_img dans TP1_features_list
+                    # pour faire correspondre les features du TP1 avec les nouveaux features
+                    index = np.where(TP1_features_list_np==num_img)[0]
+
+                    features_TP1 = [float(i) for i in TP1_features_list[index[0]][1:4]]
+
+                    # concatenation des features
+                    features = features_TP1 + features
+
+                    galaxy_class = int(float(features_list[0][75]))
+
+                    X_Grid.append(features)
+                    Y_Grid.append(galaxy_class)
+                except :
+                    print("Image {} not find".format(num_img) )
+
+                features_list.pop(0)
+                #print(type(features),type(galaxy_class))
+
+    #print(X[0])
+    X_Grid = preprocessing.normalize(X_Grid, norm='max',axis = 0)
+    #print(X[0])
+
+    X_Grid= np.array(X_Grid)
+    Y_Grid = np.array(Y_Grid)
+    return X_Grid,Y_Grid
+
+def plot_Linear_acc(Grid):
+    result = Grid.cv_results_
+    df = pd.DataFrame(data=result)
+    list_accuracy = []
+    list_time = []
+    list_Param_C = []
+    list_gamma = []
+    list_kernel = []
+    list_test_acc = []
+    list_std_train_acc = []
+
+    for i in range(19):
+        list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
+        list_time.append(df.get_value(i, 0, 'mean_fit_time'))
+        list_Param_C.append(df.get_value(i, 4, 'param_C'))
+        list_gamma.append(df.get_value(i, 6, 'param_gamma'))
+        list_kernel.append(df.get_value(i, 5, 'param_kernel'))
+        list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
+        list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
+
+    plt.plot(list_Param_C[0:5],list_accuracy[0:5],'x',label = "Param C linear" )
+
+    plt.xlabel('Param C')
+    plt.ylabel('accuracy')
+    plt.title('Meilleur accuracy en fonction de C Linear')
+
+
+    plt.legend()
+
+    plt.show()
+
+    plt.plot(list_time[0:5],list_Param_C[0:5],'x',label = "Temps linear " )
+    plt.xlabel('temps')
+    plt.ylabel('accuracy')
+    plt.title('Meilleur accuracy en fonction du temps de calcule Linear')
+    plt.legend()
+    plt.show()
+
+
+def plot_RBF_acc(Grid):
+
+    result = Grid.cv_results_
+    df = pd.DataFrame(data=result)
+    list_accuracy = []
+    list_time = []
+    list_Param_C = []
+    list_gamma = []
+    list_kernel = []
+    list_test_acc = []
+    list_std_train_acc = []
+
+    for i in range(19):
+        list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
+        list_time.append(df.get_value(i, 0, 'mean_fit_time'))
+        list_Param_C.append(df.get_value(i, 4, 'param_C'))
+        list_gamma.append(df.get_value(i, 6, 'param_gamma'))
+        list_kernel.append(df.get_value(i, 5, 'param_kernel'))
+        list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
+        list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
+
+    x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
+    z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+
+    ax.set_xlabel('Param Gamma')
+    ax.set_ylabel('Param C')
+    ax.set_zlabel('Precision')
+
+    ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
+    ax.set_title('Precision en fonction de C et gamma ')
+
+    plt.show()
+
+    x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
+    z_line = np.tile( list_time[5:19], (len( list_time[5:19]), 1))
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+
+    ax.set_xlabel('param Gamma')
+    ax.set_ylabel('Param C')
+    ax.set_zlabel('Temps de traitment')
+
+    ax.plot_surface(x_line, y_line, z_line, cmap='ocean')
+    ax.set_title('Temps de traitement en fonction de C et gamma ')
+
     plt.show()
