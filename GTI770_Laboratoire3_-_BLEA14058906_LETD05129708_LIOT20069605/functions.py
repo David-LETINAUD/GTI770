@@ -212,12 +212,12 @@ def plot_Linear_acc(Grid):
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
 
-    plt.plot(list_test_acc[0:4],list_Param_C[0:4],label = "Param C linear" )
-    plt.scatter(list_test_acc[0:4],list_Param_C[0:4],c='r', label='Precision pour C')
-    plt.ylabel('Param C')
-    plt.xlabel('Précision')
-    plt.ylim(0.001,10)
-    plt.xlim(0,1)
+    plt.plot(list_Param_C[0:4],list_test_acc[0:4],label = "Param C linear" )
+    plt.scatter(list_Param_C[0:4],list_test_acc[0:4],c='r', label='Precision pour C')
+    plt.xlabel('Param C')
+    plt.ylabel('Précision')
+    plt.xlim(0.001,10)
+    plt.ylim(0,1)
     plt.title('Précision en fonction de C')
 
 
