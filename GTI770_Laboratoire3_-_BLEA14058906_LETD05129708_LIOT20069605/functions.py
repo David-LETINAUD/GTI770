@@ -202,6 +202,7 @@ def plot_Linear_acc(Grid):
     list_kernel = []
     list_test_acc = []
     list_std_train_acc = []
+    list_F1 = []
 
     for i in range(19):
         list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
@@ -211,13 +212,17 @@ def plot_Linear_acc(Grid):
         list_kernel.append(df.get_value(i, 5, 'param_kernel'))
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
+        list_F1.append(df.get_value(i, 12, 'mean_test_F1'))
 
-    plt.plot(list_Param_C[0:4],list_test_acc[0:4],label = "Param C linear" )
+    plt.plot(list_Param_C[0:4],list_test_acc[0:4])
     plt.scatter(list_Param_C[0:4],list_test_acc[0:4],c='r', label='Precision pour C')
+    plt.plot(list_Param_C[0:4],list_F1[0:4])
+    plt.scatter(list_Param_C[0:4],list_F1[0:4],c='g', label='F1_score pour C')
     plt.xlabel('Param C')
-    plt.ylabel('Précision')
+    plt.ylabel('%')
     plt.xlim(0.001,10)
     plt.ylim(0,1)
+    plt.grid(True)
     plt.title('Précision en fonction de C')
 
 
@@ -225,7 +230,7 @@ def plot_Linear_acc(Grid):
 
     plt.show()
 
-    plt.plot(list_Param_C[0:4],list_time[0:4],label = "Temps de calcule linear " )
+    plt.plot(list_Param_C[0:4],list_time[0:4])
     plt.scatter(list_Param_C[0:4],list_time[0:4],c='r', label='Temps pour  C')
     plt.ylabel('Temps (S)')
     plt.xlabel('Param C')
@@ -233,6 +238,7 @@ def plot_Linear_acc(Grid):
     plt.xlim(0.001, 10)
     plt.title('Temps de traitement en fonction de  C')
     plt.legend()
+    plt.grid(True)
     plt.show()
 
 
@@ -253,6 +259,7 @@ def plot_RBF_acc(Grid):
     list_kernel = []
     list_test_acc = []
     list_std_train_acc = []
+    list_F1=[]
 
     for i in range(19):
         list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
@@ -262,6 +269,7 @@ def plot_RBF_acc(Grid):
         list_kernel.append(df.get_value(i, 5, 'param_kernel'))
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
+        list_F1.append(df.get_value(i, 12, 'mean_test_F1'))
 
     # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
     # z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
