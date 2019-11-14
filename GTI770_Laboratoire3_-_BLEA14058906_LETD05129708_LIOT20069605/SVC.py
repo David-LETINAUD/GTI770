@@ -118,8 +118,15 @@ gamma = [0.001, 0.1, 1.0, 10.0]
 #fair une for pour chaque element si on veut les utiliser
 
 
-#finir les modification pe fair eune 2e, methode pour rdf.
 
+"""
+    Fonction GridSearchCv qui permet de trouver les meilleurs hyperparamètres    
+    input :
+        X_train: Liste des vecteurs à analysé
+        Y_train: liste de la classification des vecteurs 
+    output:
+        Grid: Résultat de la fonction gridsearch
+"""
 def GridSearch_bestparam(X_train,Y_train):
     print('ca commence')
 
@@ -157,7 +164,16 @@ def GridSearch_bestparam(X_train,Y_train):
     #return sorted(clf.cv_result_.key())
 
 
+"""
+    Fonction svc linear qui calcule la matrice de confusion selon l'hyperparamètre choisi     
+    input :
+        X_train: Liste des vecteurs à analysé pour l'entrainement
+        Y_train: liste de la classification des vecteurs pour l'entrainement
+        X_test : Liste des vecteurs pour à analyser pour le test 
+        Y_test : liste de la classification des vecteurs pour le test
+        C      : hyperparamètre C
 
+"""
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
 
     svc_class = svm.SVC(kernel="linear", C=C)
@@ -167,7 +183,17 @@ def SVCLine(X_train, Y_train, X_test, Y_test,C):
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
 
+"""
+    Fonction svc RBF qui calcule la matrice de confusion selon les hyperparamètres choisis     
+    input :
+        X_train: Liste des vecteurs à analysé pour l'entrainement
+        Y_train: liste de la classification des vecteurs pour l'entrainement
+        X_test : Liste des vecteurs pour à analyser pour le test 
+        Y_test : liste de la classification des vecteurs pour le test
+        C      : hyperparamètre C
+        gamma  : hyperparamètre gamma
 
+"""
 def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma)
     svc_class.fit(X_train, Y_train)
@@ -181,97 +207,6 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
 # SVC_rbf(X_train, Y_train, X_test, Y_test,1,1)
 
 #Grid = GridSearch_bestparam(X_train,Y_train)
-# #print(Grid)
-# result = Grid.cv_results_
-#
-# df = pd.DataFrame(data=result)
-#
-# df[['param_kernel','param_C','param_gamma','mean_train_Accuracy','mean_fit_time','mean_score_time']]
-# print(df)
-# #print(df.get_values(1,'mean_train_Accuracy'))
-# list_accuracy=[]
-# list_time=[]
-# list_Param_C=[]
-# list_gamma=[]
-# list_kernel=[]
-# list_test_acc=[]
-# list_std_train_acc=[]
 
-# for i in range(15):
-#     list_accuracy.append(df.get_value(i,35,'mean_train_Accuracy'))
-#     list_time.append(df.get_value(i,0,'mean_fit_time'))
-#     list_Param_C.append(df.get_value(i,4,'param_C'))
-#     list_gamma.append(df.get_value(i,6,'param_gamma'))
-#     list_kernel.append(df.get_value(i,5,'param_kernel'))
-#     list_test_acc.append(df.get_value(i,28,'mean_test_Accuracy'))
-#     list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
-#
-#
-#
-# print(list_accuracy)
-# print(list_time)
-# print(list_Param_C)
-# print(list_gamma)
-# print(list_kernel)
-# print(list_test_acc)
-# print(list_std_train_acc)
-
-# print(Grid.cv_results_)
-# print(Grid)
-# print(type(Grid.cv_results_))
-
-
-
-#Grid_1(Grid,mean_train_Accuracy ,mean_fit_time,"estimator","Param 2 test")
-
-
-
-
-# plt.plot(list_Param_C[0:5],list_accuracy[0:5],'x',label = "Param C linear" )
-#
-# plt.xlabel('Param C')
-# plt.ylabel('accuracy')
-# plt.title('Meilleur accuracy en fonction de C Linear')
-#
-#
-#
-#
-#
-#
-# plt.legend()
-#
-# plt.show()
-#
-# plt.plot(list_time[0:5],list_Param_C[0:5],'x',label = "Temps linear " )
-# plt.xlabel('temps')
-# plt.ylabel('accuracy')
-# plt.title('Meilleur accuracy en fonction du temps de calcule Linear')
-# plt.legend()
-# plt.show()
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# x_line,y_line = np.meshgrid(list_gamma[5:19],list_Param_C[5:19])
-# z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
-# fig = plt.figure()
-# ax = plt.axes(projection='3d')
-#
-# ax.set_xlabel('param Gamma')
-# ax.set_ylabel('Param C')
-# ax.set_zlabel('Accuracy')
-#
-# ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
-# ax.set_title('Accurace en fonction de C et gamma ')
-#
-# plt.show()
 #
 #

@@ -135,7 +135,13 @@ def plot_delay(train_delay,test_delay,titre):
     #plt.legend(legende)
     plt.show()
 
-
+    """
+    Séparation des données en deux listes pour l'utilisation de Gridsearchcv      
+    Output : 
+            X_Grid: Liste des vecteurs normalisés
+            Y_Grid: Liste de classification des vecteurs 
+         
+    """
 def get_data_GridSearch():
     X_Grid = []
     Y_Grid = []
@@ -180,7 +186,12 @@ def get_data_GridSearch():
     X_Grid= np.array(X_Grid)
     Y_Grid = np.array(Y_Grid)
     return X_Grid,Y_Grid
-
+    """
+    Affichage des données Linear selon le temps de calcule et la précision en fonction du paramètre C     
+    input : 
+        Grid: Résultat de la fonction gridsearch
+         
+    """
 def plot_Linear_acc(Grid):
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
@@ -201,30 +212,36 @@ def plot_Linear_acc(Grid):
         list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
 
-    plt.plot(list_Param_C[0:4],list_accuracy[0:4],label = "Param C linear" )
-    plt.scatter(list_Param_C[0:4],list_accuracy[0:4],c='r', label='Precision pour valur de C')
-    plt.xlabel('Param C')
-    plt.ylabel('accuracy')
-    plt.xlim(0.001,10)
-    plt.ylim(0,1)
-    plt.title('Meilleur accuracy en fonction de C Linear')
-
-
-    plt.legend()
-
-    plt.show()
-
-    plt.plot(list_time[0:4],list_Param_C[0:4],label = "Temps de calcule linear " )
-    plt.scatter(list_time[0:4],list_Param_C[0:4],c='r', label='Temps pour valur de C')
-    plt.xlabel('temps en secondes')
+    plt.plot(list_test_acc[0:4],list_Param_C[0:4],label = "Param C linear" )
+    plt.scatter(list_test_acc[0:4],list_Param_C[0:4],c='r', label='Precision pour C')
     plt.ylabel('Param C')
-    plt.xlim(0, 60)
-    plt.ylim(0.001, 10)
-    plt.title('Meilleur temps de traitement en fonction du paramettre C')
+    plt.xlabel('Précision')
+    plt.ylim(0.001,10)
+    plt.xlim(0,1)
+    plt.title('Précision en fonction de C')
+
+
+    plt.legend()
+
+    plt.show()
+
+    plt.plot(list_Param_C[0:4],list_time[0:4],label = "Temps de calcule linear " )
+    plt.scatter(list_Param_C[0:4],list_time[0:4],c='r', label='Temps pour  C')
+    plt.ylabel('Temps (S)')
+    plt.xlabel('Param C')
+    plt.ylim(0, 60)
+    plt.xlim(0.001, 10)
+    plt.title('Temps de traitement en fonction de  C')
     plt.legend()
     plt.show()
 
 
+    """
+    Affichage des données Rbfselon le temps de calcule et la précision en fonction du paramètre C et Gamma      
+    input : 
+        Grid: Résultat de la fonction gridsearch
+
+    """
 def plot_RBF_acc(Grid):
 
     result = Grid.cv_results_
@@ -250,9 +267,9 @@ def plot_RBF_acc(Grid):
     # z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
     # fig = plt.figure()
     ax = plt.axes(projection='3d')
-    x_line=list_gamma[5:19]
-    y_line= list_Param_C[5:19]
-    z_line=list_accuracy[5:19]
+    x_line=list_gamma[5:20]
+    y_line= list_Param_C[5:20]
+    z_line=list_test_acc[5:20]
     ax.set_xlabel('Param Gamma')
     ax.set_ylabel('Param C')
     ax.set_zlabel('Precision')
@@ -260,7 +277,7 @@ def plot_RBF_acc(Grid):
 
 
     # ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
-    ax.scatter3D(x_line,y_line,z_line,cmap='Green',label='Precision selon Gamma et C')
+    ax.scatter3D(x_line,y_line,z_line,cmap='Green',label='Precision de Gamma et C')
     ax.set_title('Precision en fonction de C et gamma ')
 
     plt.show()
@@ -268,9 +285,9 @@ def plot_RBF_acc(Grid):
     # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
     # z_line = np.tile( list_time[5:19], (len( list_time[5:19]), 1))
     #
-    x_line=list_gamma[5:19]
-    y_line=list_Param_C[5:19]
-    z_line=list_time[5:19]
+    x_line=list_gamma[5:20]
+    y_line=list_Param_C[5:20]
+    z_line=list_time[5:20]
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
@@ -280,33 +297,19 @@ def plot_RBF_acc(Grid):
     #ax.plot3D(x_line, y_line, z_line, 'gray')
     # ax.plot_surface(x_line, y_line, z_line, cmap='ocean')
     ax.set_title('Temps de traitement en fonction de C et gamma ')
-    ax.scatter3D(x_line, y_line, z_line, cmap='Green',label='Temps de traitement selon Gamma et C')
+    ax.scatter3D(x_line, y_line, z_line, cmap='Green',label='Temps de traitement en fonction de Gamma et C')
     plt.show()
 
-def plot_analyse(Grid):
+
+    """
+    Affichage des données Linear et RBF dans un tableau avec les résultats permettant un bonne selection des hyperparamètres     
+    input : 
+        Grid: Résultat de la fonction gridsearch
+
+    """
+def plot_analyse_grille(Grid):
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
-    list_accuracy = []
-    list_time = []
-    list_Param_C = []
-    list_gamma = []
-    list_kernel = []
-    list_test_acc = []
-    list_std_train_acc = []
-
-    for i in range(19):
-        list_accuracy.append(df.get_value(i, 35, 'mean_train_Accuracy'))
-        list_time.append(df.get_value(i, 0, 'mean_fit_time'))
-        list_Param_C.append(df.get_value(i, 4, 'param_C'))
-        list_gamma.append(df.get_value(i, 6, 'param_gamma'))
-        list_kernel.append(df.get_value(i, 5, 'param_kernel'))
-        list_test_acc.append(df.get_value(i, 28, 'mean_test_Accuracy'))
-        list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
-
-    dash= '_'* 80
-    print(dash)
-    print('{:<10s}{:>14s}{:>14s}{:>30s}{:>20s}'.format('Kernel', 'Param C', 'Param Gamma', 'Precision', 'Temps de traitement'))
-    print(dash)
-    for i in range(19):
-
-        print('{:<10s}{:>14}{:>20}{:>30}{:>20}'.format(list_kernel[i],list_Param_C[i],list_gamma[i], list_accuracy[i],list_time[i]))
+    dfData=df[['param_kernel','param_C','param_gamma','mean_test_F1','std_test_F1','mean_test_Accuracy','std_test_Accuracy','rank_test_Accuracy','mean_fit_time', 'std_fit_time', 'mean_score_time', 'std_score_time']]
+    dfData= dfData.sort_values(['param_kernel','param_C','param_gamma'],ascending=[True,False,False])
+    dfData
