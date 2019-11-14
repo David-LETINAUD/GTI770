@@ -22,8 +22,6 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
-#import tensorflow as tf
-
 
 
 ########################################   Initialisations   ########################################
@@ -37,13 +35,18 @@ TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_feat
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 # Nombre d'images total du dataset (training + testing)
-nb_img = 16000
+nb_img = 1600
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
 
 
 ########################################   Lecture   ########################################
 def get_data():
+    """
+    Lit les données, normalise et découpage du dataset      
+    output : 
+        (np.ndarray) : X_train, X_test, Y_train, Y_test  
+    """
     X=[]
     Y=[]
 
@@ -81,6 +84,7 @@ def get_data():
 
                 features_list.pop(0)
 
+    # Normalisation des données
     X = preprocessing.normalize(X, norm='max',axis = 0)
 
     X = np.array(X)
@@ -90,24 +94,37 @@ def get_data():
     return X_train, X_test, Y_train, Y_test
 
 
-def plot_perf(histo,legende,titre,sous_titre):    
+def plot_perf(histo,legende,titre,sous_titre): 
+    """
+    Affichage des données finales sous forme d'une grille de tableau     
+    input : 
+         histo (np.ndarray) :       Contient les performances à chaque epochs pour chaque hyperparamètre
+         legende (string list) :    Legende à afficher
+         titre (string) :           Titre à afficher
+         sous_titre (string list) : Sous titre à afficher pour chaque subplot
+    """   
     fig, axs = plt.subplots(2,3)
     plt.suptitle(titre, fontsize=16)
     cpt = 0
     for ax in axs:     
         for ax_i in ax:   
             ax_i.title.set_text(sous_titre[cpt])
-            #ax_i.set_xlabel("epochs")
-            #ax_i.set_legend(legende)
             
-            ax_i.plot( histo[cpt], '-')#, label=legende)
-            #ax_i.legend(loc="upper right")
+            ax_i.plot( histo[cpt], '-')
             cpt+=1
 
+    # Affichage unique de la legende 
     plt.legend(legende)
     plt.show()
 
-def plot_delay(train_delay,test_delay,titre):    
+def plot_delay(train_delay,test_delay,titre):   
+    """
+    Affichage des données des delais d'entrainement et de test     
+    input : 
+         train_delay (np.ndarray) : Contient les délais d'entrainement pour chaque hyperparamètre
+         test_delay (np.ndarray) :  Contient les délais de tests pour chaque hyperparamètre
+         titre (string) :           Titre à afficher
+    """  
     fig, axs = plt.subplots(1,2)
     plt.suptitle(titre, fontsize=16)
 
@@ -121,5 +138,4 @@ def plot_delay(train_delay,test_delay,titre):
     axs[1].set_ylabel("time (s)")
     axs[1].plot(test_delay,'x--')
 
-    #plt.legend(legende)
     plt.show()

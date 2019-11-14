@@ -31,10 +31,10 @@ def recall_m(y_true, y_pred):
     """
     Calcul du rappel     
     input :
-        y_true (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties réelles
-        y_pred (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties prédites
+        y_true (tensorflow.python.framework.ops.Tensor') : sorties réelles
+        y_pred (tensorflow.python.framework.ops.Tensor') : sorties prédites
     output : 
-        (<class 'tensorflow.python.framework.ops.Tensor'>) : rappel    
+        (tensorflow.python.framework.ops.Tensor') : rappel    
     """
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
@@ -46,10 +46,10 @@ def precision_m(y_true, y_pred):
     """
     Calcul de la précision     
     input :
-        y_true (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties réelles
-        y_pred (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties prédites
+        y_true (tensorflow.python.framework.ops.Tensor')  : sorties réelles
+        y_pred (tensorflow.python.framework.ops.Tensor')  : sorties prédites
     output : 
-        (<class 'tensorflow.python.framework.ops.Tensor'>) : précision    
+        (tensorflow.python.framework.ops.Tensor')  : précision    
     """
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
@@ -61,10 +61,10 @@ def f1(y_true, y_pred):
     """
     Calcul du f1-score     
     input :
-        y_true (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties réelles
-        y_pred (<class 'tensorflow.python.framework.ops.Tensor'>) : sorties prédites
+        y_true (tensorflow.python.framework.ops.Tensor')  : sorties réelles
+        y_pred (tensorflow.python.framework.ops.Tensor')  : sorties prédites
     output : 
-        (<class 'tensorflow.python.framework.ops.Tensor'>) : f1-score    
+        (tensorflow.python.framework.ops.Tensor')  : f1-score    
     """
     precision = precision_m(y_true, y_pred)
     recall = recall_m(y_true, y_pred)
