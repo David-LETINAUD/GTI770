@@ -37,7 +37,6 @@ TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_feat
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 
 # Nombre d'images total du dataset (training + testing)
-#nb_img = 16000
 nb_img = 16000
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
@@ -61,8 +60,8 @@ def get_data():
             for c in range(nb_img):
                 features = [float(i) for i in features_list[0][1:75]]
 
+                # Récupération de l'image en format entier
                 num_img = str(int(float(features_list[0][0])))
-
                 try :
                     # Cherche l'index de l'image num_img dans TP1_features_list
                     # pour faire correspondre les features du TP1 avec les nouveaux features
@@ -81,11 +80,8 @@ def get_data():
                     print("Image {} not find".format(num_img) )
 
                 features_list.pop(0)
-                #print(type(features),type(galaxy_class))
 
-    #print(X[0])
     X = preprocessing.normalize(X, norm='max',axis = 0)
-    #print(X[0])
 
     X = np.array(X)
     Y = np.array(Y)

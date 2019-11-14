@@ -79,15 +79,17 @@ for layer_s in layer_sizes_range:
     cpt+=1
 ################################## Nombres de perceptrons
 # layer_sizes_range = [[5, 4, 4],[100, 100, 2],[500, 500, 500]]
-#
+
 # try:
 #     shutil.rmtree('./logs')
 # except:
 #     print("nothing to delete")
     
 # tensorboard_callback = []
+
+
 # for i in range(3):
-#     tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))#time.time())))
+#     tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))
 # # Par invité de commande : 
 # # tensorboard --logdir="./logs" --port 6006
 # cpt = 0
@@ -97,17 +99,17 @@ for layer_s in layer_sizes_range:
 #     start = time.time()
 #     #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
 #     hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]])
-#
+
 #     end = time.time()
 #     training_delay_RN.append(end - start)
-#
+
 #     history_obj.append( list(hist_obj.history.values()))
-#
+
 #     #### Prédiction
 #     start = time.time()
-#
+
 #     Y_pred = np.where(model.predict(X_test) > 0.5, 1, 0)
-#
+
 #     end = time.time()
 #     predicting_delay_RN.append(end - start)
 
@@ -151,7 +153,6 @@ for layer_s in layer_sizes_range:
 
 ################################## Learning rate 
 #l_rate_range = [0.00001,0.0005,0.1]
-#l_rate_range = [0.0005]
 
 # try:
 #     shutil.rmtree('./logs')
