@@ -318,6 +318,6 @@ def plot_RBF_acc(Grid):
 def plot_analyse_grille(Grid):
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
-    dfData=df[['param_kernel','param_C','param_gamma','mean_test_F1','std_test_F1','mean_test_Accuracy','std_test_Accuracy','rank_test_Accuracy','mean_fit_time', 'std_fit_time', 'mean_score_time', 'std_score_time']]
-    dfData= dfData.sort_values(['param_kernel','param_C','param_gamma'],ascending=[True,False,False])
+    dfData=df[['param_kernel','param_C','param_gamma','rank_test_Accuracy','mean_test_Accuracy','std_test_Accuracy', 'mean_test_F1','std_test_F1','mean_fit_time', 'std_fit_time','mean_score_time', 'std_score_time']]
+    dfData= dfData.sort_values(['param_kernel','rank_test_Accuracy','mean_test_F1'],ascending=[True,True,True])
     dfData
