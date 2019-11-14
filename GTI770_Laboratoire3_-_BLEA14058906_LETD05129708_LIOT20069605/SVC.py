@@ -127,11 +127,15 @@ def GridSearch_bestparam(X_train,Y_train):
              {'C': [0.001,0.1,1,10],'gamma':[0.001, 0.1,1,10], 'kernel': ['rbf']}, ]
     #param = {'kernel':("linear","rbf"), 'C':[0.001,0.1,1,10]}
     ##param= {'C': [0.001, 0.1, 1],'gamma':[0.001, 0.1, 1 ], 'kernel': ['rbf']}
-    scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
+    acc_scorer=  make_scorer(accuracy_score)
+    f1_scorer= make_scorer(f1_score)
+    score = {'F1':f1_scorer,'Accuracy':acc_scorer}
+
+    #scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
    # param = [{'kernel': ("rbf"), 'gamma': [0.001, 0.1, 1, 10], 'C': [0.001, 0.1, 1, 10]},{'kernel': ( "linear"),'C': [0.001, 0.1, 1, 10]}]
     svc =svm.SVC(gamma= "scale",cache_size=11264)
   #  clf = GridSearchCV(svc,param,scoring=scoring, cv=5,refit = 'AUC', return_train_score=True)
-    clf = GridSearchCV(svc, param, scoring=scoring, cv=5, refit='AUC', return_train_score=True,n_jobs=10)
+    clf = GridSearchCV(svc, param, scoring=score, cv=5, refit='Accuracy', return_train_score=True,n_jobs=10)
     clf.fit(X_train,Y_train)
 
     #print("value")
@@ -176,7 +180,7 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
 # print('rbf')
 # SVC_rbf(X_train, Y_train, X_test, Y_test,1,1)
 
-# Grid = GridSearch_bestparam(X_train,Y_train)
+#Grid = GridSearch_bestparam(X_train,Y_train)
 # #print(Grid)
 # result = Grid.cv_results_
 #
