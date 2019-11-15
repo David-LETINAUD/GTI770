@@ -23,7 +23,7 @@ import numpy as np
 from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import pandas as pd
-from textable import textable
+
 #import tensorflow as tf
 
 
@@ -41,8 +41,13 @@ from textable import textable
 #Data de david
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
 #data de PC alex
-dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-TP1_features_path ="/home/ens/AN03460/Desktop/tp3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
+#dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#TP1_features_path ="/home/ens/AN03460/Desktop/tp3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
+
+dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
+TP1_features_path ="/Users/thomas/Desktop/COURS_ETS/gti770/TP3-Merge/GTI770/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
+
+
 # Nombre d'images total du dataset (training + testing)
 #nb_img = 16000
 nb_img = 16000
