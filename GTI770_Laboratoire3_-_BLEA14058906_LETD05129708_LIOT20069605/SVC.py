@@ -34,6 +34,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.svm import SVC
 from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
+import time
 import pandas as pd
 #
 from sklearn import svm
@@ -105,12 +106,19 @@ def GridSearch_bestparam(X_train,Y_train):
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
 
     svc_class = svm.SVC(kernel="linear", C=C)
+    start_train = time.time()
     svc_class.fit(X_train, Y_train)
+    end_train = time.time()
+    start_pred = time.time()
     y_pred = svc_class.predict(X_test)
+    end_pred = time.time()
 
+    train_time = (end_train - start_train)
+    pred_time = (end_pred - start_pred)
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
-    return confusion_matrix(Y_test, y_pred), classification_report(Y_test, y_pred)
+    print('Temps de training:', train_time, 'Temps de prédiction: ', pred_time)
+    return confusion_matrix(Y_test, y_pred), classification_report(Y_test, y_pred), train_time, pred_time
 
 
 """
@@ -129,9 +137,16 @@ def SVCLine(X_train, Y_train, X_test, Y_test,C):
 """
 def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
     svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma)
+    start_train= time.time()
     svc_class.fit(X_train, Y_train)
+    end_train=time.time()
+    start_pred=time.time()
     y_pred = svc_class.predict(X_test)
+    end_pred=time.time()
 
+    train_time=(end_train-start_train)
+    pred_time=(end_pred-start_pred )
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
-    return confusion_matrix(Y_test, y_pred),classification_report(Y_test, y_pred)
+    print('Temps de training:',train_time, 'Temps de prédiction: ',pred_time)
+    return confusion_matrix(Y_test, y_pred),classification_report(Y_test, y_pred),train_time,pred_time

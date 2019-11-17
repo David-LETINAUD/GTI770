@@ -361,7 +361,7 @@ def plot_sclability_svm(Acc, size,time,titre):
             titre: String du titre général désiré
 
         """
-    fid, ax = plt.subplots(1,2)
+    fid, ax = plt.subplots(1,3)
     plt.suptitle(titre,fontsize=16)
 
     ax[0].title.set_text("Accuracy")
@@ -373,5 +373,7 @@ def plot_sclability_svm(Acc, size,time,titre):
     ax[1].set_xlabel("training_size")
     ax[1].set_ylabel("time (s)")
     ax[1].plot(size, time)
+
+
 
     plt.show()
