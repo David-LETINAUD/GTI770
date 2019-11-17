@@ -24,32 +24,17 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 import pandas as pd
 
-#import tensorflow as tf
-
-
-
 ########################################   Initialisations   ########################################
-#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-#Data de David
-
+dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 #dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 
 #dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
-#TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
-#Data de david
+TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
-#data de PC alex
-#dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
-#TP1_features_path ="/home/ens/AN03460/Desktop/tp3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
-
-dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
-TP1_features_path ="/Users/thomas/Desktop/COURS_ETS/gti770/TP3-Merge/GTI770/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
-
 
 # Nombre d'images total du dataset (training + testing)
-#nb_img = 16000
 nb_img = 16000
 # Pourcentage de données utilisées pour l'entrainement
 ratio_train = 0.8
@@ -57,6 +42,11 @@ ratio_train = 0.8
 
 ########################################   Lecture   ########################################
 def get_data():
+    """
+    Lit les données, normalise et découpage du dataset      
+    output : 
+        (np.ndarray) : X_train, X_test, Y_train, Y_test  
+    """
     X=[]
     Y=[]
 
@@ -73,8 +63,8 @@ def get_data():
             for c in range(nb_img):
                 features = [float(i) for i in features_list[0][1:75]]
 
+                # Récupération de l'image en format entier
                 num_img = str(int(float(features_list[0][0])))
-
                 try :
                     # Cherche l'index de l'image num_img dans TP1_features_list
                     # pour faire correspondre les features du TP1 avec les nouveaux features
@@ -93,11 +83,9 @@ def get_data():
                     print("Image {} not find".format(num_img) )
 
                 features_list.pop(0)
-                #print(type(features),type(galaxy_class))
 
-    #print(X[0])
+    # Normalisation des données
     X = preprocessing.normalize(X, norm='max',axis = 0)
-    #print(X[0])
 
     X = np.array(X)
     Y = np.array(Y)
@@ -106,24 +94,37 @@ def get_data():
     return X_train, X_test, Y_train, Y_test
 
 
-def plot_perf(histo,legende,titre,sous_titre):    
+def plot_perf(histo,legende,titre,sous_titre): 
+    """
+    Affichage des données finales sous forme d'une grille de tableau     
+    input : 
+         histo (np.ndarray) :       Contient les performances à chaque epochs pour chaque hyperparamètre
+         legende (string list) :    Legende à afficher
+         titre (string) :           Titre à afficher
+         sous_titre (string list) : Sous titre à afficher pour chaque subplot
+    """   
     fig, axs = plt.subplots(2,3)
     plt.suptitle(titre, fontsize=16)
     cpt = 0
     for ax in axs:     
         for ax_i in ax:   
             ax_i.title.set_text(sous_titre[cpt])
-            #ax_i.set_xlabel("epochs")
-            #ax_i.set_legend(legende)
             
-            ax_i.plot( histo[cpt], '-')#, label=legende)
-            #ax_i.legend(loc="upper right")
+            ax_i.plot( histo[cpt], '-')
             cpt+=1
 
+    # Affichage unique de la legende 
     plt.legend(legende)
     plt.show()
 
-def plot_delay(train_delay,test_delay,titre):    
+def plot_delay(train_delay,test_delay,titre):   
+    """
+    Affichage des données des delais d'entrainement et de test     
+    input : 
+         train_delay (np.ndarray) : Contient les délais d'entrainement pour chaque hyperparamètre
+         test_delay (np.ndarray) :  Contient les délais de tests pour chaque hyperparamètre
+         titre (string) :           Titre à afficher
+    """  
     fig, axs = plt.subplots(1,2)
     plt.suptitle(titre, fontsize=16)
 
@@ -137,17 +138,46 @@ def plot_delay(train_delay,test_delay,titre):
     axs[1].set_ylabel("time (s)")
     axs[1].plot(test_delay,'x--')
 
-    #plt.legend(legende)
     plt.show()
 
+def plot_sclability_test(accuracy,training_size,train_delay,test_delay,titre):  
+    """
+    Affichage des données des delais d'entrainement et de test     
+    input : 
+         accuracy (float list) : Taille du dataset d'entrainement
+         training_size (int list) : Contient les tailles des datasets d'entrainement
+         train_delay (np.ndarray) : Contient les délais d'entrainement pour chaque hyperparamètre
+         test_delay (np.ndarray) :  Contient les délais de tests pour chaque hyperparamètre
+         titre (string) :           Titre à afficher
+    """  
+    fig, axs = plt.subplots(1,3)
+    plt.suptitle(titre, fontsize=16)
+
+    axs[0].title.set_text("Accuracy")
+    axs[0].set_xlabel("training_size")
+    axs[0].set_ylabel("accuracy")
+    axs[0].plot(training_size,accuracy,'x--')
+
+    axs[1].title.set_text("Training delay")
+    axs[1].set_xlabel("training_size")
+    axs[1].set_ylabel("time (s)")
+    axs[1].plot(training_size,train_delay,'x--')
+
+    axs[2].title.set_text("Predicting delay")
+    axs[2].set_xlabel("training_size")
+    axs[2].set_ylabel("time (s)")
+    axs[2].plot(training_size,test_delay,'x--')
+
+    plt.show()
+
+
+def get_data_GridSearch():
     """
     Séparation des données en deux listes pour l'utilisation de Gridsearchcv      
     Output : 
             X_Grid: Liste des vecteurs normalisés
             Y_Grid: Liste de classification des vecteurs 
-         
     """
-def get_data_GridSearch():
     X_Grid = []
     Y_Grid = []
     with open(dataset_path, 'r') as f:
@@ -191,13 +221,14 @@ def get_data_GridSearch():
     X_Grid= np.array(X_Grid)
     Y_Grid = np.array(Y_Grid)
     return X_Grid,Y_Grid
+
+def plot_Linear_acc(Grid):
     """
     Affichage des données Linear selon le temps de calcule et la précision en fonction du paramètre C     
     input : 
         Grid: Résultat de la fonction gridsearch
          
     """
-def plot_Linear_acc(Grid):
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
     list_accuracy = []
@@ -247,13 +278,13 @@ def plot_Linear_acc(Grid):
     plt.show()
 
 
+
+def plot_RBF_acc(Grid):
     """
     Affichage des données Rbfselon le temps de calcule et la précision en fonction du paramètre C et Gamma      
     input : 
         Grid: Résultat de la fonction gridsearch
-
     """
-def plot_RBF_acc(Grid):
 
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
@@ -276,9 +307,6 @@ def plot_RBF_acc(Grid):
         list_std_train_acc.append(df.get_value(i, 36, 'std_train_Accuracy'))
         list_F1.append(df.get_value(i, 12, 'mean_test_F1'))
 
-    # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
-    # z_line = np.tile(list_accuracy[5:19],(len(list_accuracy[5:19]),1))
-    # fig = plt.figure()
     ax = plt.axes(projection='3d')
     x_line=list_gamma[5:20]
     y_line= list_Param_C[5:20]
@@ -286,18 +314,12 @@ def plot_RBF_acc(Grid):
     ax.set_xlabel('Param Gamma')
     ax.set_ylabel('Param C')
     ax.set_zlabel('Precision')
-    #ax.plot3D(x_line,y_line,z_line, 'gray')
-
-
-    # ax.plot_surface(x_line,y_line,z_line,cmap='ocean')
+    
     ax.scatter3D(x_line,y_line,z_line,cmap='Green',label='Precision de Gamma et C')
     ax.set_title('Precision en fonction de C et gamma ')
 
     plt.show()
 
-    # x_line, y_line = np.meshgrid(list_gamma[5:19], list_Param_C[5:19])
-    # z_line = np.tile( list_time[5:19], (len( list_time[5:19]), 1))
-    #
     x_line=list_gamma[5:20]
     y_line=list_Param_C[5:20]
     z_line=list_time[5:20]
@@ -307,20 +329,19 @@ def plot_RBF_acc(Grid):
     ax.set_xlabel('param Gamma')
     ax.set_ylabel('Param C')
     ax.set_zlabel('Temps de traitment en seconde')
-    #ax.plot3D(x_line, y_line, z_line, 'gray')
-    # ax.plot_surface(x_line, y_line, z_line, cmap='ocean')
+
     ax.set_title('Temps de traitement en fonction de C et gamma ')
     ax.scatter3D(x_line, y_line, z_line, cmap='Green',label='Temps de traitement en fonction de Gamma et C')
     plt.show()
 
 
+
+def plot_analyse_grille(Grid):
     """
     Affichage des données Linear et RBF dans un tableau avec les résultats permettant un bonne selection des hyperparamètres     
     input : 
         Grid: Résultat de la fonction gridsearch
-
     """
-def plot_analyse_grille(Grid):
     result = Grid.cv_results_
     df = pd.DataFrame(data=result)
     dfData=df[['param_kernel','param_C','param_gamma','rank_test_Accuracy','mean_test_Accuracy','std_test_Accuracy', 'mean_test_F1','std_test_F1','mean_fit_time', 'std_fit_time','mean_score_time', 'std_score_time']]
