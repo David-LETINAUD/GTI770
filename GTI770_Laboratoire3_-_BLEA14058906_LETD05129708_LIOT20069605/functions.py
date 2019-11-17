@@ -321,3 +321,29 @@ def plot_analyse_grille(Grid):
     dfData=df[['param_kernel','param_C','param_gamma','rank_test_Accuracy','mean_test_Accuracy','std_test_Accuracy', 'mean_test_F1','std_test_F1','mean_fit_time', 'std_fit_time','mean_score_time', 'std_score_time']]
     dfData= dfData.sort_values(['param_kernel','rank_test_Accuracy','mean_test_F1'],ascending=[True,True,True])
     dfData
+
+def plot_sclability_svm(Acc, size,time,titre):
+
+    """
+        Affichage des graphique de la 'scability' de l'analyse SVM
+        input :
+            Acc  : Tableau contenant la meilleurs valeur de précision du test gridsearchcv
+            size : Tableau contenant la taille des échantillons utilisés
+            time : Tableau contenant le temps de traitement
+            titre: String du titre général désiré
+
+        """
+    fid, ax = plt.subplots(1,2)
+    plt.suptitle(titre,fontsize=16)
+
+    ax[0].title.set_text("Accuracy")
+    ax[0].set_xlabel("training_size")
+    ax[0].set_ylabel("Accuracy")
+    ax[0].plot(size,Acc)
+
+    ax[1].title.set_text("Training delay")
+    ax[1].set_xlabel("training_size")
+    ax[1].set_ylabel("time (s)")
+    ax[1].plot(size, time)
+
+    plt.show()
