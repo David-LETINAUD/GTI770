@@ -97,6 +97,9 @@ def GridSearch_bestparam(X_train,Y_train):
         X_test : Liste des vecteurs pour à analyser pour le test 
         Y_test : liste de la classification des vecteurs pour le test
         C      : hyperparamètre C
+     output: 
+        Matrice de confusion
+        Rapport de classification  
 
 """
 def SVCLine(X_train, Y_train, X_test, Y_test,C):
@@ -119,6 +122,9 @@ def SVCLine(X_train, Y_train, X_test, Y_test,C):
         Y_test : liste de la classification des vecteurs pour le test
         C      : hyperparamètre C
         gamma  : hyperparamètre gamma
+    output: 
+          Matrice de confusion
+          Rapport de classification    
 
 """
 def SVC_rbf(X_train, Y_train, X_test, Y_test,C,gamma):
