@@ -25,15 +25,17 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 ########################################   Initialisations   ########################################
-dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+#dataset_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 #dataset_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/galaxy_feature_vectors.csv"
 
 
 #dataset_path = "/Users/thomas/Desktop/COURS_ETS/gti770/data/csv/galaxy/galaxy_feature_vectors.csv"
 
-TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
+#TP1_features_path = "C:/Users/David/Desktop/GTI770/data/data/csv/galaxy/TP1_features.csv"
 #TP1_features_path = "/home/ens/AQ38840/Desktop/data/data/csv/galaxy/TP1_features.csv"
-
+## Path ordi alex
+dataset_path = "/home/ens/AN03460/Desktop/Gti-770/First tp3/data/data/csv/galaxy/galaxy_feature_vectors.csv"
+TP1_features_path ="/home/ens/AN03460/Desktop/tp3/GTI770-AlexandreBleau_TP3-branch/GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/TP1_features.csv"
 # Nombre d'images total du dataset (training + testing)
 nb_img = 16000
 # Pourcentage de données utilisées pour l'entrainement
@@ -347,3 +349,29 @@ def plot_analyse_grille(Grid):
     dfData=df[['param_kernel','param_C','param_gamma','rank_test_Accuracy','mean_test_Accuracy','std_test_Accuracy', 'mean_test_F1','std_test_F1','mean_fit_time', 'std_fit_time','mean_score_time', 'std_score_time']]
     dfData= dfData.sort_values(['param_kernel','rank_test_Accuracy','mean_test_F1'],ascending=[True,True,True])
     dfData
+
+def plot_sclability_svm(Acc, size,time,titre):
+
+    """
+        Affichage des graphique de la 'scability' de l'analyse SVM
+        input :
+            Acc  : Tableau contenant la meilleurs valeur de précision du test gridsearchcv
+            size : Tableau contenant la taille des échantillons utilisés
+            time : Tableau contenant le temps de traitement
+            titre: String du titre général désiré
+
+        """
+    fid, ax = plt.subplots(1,2)
+    plt.suptitle(titre,fontsize=16)
+
+    ax[0].title.set_text("Accuracy")
+    ax[0].set_xlabel("training_size")
+    ax[0].set_ylabel("Accuracy")
+    ax[0].plot(size,Acc)
+
+    ax[1].title.set_text("Training delay")
+    ax[1].set_xlabel("training_size")
+    ax[1].set_ylabel("time (s)")
+    ax[1].plot(size, time)
+
+    plt.show()
