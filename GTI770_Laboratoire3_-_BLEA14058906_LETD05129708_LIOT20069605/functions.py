@@ -177,8 +177,8 @@ def get_data_GridSearch():
     """
     Séparation des données en deux listes pour l'utilisation de Gridsearchcv      
     Output : 
-            X_Grid: Liste des vecteurs normalisés
-            Y_Grid: Liste de classification des vecteurs 
+            X_Grid:(np_array) Liste des vecteurs normalisés
+            Y_Grid: (np_array)Liste de classification des vecteurs
     """
     X_Grid = []
     Y_Grid = []
@@ -228,7 +228,7 @@ def plot_Linear_acc(Grid):
     """
     Affichage des données Linear selon le temps de calcule et la précision en fonction du paramètre C     
     input : 
-        Grid: Résultat de la fonction gridsearch
+        Grid:(sklearn.model_selection._search.GridSearchCV) Résultat de la fonction gridsearch
          
     """
     result = Grid.cv_results_
@@ -285,7 +285,7 @@ def plot_RBF_acc(Grid):
     """
     Affichage des données Rbfselon le temps de calcule et la précision en fonction du paramètre C et Gamma      
     input : 
-        Grid: Résultat de la fonction gridsearch
+        Grid:(sklearn.model_selection._search.GridSearchCV) Résultat de la fonction gridsearch
     """
 
     result = Grid.cv_results_
@@ -355,10 +355,10 @@ def plot_sclability_svm(Acc, size,time,titre):
     """
         Affichage des graphique de la 'scability' de l'analyse SVM
         input :
-            Acc  : Tableau contenant la meilleurs valeur de précision du test gridsearchcv
-            size : Tableau contenant la taille des échantillons utilisés
-            time : Tableau contenant le temps de traitement
-            titre: String du titre général désiré
+            Acc  :(np_array) Tableau contenant la meilleurs valeur de précision du test gridsearchcv
+            size : (np_array)Tableau contenant la taille des échantillons utilisés
+            time : (np_array)Tableau contenant le temps de traitement
+            titre: (String) titre général désiré
 
         """
     fid, ax = plt.subplots(1,3)

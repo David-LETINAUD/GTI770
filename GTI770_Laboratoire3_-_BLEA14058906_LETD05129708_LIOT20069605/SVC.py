@@ -28,10 +28,10 @@ from sklearn.metrics import classification_report, confusion_matrix,f1_score
 """
     Fonction GridSearchCv qui permet de trouver les meilleurs hyperparamètres    
     input :
-        X_train: Liste des vecteurs à analysé
-        Y_train: liste de la classification des vecteurs 
+        X_train:(np_array) Liste des vecteurs à analysé
+        Y_train:(np_array)liste de la classification des vecteurs 
     output:
-        Grid: Résultat de la fonction gridsearch
+        Grid:(sklearn.model_selection._search.GridSearchCV) Résultat de la fonction gridsearch
 """
 def GridSearch_bestparam(X_train,Y_train):
     print('ca commence')
@@ -60,11 +60,11 @@ def GridSearch_bestparam(X_train,Y_train):
 """
     Fonction svc linear qui calcule la matrice de confusion selon l'hyperparamètre choisi     
     input :
-        X_train: Liste des vecteurs à analysé pour l'entrainement
-        Y_train: liste de la classification des vecteurs pour l'entrainement
-        X_test : Liste des vecteurs pour à analyser pour le test 
-        Y_test : liste de la classification des vecteurs pour le test
-        C      : hyperparamètre C
+        X_train: (np_array) Liste des vecteurs à analysé pour l'entrainement
+        Y_train: (np_array) liste de la classification des vecteurs pour l'entrainement
+        X_test : (np_array) Liste des vecteurs pour à analyser pour le test 
+        Y_test : (np_array) liste de la classification des vecteurs pour le test
+        C      : (double) hyperparamètre C
      output: 
         Matrice de confusion
         Rapport de classification  
@@ -91,12 +91,12 @@ def SVCLine(X_train, Y_train, X_test, Y_test,C):
 """
     Fonction svc RBF qui calcule la matrice de confusion selon les hyperparamètres choisis     
     input :
-        X_train: Liste des vecteurs à analysé pour l'entrainement
-        Y_train: liste de la classification des vecteurs pour l'entrainement
-        X_test : Liste des vecteurs pour à analyser pour le test 
-        Y_test : liste de la classification des vecteurs pour le test
-        C      : hyperparamètre C
-        gamma  : hyperparamètre gamma
+        X_train: (np_array) Liste des vecteurs à analysé pour l'entrainement
+        Y_train: (np_array) liste de la classification des vecteurs pour l'entrainement
+        X_test : (np_array) Liste des vecteurs pour à analyser pour le test 
+        Y_test : (np_array) liste de la classification des vecteurs pour le test
+        C      : (double) hyperparamètre C
+        gamma  : (double)hyperparamètre gamma
     output: 
           Matrice de confusion
           Rapport de classification    
