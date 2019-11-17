@@ -1,57 +1,28 @@
-# %%
-# ! /usr/bin/env python3
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
 Course :
 GTI770 — Systèmes intelligents et apprentissage machine
+
 Project :
-Lab # 2 — Arbre de décision, Bayes Naïf et KNN
+Lab # 3 — Machines à vecteur de support et réseaux neuronaux
+
 Students :
 Alexendre Bleau — BLEA14058906
 David Létinaud  — LETD05129708
 Thomas Lioret   — LIOT20069605
+
 Group :
 GTI770-A19-01
-Dl pycharm sur linux
 """
-# from skimage import io
 
- # Import Decision Tree Classifie
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
-import sklearn.metrics as metrics
-# from sklearn.metric import accuracy_score, f1_score
-import csv
-import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
-import operator
-import numpy as np
-import random
-import math
 from sklearn.model_selection import StratifiedShuffleSplit,GridSearchCV
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.svm import SVC
 from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
 import time
-import pandas as pd
-#
 from sklearn import svm
-from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix,f1_score
-import numpy as np
-import matplotlib.pyplot as plt
-
-#def Stratified(n_split,size,radom):
- #   # faire un  split # test a 20 %
-  #  Split = StratifiedShuffleSplit(n_split=n_split,test_size=size,random_state=random)
-   # return Split
-
-#utriliser plus tard de la faacon suivant
-# valeur de retour.split(X,Y)
-#fair une for pour chaque element si on veut les utiliser
-
 
 
 """
@@ -77,14 +48,10 @@ def GridSearch_bestparam(X_train,Y_train):
     clf = GridSearchCV(svc, param, scoring=score, cv=5, refit='Accuracy', return_train_score=True,n_jobs=10)
     clf.fit(X_train,Y_train)
 
-
-
-
     print('best param')
     print(clf.best_params_)
     print('best score')
     print(clf.best_score_)
-
 
     return clf
 
