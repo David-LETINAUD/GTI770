@@ -89,22 +89,22 @@ def RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes):
         model = Sequential()
 
         # Couche d'entrée
-        model.add(Dense(nb_features))  
-        model.add(Activation('relu'))
+        model.add(Dense(nb_features, activation='relu' ))  
 
         # Couches cachées
         for size in layer_sizes:
-            model.add(Dense(size))
-            model.add(Activation('relu'))
+            model.add(Dense(size, activation='relu' ))
             model.add(Dropout(dropout))
 
         # Couche de sortie
-        model.add(Dense(nb_classes))
-        model.add(Activation('softmax'))  
+        model.add(Dense(nb_classes, activation='softmax' ))
 
         # Optimizer
         #sgd = SGD(lr=learning_rate)
         adam = Adam(lr = learning_rate) # Adaptive Moment Estimation : faster than sgd
 
-        model.compile(optimizer=adam, loss='binary_crossentropy', metrics=['accuracy', f1])
+        model.compile(optimizer=adam, loss='sparse_categorical_crossentropy', metrics=['accuracy', f1])
+        # with sparse_categorical_crossentropy loss function :
+        # No one hot encoding of the target variable is required, a benefit of this loss function.
+
         return model

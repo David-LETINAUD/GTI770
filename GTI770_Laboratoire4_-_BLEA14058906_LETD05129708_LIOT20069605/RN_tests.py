@@ -20,24 +20,44 @@ GTI770-A19-01
 from functions import *
 from RN_model import RN_model
 from tensorflow.keras.callbacks import TensorBoard
+from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 import shutil
 import time
 
-MFCC_path = "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv"
+# TOP 3 selected
+#MFCC_path = "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv" # => MLP 22%
+MFCC_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
+#MFCC_path = "./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv" #=> MLP 20%
 
-X, Y = get_data(MFCC_path)
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+# The others
+direct_path_tab = []
+direct_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # best
+direct_path_tab.append("./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd
+direct_path_tab.append("./tagged_feature_sets/msd-jmirlpc_dev/msd-jmirlpc_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-jmirmoments_dev/msd-jmirmoments_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd
+direct_path_tab.append("./tagged_feature_sets/msd-mvd_dev/msd-mvd_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
 
-nb_features = len(X[0])
-nb_classes = 25 #max(Y)+1
+leg = [str(i) for i in range(len(direct_path_tab))]  
 
-train_size = 1000
+# X, Y = get_data(MFCC_path)
+# X = preprocessing.normalize(X, norm='max',axis = 0)
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
-layer_sizes = [100, 100, 2]
-epochs = 60
+# nb_features = len(X[0])
+# nb_classes = max(Y)+1
+
+# train_size = len(X)
+
+layer_sizes = [500]
+epochs = 50
 learning_rate = 0.0005
-batch_size = 100
+batch_size = 500
 
 dropout = 0.5
 
@@ -52,9 +72,9 @@ history_obj = []
 cpt = 0
 best_accuracy_RN = 0
 
-layer_sizes_range = [[50]]#,[100, 2],[100, 100, 2]]
+#layer_sizes_range = [[500]] #,[100, 20],[100, 100, 20]]
 
-# Suppression de la dernière étude d'hyperparamètre
+
 
 try:      
     shutil.rmtree('./logs')
@@ -62,16 +82,24 @@ except:
     print("nothing to delete")
 # Callbacks pour affichage des performances dans tensorflow : 1 callback pour chaque hyperparamètre
 tensorboard_callback = []
-for i in range(3):
+for i in range(len(direct_path_tab)):
     tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))
 # Par invité de commande : 
 # tensorboard --logdir="./logs" --port 6006
 cpt = 0
-for layer_s in layer_sizes_range:
-    model = RN_model(layer_s, dropout, learning_rate, nb_features, nb_classes)
+for path_ in direct_path_tab:
+    X, Y = get_data(path_)
+    X = preprocessing.normalize(X, norm='max',axis = 0)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+
+    nb_features = len(X[0])
+    nb_classes = max(Y)+1
+    train_size = len(X)
+
+    model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
     #### Apprentissage                                                                                                                                                               
     start = time.time()                                                                                                                   
-    hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = 3, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]]) 
+    hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]]) 
 
     end = time.time()
     training_delay_RN.append(end - start)
@@ -97,7 +125,7 @@ for layer_s in layer_sizes_range:
 ho = np.array(history_obj)
 ho = ho.transpose(1,2,0)
 
-leg = [str(i) for i in layer_sizes_range]                                                                                                                                              
+                                                                                                                                            
 
 titre = "RN : HyperParam = number of layer"                                                                                                                                         
 
