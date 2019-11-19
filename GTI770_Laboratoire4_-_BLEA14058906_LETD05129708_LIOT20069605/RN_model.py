@@ -72,7 +72,7 @@ def f1(y_true, y_pred):
 
 
 # Inspiré de : https://github.com/LeighWeston86/multilayer_perceptron
-def RN_model(layer_sizes, dropout, learning_rate):
+def RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes):
     """
     Multilayer perceptron for binary classification.
     
@@ -89,7 +89,7 @@ def RN_model(layer_sizes, dropout, learning_rate):
         model = Sequential()
 
         # Couche d'entrée
-        model.add(Dense(77))  
+        model.add(Dense(nb_features))  
         model.add(Activation('relu'))
 
         # Couches cachées
@@ -99,8 +99,8 @@ def RN_model(layer_sizes, dropout, learning_rate):
             model.add(Dropout(dropout))
 
         # Couche de sortie
-        model.add(Dense(1))
-        model.add(Activation('sigmoid'))  
+        model.add(Dense(nb_classes))
+        model.add(Activation('softmax'))  
 
         # Optimizer
         #sgd = SGD(lr=learning_rate)
