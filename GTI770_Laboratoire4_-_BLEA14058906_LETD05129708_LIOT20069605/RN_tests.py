@@ -71,7 +71,7 @@ Y_train = Y_train[:train_size]
 layer_sizes = [500]
 epochs = 5 #50
 learning_rate = 0.0005
-batch_size = 500
+batch_size = 1000
 
 dropout = 0.5
 
