@@ -46,7 +46,7 @@ def get_data(dataset_path):
     return X, Y
 
 
-def plot_perf(histo,legende,titre,sous_titre): 
+def plot_perf_epochs(histo,legende,titre,sous_titre): 
     """
     Affichage des données finales sous forme d'une grille de tableau     
     input : 
@@ -55,7 +55,7 @@ def plot_perf(histo,legende,titre,sous_titre):
          titre (string) :           Titre à afficher
          sous_titre (string list) : Sous titre à afficher pour chaque subplot
     """   
-    fig, axs = plt.subplots(2,3)
+    fig, axs = plt.subplots(2,2)
     plt.suptitle(titre, fontsize=16)
     cpt = 0
     for ax in axs:     
@@ -69,14 +69,50 @@ def plot_perf(histo,legende,titre,sous_titre):
     plt.legend(legende)
     plt.show()
 
-def plot_delay(train_delay,test_delay,titre):   
+def plot_perf_delay(acc, f1, train_delay,test_delay,titre):   
+    """
+    Affichage des performances et des delais d'entrainement et de test en fonction des hyperparamètres   
+    input : 
+        acc (list ou np.ndarray) : Contient l'accuracy du modèle pour chaque hyperparamètre
+        f1 (list ou np.ndarray) : Contient le f1-score du modèle pour chaque hyperparamètre
+        train_delay (list ou np.ndarray) : Contient les délais d'entrainement pour chaque hyperparamètre
+        test_delay (list ou np.ndarray) :  Contient les délais de tests pour chaque hyperparamètre
+        titre (string) :           Titre à afficher
+    """   
+
+    fig, axs = plt.subplots(2,2)
+    plt.suptitle(titre, fontsize=16)
+
+    axs[0][0].title.set_text("Accuracy")
+    #axs[0][0].set_xlabel("hyperparameter")
+    axs[0][0].set_ylabel("accuracy")
+    axs[0][0].plot(acc,'x--')
+    
+    axs[0][1].title.set_text("f1-score")
+    #axs[0][1].set_xlabel("hyperparameter")
+    axs[0][1].set_ylabel("f1-score")
+    axs[0][1].plot(f1,'x--')
+
+    axs[1][0].title.set_text("Training delay")
+    axs[1][0].set_xlabel("hyperparameter")
+    axs[1][0].set_ylabel("time (s)")
+    axs[1][0].plot(train_delay,'x--')
+
+    axs[1][1].title.set_text("Predicting delay")
+    axs[1][1].set_xlabel("hyperparameter")
+    axs[1][1].set_ylabel("time (s)")
+    axs[1][1].plot(test_delay,'x--')
+
+    plt.show()
+
+def plot_delay(train_delay,test_delay,titre):
     """
     Affichage des données des delais d'entrainement et de test     
     input : 
          train_delay (np.ndarray) : Contient les délais d'entrainement pour chaque hyperparamètre
          test_delay (np.ndarray) :  Contient les délais de tests pour chaque hyperparamètre
          titre (string) :           Titre à afficher
-    """  
+    """   
     fig, axs = plt.subplots(1,2)
     plt.suptitle(titre, fontsize=16)
 
@@ -91,3 +127,4 @@ def plot_delay(train_delay,test_delay,titre):
     axs[1].plot(test_delay,'x--')
 
     plt.show()
+    
