@@ -26,50 +26,6 @@ from tensorflow.keras import backend as K
 import numpy as np
 
 
-# Inspiré de : https://datascience.stackexchange.com/questions/45165/how-to-get-accuracy-f1-precision-and-recall-for-a-keras-model
-def recall_m(y_true, y_pred):
-    """
-    Calcul du rappel     
-    input :
-        y_true (tensorflow.python.framework.ops.Tensor') : sorties réelles
-        y_pred (tensorflow.python.framework.ops.Tensor') : sorties prédites
-    output : 
-        (tensorflow.python.framework.ops.Tensor') : rappel    
-    """
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-    recall = true_positives / (possible_positives + K.epsilon())
-    return recall
-
-
-def precision_m(y_true, y_pred):
-    """
-    Calcul de la précision     
-    input :
-        y_true (tensorflow.python.framework.ops.Tensor')  : sorties réelles
-        y_pred (tensorflow.python.framework.ops.Tensor')  : sorties prédites
-    output : 
-        (tensorflow.python.framework.ops.Tensor')  : précision    
-    """
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-    precision = true_positives / (predicted_positives + K.epsilon())
-    return precision
-
-
-def f1(y_true, y_pred):
-    """
-    Calcul du f1-score     
-    input :
-        y_true (tensorflow.python.framework.ops.Tensor')  : sorties réelles
-        y_pred (tensorflow.python.framework.ops.Tensor')  : sorties prédites
-    output : 
-        (tensorflow.python.framework.ops.Tensor')  : f1-score    
-    """
-    precision = precision_m(y_true, y_pred)
-    recall = recall_m(y_true, y_pred)
-    return 2 * ((precision * recall) / (precision + recall + K.epsilon()))
-
 
 # Inspiré de : https://github.com/LeighWeston86/multilayer_perceptron
 def RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes):
@@ -103,7 +59,7 @@ def RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes):
         #sgd = SGD(lr=learning_rate)
         adam = Adam(lr = learning_rate) # Adaptive Moment Estimation : faster than sgd
 
-        model.compile(optimizer=adam, loss='sparse_categorical_crossentropy', metrics=['accuracy', f1])
+        model.compile(optimizer=adam, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
         # with sparse_categorical_crossentropy loss function :
         # No one hot encoding of the target variable is required, a benefit of this loss function.
 
