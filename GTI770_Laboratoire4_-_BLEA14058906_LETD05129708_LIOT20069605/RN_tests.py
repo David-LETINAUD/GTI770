@@ -60,7 +60,7 @@ direct_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_de
 layer_sizes = [500]
 epochs = 50
 learning_rate = 0.0005
-batch_size = 500
+batch_size = 1000
 
 dropout = 0.5
 
