@@ -128,6 +128,7 @@ def plot_delay(train_delay,test_delay,titre):
     axs[1].plot(test_delay,'x--')
 
     plt.show()
+<<<<<<< HEAD
     
 
 
@@ -190,3 +191,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     return ax
 
 # plot_confusion_matrix(y_test,best_y_pred_SVM,class_names, title="KNN Confusion matrix : K = {}".format(K_range[best_index_KNN]))
+=======
+    
+>>>>>>> plot_perf_delay
