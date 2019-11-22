@@ -45,7 +45,7 @@ direct_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspect
 # direct_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
 # direct_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
 
-leg = [str(i) for i in range(len(direct_path_tab))]  
+
 
 # X, Y = get_data(MFCC_path)
 # X = preprocessing.normalize(X, norm='max',axis = 0)
@@ -59,13 +59,11 @@ leg = [str(i) for i in range(len(direct_path_tab))]
 layer_sizes = [500]
 epochs = 50
 learning_rate = 0.0005
-batch_size = 1000
+batch_size = 500
 
 dropout = 0.5
 
-# Pour affichage
-sub_title = ['loss','acc','val_loss','val_acc']
-x_lab = "epochs"
+
 
 ################################## Nombres de couches cachees
 training_delay_RN = []
@@ -77,8 +75,6 @@ f1_RN = []
 acc_RN = []
 
 #layer_sizes_range = [[500]] #,[100, 20],[100, 100, 20]]
-
-
 
 try:      
     shutil.rmtree('./logs')
@@ -139,6 +135,10 @@ for path_ in direct_path_tab:
 ho = np.array(history_obj)
 ho = ho.transpose(1,2,0)                                                                                                            
 
+# Pour affichage
+sub_title = ['loss','acc','val_loss','val_acc']
+x_lab = "epochs"
+leg = [str(i) for i in range(len(direct_path_tab))]  
 titre = "RN : Dataset test"                                                                                                                                         
 
 plot_perf_epochs(ho, leg, titre ,sub_title)
