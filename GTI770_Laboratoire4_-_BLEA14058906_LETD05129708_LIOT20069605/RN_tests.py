@@ -34,17 +34,17 @@ MFCC_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
 #MFCC_path = "./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv" #=> MLP 20%
 
 # The others
-direct_path_tab = []
-direct_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # best =>31%
-#direct_path_tab.append("./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
-#direct_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv")
-direct_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd => 25%
-# direct_path_tab.append("./tagged_feature_sets/msd-jmirlpc_dev/msd-jmirlpc_dev.csv")
-# direct_path_tab.append("./tagged_feature_sets/msd-jmirmoments_dev/msd-jmirmoments_dev.csv")
-direct_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
-# direct_path_tab.append("./tagged_feature_sets/msd-mvd_dev/msd-mvd_dev.csv")
-# direct_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
-# direct_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
+dataset_path_tab = []
+dataset_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # best =>31%
+#dataset_path_tab.append("./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
+#dataset_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv")
+dataset_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd => 25%
+# dataset_path_tab.append("./tagged_feature_sets/msd-jmirlpc_dev/msd-jmirlpc_dev.csv")
+# dataset_path_tab.append("./tagged_feature_sets/msd-jmirmoments_dev/msd-jmirmoments_dev.csv")
+dataset_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
+# dataset_path_tab.append("./tagged_feature_sets/msd-mvd_dev/msd-mvd_dev.csv")
+# dataset_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
+# dataset_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
 
 
 
@@ -83,12 +83,12 @@ except:
     print("nothing to delete")
 # Callbacks pour affichage des performances dans tensorflow : 1 callback pour chaque hyperparamètre
 tensorboard_callback = []
-for i in range(len(direct_path_tab)):
+for i in range(len(dataset_path_tab)):
     tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))
 # Par invité de commande : 
 # tensorboard --logdir="./logs" --port 6006
 cpt = 0
-for path_ in direct_path_tab:
+for path_ in dataset_path_tab:
     X, Y = get_data(path_)
     X = preprocessing.normalize(X, norm='max',axis = 0)
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
