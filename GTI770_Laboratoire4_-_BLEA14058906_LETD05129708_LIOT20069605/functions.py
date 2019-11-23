@@ -129,6 +129,7 @@ def plot_delay(train_delay,test_delay,titre):
 
     plt.show()
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 
 
@@ -194,3 +195,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 =======
     
 >>>>>>> plot_perf_delay
+=======
+    
+>>>>>>> global + qques func
