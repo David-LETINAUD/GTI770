@@ -26,6 +26,7 @@ import shutil
 import time
 
 from sklearn import metrics
+from sklearn.utils import class_weight
 
 # TOP 3 selected
 #MFCC_path = "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv" # => MLP 22%
@@ -35,12 +36,12 @@ MFCC_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
 # The others
 direct_path_tab = []
 direct_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # best =>31%
-direct_path_tab.append("./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
-direct_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv")
-# direct_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd => 25%
+#direct_path_tab.append("./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
+#direct_path_tab.append("./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv")
+direct_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd => 25%
 # direct_path_tab.append("./tagged_feature_sets/msd-jmirlpc_dev/msd-jmirlpc_dev.csv")
 # direct_path_tab.append("./tagged_feature_sets/msd-jmirmoments_dev/msd-jmirmoments_dev.csv")
-# direct_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
+direct_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
 # direct_path_tab.append("./tagged_feature_sets/msd-mvd_dev/msd-mvd_dev.csv")
 # direct_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
 # direct_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
@@ -92,6 +93,11 @@ for path_ in direct_path_tab:
     X = preprocessing.normalize(X, norm='max',axis = 0)
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
+    class_weights = class_weight.compute_class_weight('balanced',
+                                                 np.unique(Y_train),
+                                                 Y_train)
+    print(class_weights)
+
     nb_features = len(X[0])
     nb_classes = max(Y)+1
     train_size = len(X)
@@ -99,7 +105,7 @@ for path_ in direct_path_tab:
     model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
     #### Apprentissage                                                                                                                                                               
     start = time.time()                                                                                                                   
-    hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]]) 
+    hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]], class_weight=class_weights) 
     end = time.time()
 
     training_delay_RN.append(end - start)
