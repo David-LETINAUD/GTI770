@@ -44,7 +44,7 @@ path_rh = "./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv"
 path_trh = "./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv"
 
 
-path_list = [path_MFC,path_SSD,path_marsyas]
+path_list = [path_marsyas]
 
 mean_acc = []
 mean_f1 = []
@@ -52,14 +52,14 @@ mean_f1 = []
 training_time = []
 predict_time = []
 
-#print("GO")
+print("GO")
 
 for path in path_list:
     
     print(path)
 
     X,Y = get_data(path)
-    rfc = RandomForestClassifier(n_estimators = 100, max_depth = None, n_jobs = 3) 
+    rfc = RandomForestClassifier(n_estimators = 5, max_depth = None, n_jobs = 3) 
     scores = []
     accuracy = []
     kf = KFold(n_splits = 5) 
