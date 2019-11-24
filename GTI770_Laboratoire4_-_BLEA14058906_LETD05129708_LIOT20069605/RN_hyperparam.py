@@ -44,8 +44,8 @@ nb_classes = max(Y)+1
 train_size = len(X)
 
 
-# X_train = X_train[:train_size]
-# Y_train = Y_train[:train_size]
+X_train = X_train[:train_size]
+Y_train = Y_train[:train_size]
 
 # Parametres de base
 layer_sizes = [500]
