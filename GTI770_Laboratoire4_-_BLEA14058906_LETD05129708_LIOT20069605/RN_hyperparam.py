@@ -43,9 +43,11 @@ nb_features = len(X[0])
 nb_classes = max(Y)+1
 train_size = len(X)
 
-X_train = X_train[:train_size]
-Y_train = Y_train[:train_size]
 
+# X_train = X_train[:train_size]
+# Y_train = Y_train[:train_size]
+
+# Parametres de base
 layer_sizes = [500]
 epochs = 50
 learning_rate = 0.0005
@@ -151,7 +153,7 @@ def perceptrons_number_test():
     global leg
     global titre
 
-    nb_perceptrons_range = [[50],[100],[500]]                                                                                                                      
+    nb_perceptrons_range = [[100],[500],[1000]]                                                                                                                      
 
     # Suppression de la dernière étude d'hyperparamètre
     try:    
