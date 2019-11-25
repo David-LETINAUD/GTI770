@@ -29,6 +29,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 import sklearn.metrics as metrics
 import time
+from sklearn import preprocessing
 
 
 #Ouverture
@@ -46,6 +47,77 @@ path_trh = "./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv"
 
 path_list = [path_marsyas]
 
-res = RF_dataset_study(path_list,5,5)
+X,Y = get_data(path_marsyas) #MAJ GET DATA : NEW sortie
 
-print(res)
+X = X[:100]
+Y = Y[:100]
+X = preprocessing.normalize(X, norm ='max',axis=0)
+
+
+#res = RF_dataset_study(path_list,5,5)
+#print(res)
+
+#Etude des hyperparamètres
+
+#Nombre d'arbres
+list_estimators = [2,5]
+n_splits = 5
+res = RF_nbEstimators(X,Y,list_estimators,n_splits)
+acc = res[:,0]
+f1 = res[:,1]
+train_delay = res[:,2]
+test_delay = res[:,3]
+
+plot_perf_delay(acc, f1, train_delay,test_delay,"nombre d'estimateurs")
+#print(res)
+
+
+#Profondeur des arbres
+list_max_depth = [5,None]
+res = RF_maxDepth(X,Y,list_max_depth,n_splits = 5)
+
+acc = res[:,0]
+f1 = res[:,1]
+train_delay = res[:,2]
+test_delay = res[:,3]
+
+plot_perf_delay(acc, f1, train_delay,test_delay,"profondeur")
+#print(res)
+
+
+#Séparation noeud interne
+list_min_samples_splits = [2,3]
+res = RF_sampleSplit(X,Y,list_min_samples_splits,n_splits = 5)
+acc = res[:,0]
+f1 = res[:,1]
+train_delay = res[:,2]
+test_delay = res[:,3]
+
+plot_perf_delay(acc, f1, train_delay,test_delay,"internal node")
+#print(res)
+
+
+#Séparation noeud terminal
+list_min_samples_leaf = [1,2]
+res = RF_sampleLeaf(X,Y,list_min_samples_leaf,n_splits = 5)
+acc = res[:,0]
+f1 = res[:,1]
+train_delay = res[:,2]
+test_delay = res[:,3]
+
+plot_perf_delay(acc, f1, train_delay,test_delay,"leaf node")
+#print(res)
+
+#Meilleur K-fold cross validation
+list_nb_Ksplit = [5,7]
+res = RF_Kfold_Split(X,Y,list_nb_Ksplit)
+acc = res[:,0]
+f1 = res[:,1]
+train_delay = res[:,2]
+test_delay = res[:,3]
+
+plot_perf_delay(acc, f1, train_delay,test_delay,"split")
+#print(res)
+
+
+
