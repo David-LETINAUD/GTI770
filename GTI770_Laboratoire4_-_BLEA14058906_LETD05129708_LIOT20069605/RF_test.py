@@ -44,58 +44,13 @@ path_rh = "./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv"
 path_trh = "./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv"
 
 
-path_list = [path_marsyas]
 
-mean_acc = []
-mean_f1 = []
+L = [[1,2,3,4],[5,6,7,8]]
+L = np.array(L)
+yo = L[:,1]
 
-training_time = []
-predict_time = []
+print(yo)
 
-print("GO")
 
-for path in path_list:
-    
-    print(path)
-
-    X,Y = get_data(path)
-    rfc = RandomForestClassifier(n_estimators = 5, max_depth = None, n_jobs = 3) 
-    scores = []
-    accuracy = []
-    kf = KFold(n_splits = 5) 
-    t_train = 0
-    t_pred = 0
-
-    
-    for train_index, test_index in kf.split(X):
-        #print("iter")
-        t1 = time.time()
-        X_train, X_test = X[train_index], X[test_index]
-        Y_train, Y_test = Y[train_index], Y[test_index]
-        rfc.fit(X_train,Y_train)
-        t2 = time.time()
-        Y_pred = rfc.predict(X_test)
-        t3 = time.time()
-        scores.append(metrics.f1_score(Y_test, Y_pred, labels=None, pos_label=1, average="weighted", sample_weight=None))
-        accuracy.append(metrics.accuracy_score(Y_test, Y_pred))
-        t_train += t2-t1
-        t_pred += t3-t2
-    
-    m_acc = np.mean(accuracy)
-    m_f1 = np.mean(scores)
-        
-    print("moyenne des accuracy :",m_acc,"les accuracy sont de : ",accuracy)
-    print("moyenne des f1_score :",m_f1,"les f1_scores sont de : ",scores)
-    
-    training_time.append((path,t_train))
-    predict_time.append((path,t_pred))
-    mean_acc.append((path,m_acc))
-    mean_f1.append((path,m_f1))
-        
-
-print("training time : ",training_time)
-print("prediction time : ",predict_time)
-print("acc : ",mean_acc)
-print("f1score : ",mean_f1)
 
 
