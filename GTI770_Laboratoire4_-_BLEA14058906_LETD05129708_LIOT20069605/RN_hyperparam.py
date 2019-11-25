@@ -28,12 +28,17 @@ import time
 
 from sklearn import metrics
 from sklearn.utils import class_weight
+from imblearn.under_sampling import RandomUnderSampler
 
 
 data_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv"
 
 X, Y, le = get_data(data_path)
 X = preprocessing.normalize(X, norm='max',axis = 0)
+
+# rus = RandomUnderSampler(random_state=0)
+# X, Y = rus.fit_resample(X, Y)
+
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
 # print(list(le.inverse_transform(Y[:10])))
@@ -48,9 +53,9 @@ X_train = X_train[:train_size]
 Y_train = Y_train[:train_size]
 
 # Parametres de base
-layer_sizes = [500]
-epochs = 50
-learning_rate = 0.0005
+layer_sizes = [500] # OK
+epochs = 100 # OK avec 100
+learning_rate = 0.001
 batch_size = 500
 
 dropout = 0.5
@@ -221,7 +226,8 @@ def learning_rate_test():
     global leg
     global titre
 
-    l_rate_range = [0.00001,0.0005,0.01]
+    l_rate_range = [0.001,0.0005]#,0.001,0.003] 0.001 OK
+    print(l_rate_range)
 
     # Suppression de la dernière étude d'hyperparamètre
     try:
@@ -235,13 +241,19 @@ def learning_rate_test():
         tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))
     # Par invité de commande : 
     # tensorboard --logdir="./logs" --port 6006
+
+    class_weights = class_weight.compute_class_weight('balanced',
+                                                      np.unique(Y_train),
+                                                      Y_train)
+    print(class_weights)
+
     cpt = 0
     for l_rate in l_rate_range:
         model = RN_model(layer_sizes, dropout, l_rate, nb_features, nb_classes)
         #### Apprentissage
         start = time.time()
         #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)
-        hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]])
+        hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]],class_weight=class_weights)
         end = time.time()
         training_delay_RN.append(end - start)
 
@@ -305,13 +317,20 @@ def epochs_number_test():
         tensorboard_callback.append(TensorBoard(log_dir="logs\{}".format(i)))
     # Par invité de commande : 
     # tensorboard --logdir="./logs" --port 6006
+
+    class_weights = class_weight.compute_class_weight('balanced',
+                                                      np.unique(Y_train),
+                                                      Y_train)
+    print(class_weights)
+
+
     cpt = 0
     for ep in epochs_range:                                                                                                                                                            
         model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)                                                                                                                       
         #### Apprentissage                                                                                                                                                             
         start = time.time()                                                                                                                                                            
         #model.fit(X_train, Y_train, batch_size = 100, epochs = 60)                                                                                                                    
-        hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = ep, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]])                                                                  
+        hist_obj = model.fit(X_train, Y_train, batch_size = batch_size, epochs = ep, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt]],class_weight=class_weights)
 
         end = time.time()                                                                                                                                                              
         training_delay_RN.append(end - start)                                                                                                                                          

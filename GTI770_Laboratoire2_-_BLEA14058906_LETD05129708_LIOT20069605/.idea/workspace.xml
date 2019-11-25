@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e66263b-07e8-489d-8a39-63b0ada92b93" name="Default Changelist" comment="ID + class">
-      <change beforePath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/GTI770-TP03.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/GTI770-TP03.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/RN_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/RN_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,40 +11,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/main_RN.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="71" column="65" selection-start-line="71" selection-start-column="65" selection-end-line="71" selection-end-column="65" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/RN_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-270">
-              <caret line="81" column="36" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/functions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="90" column="19" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/GTI770-TP03.ipynb">
-          <provider selected="true" editor-type-id="jupyter-editor" />
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -94,7 +59,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="4">
     <option name="x" value="67" />
     <option name="y" value="25" />
     <option name="width" value="927" />
@@ -121,8 +86,9 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/main_svm.ipynb" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../GTI770_Laboratoire4_-_BLEA14058906_LETD05129708_LIOT20069605" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -180,12 +146,13 @@
       <workItem from="1571664278054" duration="10149000" />
       <workItem from="1572270155531" duration="3132000" />
       <workItem from="1573132280601" duration="3892000" />
-      <workItem from="1573481564442" duration="9960000" />
+      <workItem from="1573481564442" duration="10569000" />
+      <workItem from="1574691209176" duration="973000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41332000" />
+    <option name="totallyTimeSpent" value="42914000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -197,9 +164,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <frame x="67" y="25" width="927" height="1055" extended-state="4" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.016602103" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.03405221" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -213,7 +180,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.23974082" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.23974082" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32937366" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -284,22 +251,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/main_RN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="71" column="65" selection-start-line="71" selection-start-column="65" selection-end-line="71" selection-end-column="65" />
+        <state relative-caret-position="1500">
+          <caret line="100" column="65" selection-start-line="100" selection-start-column="65" selection-end-line="100" selection-end-column="65" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/RN_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-270">
-          <caret line="81" column="36" selection-start-line="81" selection-start-column="36" selection-end-line="81" selection-end-column="36" />
+        <state relative-caret-position="533">
+          <caret line="108" column="36" selection-start-line="108" selection-start-column="36" selection-end-line="108" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../GTI770_Laboratoire3_-_BLEA14058906_LETD05129708_LIOT20069605/functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="90" column="19" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="19" />
+          <caret line="92" column="19" selection-start-line="92" selection-start-column="19" selection-end-line="92" selection-end-column="19" />
         </state>
       </provider>
     </entry>
