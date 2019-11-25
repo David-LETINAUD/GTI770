@@ -37,6 +37,7 @@ tf.disable_v2_behavior()
 #data_path = "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv" # => MLP 22%
 data_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
 #data_path = "./tagged_feature_sets/msd-jmirspectral_dev/msd-jmirspectral_dev.csv" #=> MLP 20%
+#data_path = "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"
 
 # The others
 dataset_path_tab = []
@@ -46,7 +47,7 @@ dataset_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # b
 #dataset_path_tab.append("./tagged_feature_sets/msd-jmirderivatives_dev/msd-jmirderivatives_dev.csv") # 3rd => 25%
 # dataset_path_tab.append("./tagged_feature_sets/msd-jmirlpc_dev/msd-jmirlpc_dev.csv")
 # dataset_path_tab.append("./tagged_feature_sets/msd-jmirmoments_dev/msd-jmirmoments_dev.csv")
-# dataset_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
+#dataset_path_tab.append("./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv") # 2nd => 27%
 # dataset_path_tab.append("./tagged_feature_sets/msd-mvd_dev/msd-mvd_dev.csv")
 # dataset_path_tab.append("./tagged_feature_sets/msd-rh_dev_new/msd-rh_dev_new.csv")
 # dataset_path_tab.append("./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv")
@@ -170,7 +171,7 @@ titre = "RN : Dataset test"
 
 plot_perf_epochs(ho, leg, titre ,sub_title)
 plot_perf_delay(f1_RN,acc_RN,training_delay_RN,predicting_delay_RN,titre)
-
+plot_confusion_matrix(Y_test,Y_pred,class_names, title="TEST {}".format(0))
 
 #### Prédiction            
 # Loads the weights
