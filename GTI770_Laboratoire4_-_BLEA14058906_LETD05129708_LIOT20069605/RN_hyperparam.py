@@ -226,7 +226,7 @@ def learning_rate_test():
     global leg
     global titre
 
-    l_rate_range = [0.001,0.0005]#,0.001,0.003] 0.001 OK
+    l_rate_range = [0.0005, 0.001,0.005]
     print(l_rate_range)
 
     # Suppression de la dernière étude d'hyperparamètre
@@ -303,7 +303,7 @@ def epochs_number_test():
     global leg
     global titre
 
-    epochs_range = [10,50, 2000]                                                                                                                                            
+    epochs_range = [10,100, 1000]                                                                                                                                            
     max_ep = max(epochs_range) 
 
     # Suppression de la dernière étude d'hyperparamètre
