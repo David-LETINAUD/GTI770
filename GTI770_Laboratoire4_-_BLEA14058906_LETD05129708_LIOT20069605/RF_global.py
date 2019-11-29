@@ -128,6 +128,7 @@ plot_perf_delay(acc, f1, train_delay,test_delay,"split")
 
 #############Saving models with pickle
 
+#Marsyas
 # Fit the model on training set
 X,Y,Label = get_data(path_marsyas)
 X = preprocessing.normalize(X, norm ='max',axis=0)
@@ -140,5 +141,47 @@ rfc.fit(X_train, Y_train)
 # save the model to disk
 pickle.dump(rfc, open('rfc_marsyas.sav', 'wb'))
 loaded_model = pickle.load(open('rfc_marsyas.sav', 'rb'))
+#print(loaded_model)
 result = loaded_model.score(X_test, Y_test)
+print(loaded_model.predict(X_test))
 print(result)
+
+
+
+#path_SSD
+X,Y,Label = get_data(path_SSD)
+X = preprocessing.normalize(X, norm ='max',axis=0)
+X = X[:100]
+Y = Y[:100]
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_split=2,min_samples_leaf=1)
+rfc.fit(X_train, Y_train)
+
+# save the model to disk
+pickle.dump(rfc, open('rfc_ssd.sav', 'wb'))
+loaded_model = pickle.load(open('rfc_ssd.sav', 'rb'))
+#print(loaded_model)
+result = loaded_model.score(X_test, Y_test)
+print(loaded_model.predict(X_test))
+print(result)
+
+
+#path_MFC
+X,Y,Label = get_data(path_MFC)
+X = preprocessing.normalize(X, norm ='max',axis=0)
+X = X[:100]
+Y = Y[:100]
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_split=2,min_samples_leaf=1)
+rfc.fit(X_train, Y_train)
+
+# save the model to disk
+pickle.dump(rfc, open('rfc_mfc.sav', 'wb'))
+loaded_model = pickle.load(open('rfc_mfc.sav', 'rb'))
+#print(loaded_model)
+result = loaded_model.score(X_test, Y_test)
+print(loaded_model.predict(X_test))
+print(result)
+
+
+
