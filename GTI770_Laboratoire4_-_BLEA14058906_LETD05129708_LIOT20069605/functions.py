@@ -43,8 +43,9 @@ def get_data(dataset_path):
     le = LabelEncoder()
     Y = le.fit_transform(np.array(features_list.iloc[:,-1]) )   
     X = np.array(features_list.iloc[:,2:-1])
+    id= np.array(features_list.iloc[:,1])
 
-    return X, Y, le
+    return X, Y, id, le
 
 
 def plot_perf_epochs(histo,legende,titre,sous_titre): 

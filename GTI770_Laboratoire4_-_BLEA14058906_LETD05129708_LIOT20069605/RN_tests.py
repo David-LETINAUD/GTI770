@@ -121,7 +121,7 @@ for path_ in dataset_path_tab:
     print(class_weights)
 
     nb_features = len(X[0])
-    nb_classes = max(Y)+1
+    nb_classes = max(Y)
     train_size = len(X)
 
     model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
