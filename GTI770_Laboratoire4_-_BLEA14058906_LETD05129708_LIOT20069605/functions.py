@@ -47,6 +47,20 @@ def get_data(dataset_path):
 
     return X, Y, id, le
 
+def train_test_ID_split(X, Y, id):
+    id = np.array([id])
+    nb_features = len(X[0])
+
+    X_ID  = np.concatenate((X, id.T),axis=1)
+    X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)
+
+    X_train = X_train_ID[:, [range(nb_features)]]
+    X_test  = X_test_ID[:, [range(nb_features)]]
+    id_train = X_train_ID[:, [-1]]
+    id_test = X_test_ID[:, [-1]]
+
+    return X_train,X_test, id_train, id_test, Y_train, Y_test
+
 
 def plot_perf_epochs(histo,legende,titre,sous_titre): 
     """
