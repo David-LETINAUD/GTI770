@@ -94,33 +94,37 @@ data_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
 X, Y, id, le = get_data(data_path)
 
 # Normalise ou autre traitement
+X_train,X_test, id_train, id_test, Y_train, Y_test = train_test_ID_split(X,Y, id)
+print(X_train[0], id_train[0])
+print(Y_train[0], le.inverse_transform([Y_train[0]]))
+# id = np.array([id[:1000]])
+# X = X[:1000]
+# Y = Y[:1000]
 
-id = np.array([id[:1000]])
-X = X[:1000]
-Y = Y[:1000]
+# nb_features = len(X[0])# -1 a cause de l ID
+# nb_classes = max(Y)
+# train_size = len(X)
 
-nb_features = len(X[0]) -1# -1 a cause de l ID
-nb_classes = max(Y)
-train_size = len(X)
+# print(np.shape(X),np.shape(id))
+# X_ID  = np.concatenate((X, id.T),axis=1)
+# print(np.shape(X_ID))
 
-print(np.shape(X),np.shape(id))
-X_ID  = np.concatenate((X, id.T),axis=1)
-print(np.shape(X_ID))
+# #print(X_ID[:10])
 
-#print(X_ID[:10])
-
-X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+# X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
 
 
-X_train = X_train_ID[:, [range(nb_features)]]
-X_test  = X_test_ID[:, [range(nb_features)]]
-id_train = X_train_ID[:, [-1]]
-id_test = X_test_ID[:, [-1]]
+# X_train = X_train_ID[:, [range(nb_features)]]
+# X_test  = X_test_ID[:, [range(nb_features)]]
+# id_train = X_train_ID[:, [-1]]
+# id_test = X_test_ID[:, [-1]]
 
-print("#################################################")
-print(X[:3], X_ID[:3])
-print("*************************************************")
-print(X_train[:3], X_train_ID[:3] )
-print("#################################################")
-print(id_train[:3])
+# print("#################################################")
+# print(X[0], X_ID[0])
+# print("*************************************************")
+# print(X_train[0], X_train_ID[0] )
+# print("#################################################")
+# print(id_train[0])
+
+
