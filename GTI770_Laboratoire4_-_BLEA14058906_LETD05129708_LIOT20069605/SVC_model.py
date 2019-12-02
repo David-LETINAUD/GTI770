@@ -145,7 +145,12 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test, C, gamma):
 
     train_time = (end_train - start_train)
     pred_time = (end_pred - start_pred)
+
+
     print(confusion_matrix(Y_test, y_pred))
     print(classification_report(Y_test, y_pred))
     print('Temps de training:', train_time, 'Temps de prédiction: ', pred_time)
-    return confusion_matrix(Y_test, y_pred), classification_report(Y_test, y_pred), train_time, pred_time
+    #return confusion_matrix(Y_test, y_pred), classification_report(Y_test, y_pred), train_time, pred_time
+    return svc_class,y_pred,train_time, pred_time
+
+
