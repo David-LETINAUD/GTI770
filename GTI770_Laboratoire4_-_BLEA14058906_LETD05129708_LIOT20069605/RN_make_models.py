@@ -88,8 +88,9 @@ for cp in checkpoint_path:
 
 cpt = 0
 for path_ in dataset_path_tab:
-    X, Y, le = get_data(path_)
+    X, Y, id, le = get_data(path_)
     class_names = list(le.classes_)
+
     X = preprocessing.normalize(X, norm='max',axis = 0)
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 

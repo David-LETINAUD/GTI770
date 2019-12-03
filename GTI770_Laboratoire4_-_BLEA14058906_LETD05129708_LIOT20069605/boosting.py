@@ -126,6 +126,16 @@ SVM_models_path = ['./Models/svm_ssd.sav',"",""]
 
 # Y_pred_RN = RN_model_.predict(X_test)
 
+##### MARCHE BIEN
+# dp = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv"
+# X, Y, id, le = get_data(dp)
+# X = preprocessing.normalize(X, norm='max',axis = 0)
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)
+# X_train_v2, X_test_v2, id_train_v2, id_test_v2, Y_train_v2, Y_test_v2 = train_test_ID_split(X,Y, id)
+
+# nb_features = len(X[0])
+# nb_classes = max(Y)
+# train_size = len(X)
 
 
 ##### MARCHE BIEN

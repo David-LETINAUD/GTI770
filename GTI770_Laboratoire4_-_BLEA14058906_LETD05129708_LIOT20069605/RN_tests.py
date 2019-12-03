@@ -54,7 +54,7 @@ dataset_path_tab.append("./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv") # b
 
 
 
-X, Y, le = get_data(data_path)
+X, Y,id, le = get_data(data_path)
 X = preprocessing.normalize(X, norm='max',axis = 0)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
@@ -101,77 +101,77 @@ for i in range(len(dataset_path_tab)):
 # tensorboard --logdir="./logs" --port 6006
 
 # Save keras model
-checkpoint_path = "MLP_model/cp.ckpt"
+checkpoint_path = "MLP_model/MLP_model_SSD/cp.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
 
 # Create a callback that saves the model's weights
-cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
-                                                 save_weights_only=True,
-                                                 verbose=1)
+# cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
+#                                                  save_weights_only=True,
+#                                                  verbose=1)
 
-cpt = 0
-for path_ in dataset_path_tab:
-    X, Y, le = get_data(path_)
-    X = preprocessing.normalize(X, norm='max',axis = 0)
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+# cpt = 0
+# for path_ in dataset_path_tab:
+#     X, Y, le = get_data(path_)
+#     X = preprocessing.normalize(X, norm='max',axis = 0)
+#     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
 
-    class_weights = class_weight.compute_class_weight('balanced',
-                                                 np.unique(Y_train),
-                                                 Y_train)
-    print(class_weights)
+#     class_weights = class_weight.compute_class_weight('balanced',
+#                                                  np.unique(Y_train),
+#                                                  Y_train)
+#     print(class_weights)
 
-    nb_features = len(X[0])
-    nb_classes = max(Y)
-    train_size = len(X)
+#     nb_features = len(X[0])
+#     nb_classes = max(Y)
+#     train_size = len(X)
 
-    model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
-    #### Apprentissage                                                                                                                                                               
-    start = time.time()                                                                                                                   
-    hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt],cp_callback], class_weight=class_weights) 
-    end = time.time()
+#     model = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
+#     #### Apprentissage                                                                                                                                                               
+#     start = time.time()                                                                                                                   
+#     hist_obj = model.fit(X_train[0:train_size], Y_train[0:train_size], batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), callbacks = [tensorboard_callback[cpt],cp_callback], class_weight=class_weights, callbacks = [tensorboard_callback[cpt],cp_callback]) 
+#     end = time.time()
 
-    training_delay_RN.append(end - start)
-    history_obj.append( list(hist_obj.history.values()))
+#     training_delay_RN.append(end - start)
+#     history_obj.append( list(hist_obj.history.values()))
 
-    #### Prédiction                                                                                                                                                                  
-    start = time.time()
-    Y_pred_temp = model.predict(X_test)
-    end = time.time()
-    predicting_delay_RN.append(end - start)
+#     #### Prédiction                                                                                                                                                                  
+#     start = time.time()
+#     Y_pred_temp = model.predict(X_test)
+#     end = time.time()
+#     predicting_delay_RN.append(end - start)
 
-    # remise en forme de Y_pred
-    Y_pred = []
-    for i in Y_pred_temp:
-        # tmp = np.zeros(nb_classes)
-        # tmp[np.argmax(i)] = 1
-        #Y_pred.append(tmp)
+#     # remise en forme de Y_pred
+#     Y_pred = []
+#     for i in Y_pred_temp:
+#         # tmp = np.zeros(nb_classes)
+#         # tmp[np.argmax(i)] = 1
+#         #Y_pred.append(tmp)
 
-        Y_pred.append(np.argmax(i))    
+#         Y_pred.append(np.argmax(i))    
     
 
-    #print(metrics.confusion_matrix(Y_test, Y_pred))
-    #print(metrics.classification_report(Y_test, Y_pred, digits=3)) 
-    f1 = metrics.f1_score(Y_test, Y_pred,average='weighted')
-    acc = metrics.accuracy_score(Y_test, Y_pred)
-    print("acc :", acc,"f1 :", f1)
-    #  Assurez-vous d’avoir le paramètre average=‘weighted’ afin de pondérer correctement le score en fonction du nombre d’instances de chaque classe.
-    f1_RN.append(f1)
-    acc_RN.append(acc)
-    cpt+=1
+#     #print(metrics.confusion_matrix(Y_test, Y_pred))
+#     #print(metrics.classification_report(Y_test, Y_pred, digits=3)) 
+#     f1 = metrics.f1_score(Y_test, Y_pred,average='weighted')
+#     acc = metrics.accuracy_score(Y_test, Y_pred)
+#     print("acc :", acc,"f1 :", f1)
+#     #  Assurez-vous d’avoir le paramètre average=‘weighted’ afin de pondérer correctement le score en fonction du nombre d’instances de chaque classe.
+#     f1_RN.append(f1)
+#     acc_RN.append(acc)
+#     cpt+=1
 
-# Mise en forme des données pour l'affichage
-ho = np.array(history_obj)
-ho = ho.transpose(1,2,0)                                                                                                            
+# # Mise en forme des données pour l'affichage
+# ho = np.array(history_obj)
+# ho = ho.transpose(1,2,0)                                                                                                            
 
-# Pour affichage
-sub_title = ['loss','acc','val_loss','val_acc']
-x_lab = "epochs"
-leg = [str(i) for i in range(len(dataset_path_tab))]  
-titre = "RN : Dataset test"                                                                                                                                         
+# # Pour affichage
+# sub_title = ['loss','acc','val_loss','val_acc']
+# x_lab = "epochs"
+# leg = [str(i) for i in range(len(dataset_path_tab))]  
+# titre = "RN : Dataset test"                                                                                                                                         
 
-plot_perf_epochs(ho, leg, titre ,sub_title)
-plot_perf_delay(f1_RN,acc_RN,training_delay_RN,predicting_delay_RN,titre)
-plot_confusion_matrix(Y_test,Y_pred,class_names, title="TEST {}".format(0))
+# plot_perf_epochs(ho, leg, titre ,sub_title)
+# plot_perf_delay(f1_RN,acc_RN,training_delay_RN,predicting_delay_RN,titre)
+# plot_confusion_matrix(Y_test,Y_pred,class_names, title="TEST {}".format(0))
 
 #### Prédiction            
 # Loads the weights
