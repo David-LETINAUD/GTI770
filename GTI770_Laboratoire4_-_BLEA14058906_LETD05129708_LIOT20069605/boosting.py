@@ -66,7 +66,7 @@ def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
     #SVM MODEL
     # Y_pred_SVM = SVM_model_.predict_proba(X)
 
-    Y_pred_one_hot = weights[0] * Y_pred_RN[:,range(23)] + weights[1] * Y_pred_RF[:,range(23)] #+ weights[2]*Y_pred_SVM 
+    Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF #+ weights[2]*Y_pred_SVM 
     
     Y_pred = []
     for i in Y_pred_one_hot:
@@ -118,7 +118,7 @@ RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 SVM_models_path = ['./Models/svm_ssd.sav',"",""]
 
-#run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
 
 # # LOAD modeles
 # RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
