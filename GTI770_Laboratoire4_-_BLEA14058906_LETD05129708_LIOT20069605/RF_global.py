@@ -135,8 +135,8 @@ plot_perf_delay(acc, f1, train_delay,test_delay,"split")
 # Fit the model on training set
 X,Y,Label = get_data(path_marsyas)
 X = preprocessing.normalize(X, norm ='max',axis=0)
-X = X[:100]
-Y = Y[:100]
+X = X[:1000]
+Y = Y[:1000]
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_split=2,min_samples_leaf=1)
 rfc.fit(X_train, Y_train)
@@ -153,12 +153,11 @@ print(result)
 print(loaded_model)
 
 
-"""
 #path_SSD
 X,Y,Label = get_data(path_SSD)
 X = preprocessing.normalize(X, norm ='max',axis=0)
-X = X[:100]
-Y = Y[:100]
+X = X[:1000]
+Y = Y[:1000]
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_split=2,min_samples_leaf=1)
 rfc.fit(X_train, Y_train)
@@ -173,10 +172,10 @@ print(result)
 
 
 #path_MFC
-X,Y,Label = get_data(path_MFC)
+X,Y,Label = get_data(path_MFCC)
 X = preprocessing.normalize(X, norm ='max',axis=0)
-X = X[:100]
-Y = Y[:100]
+X = X[:1000]
+Y = Y[:1000]
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_split=2,min_samples_leaf=1)
 rfc.fit(X_train, Y_train)
@@ -188,6 +187,6 @@ loaded_model = pickle.load(open('rfc_mfc.sav', 'rb'))
 result = loaded_model.score(X_test, Y_test)
 print(loaded_model.predict(X_test))
 print(result)
-"""
+
 
 
