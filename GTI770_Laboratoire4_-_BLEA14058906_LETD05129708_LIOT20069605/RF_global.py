@@ -181,8 +181,8 @@ rfc = RandomForestClassifier(n_estimators=10,max_depth=10,n_jobs=-1,min_samples_
 rfc.fit(X_train, Y_train)
 
 # save the model to disk
-pickle.dump(rfc, open('rfc_mfc.sav', 'wb'))
-loaded_model = pickle.load(open('rfc_mfc.sav', 'rb'))
+pickle.dump(rfc, open('rfc_mfcc.sav', 'wb'))
+loaded_model = pickle.load(open('rfc_mfcc.sav', 'rb'))
 #print(loaded_model)
 result = loaded_model.score(X_test, Y_test)
 print(loaded_model.predict(X_test))
