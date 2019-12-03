@@ -23,6 +23,9 @@ from sklearn.utils import class_weight
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from RN_model import RN_model
+import pickle
+
+from sklearn import metrics
 
 layer_sizes = [500] # OK
 epochs = 100 # OK avec 100
@@ -33,98 +36,119 @@ dropout = 0.5
 
 
 
-
-def boosting(data_path, weights, RN, RF, SVM ):
+def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
     X, Y, id, le = get_data(data_path)
     X = preprocessing.normalize(X, norm='max',axis = 0)
 
-    X = X[:1000]
-    Y = Y[:1000]
-
     nb_features = len(X[0])
-    nb_classes = max(Y)
-    train_size = len(X) - 1 # -1 a cause de l ID
+    nb_classes = max(Y)+1
 
-    X_ID  = np.concatenate((X, id.T), axis=1)
+    #_, X_test, id_train, id_test, _, Y_test = train_test_ID_split(X,Y, id)
 
-    X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+    # LOAD modeles
+    RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
+    RN_model_.load_weights(RN_path)
 
-    X_train = X_train_ID[:, [range(train_size)]]
-    X_test  = X_test_ID[:, [range(train_size)]]
-    id = X_test_ID[:, [-1]]
+    pickle_in = open(RF_path, "rb")
+    RF_model_ = pickle.load(pickle_in)
 
-    class_weights = class_weight.compute_class_weight('balanced',
-                                                 np.unique(Y_train),
-                                                 Y_train)
+    # pickle_in = open(SVM_path, "rb")
+    # SVM_model_ = pickle.load(pickle_in)
 
+
+    #########################   predict modele
     # RN MODEL
-    hist_obj = RN.fit(X_train, Y_train, batch_size = batch_size, epochs = epochs, validation_data=(X_test, Y_test), class_weight=class_weights)
-    Y_pred_RN = RN.predict(X_test)
+    Y_pred_RN = RN_model_.predict_proba(X)
 
     # RF MODEL
-    RF.fit(X_train, Y_train)
-    Y_pred_RF = RF.predict_proba(X_test)
+    Y_pred_RF = RF_model_.predict_proba(X)
 
     #SVM MODEL
-    SVM.fit(X_train, Y_train)
-    Y_pred_SVM = SVM.predict_proba(X_test)
+    # Y_pred_SVM = SVM_model_.predict_proba(X)
 
-    Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM
-
+    Y_pred_one_hot = weights[0] * Y_pred_RN[:,range(23)] + weights[1] * Y_pred_RF[:,range(23)] #+ weights[2]*Y_pred_SVM 
+    
     Y_pred = []
     for i in Y_pred_one_hot:
         Y_pred.append(np.argmax(i))
 
+    Y_pred_label = list(le.inverse_transform(Y_pred))
+    
     # return id/Y_pred/acc/f1
-    return Y_pred
+    f1 = metrics.f1_score(Y, Y_pred,average='weighted')
+    acc = metrics.accuracy_score(Y, Y_pred)
+    print("acc :", acc,"f1 :", f1)
+    return id, Y_pred_label, acc, f1
 
 
-def run_boosting(data_path_tab, weights_tab, RN_models_path, RF_models_path, SVM_models_path):
-    return 0
-    # Load_models
-    #
-    # result = []
-    # for data_path,weights in zip(data_path_tab,weights_tab):
-    #     r = boosting(data_path,weights,RN,RF,SVM)
-    #     result.append(r)
+def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
+   
+    id_genre_pred = []
+    perf = []
+    for data_path,weights,rn_p,rf_p,svm_p in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path):
+        r = boosting(data_path,weights,rn_p,rf_p,svm_p)
+        id_genre_pred.append(r[0:2])
+        perf.append(r[2:4])
+
+    return id_genre_pred, perf
+
+
+data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
+# Calculer les poids
+#           SSD    MFCC  MARSYAS    
+MSSD_acc = [0.353, 0.25, 0.28]
+MFCC_acc = [0.249,0.27,0.17]
+MARSYAS_acc = [0.32,0.18,0.25]
+
+# RN_acc = [0.353,0.249, 0.320]
+# RN_f1 = [0.333,0.220,0.299]
+weight = []
+# Le poids est calculé selon le pourcentage que représente l'accuracy..
+# .. du modèle sur la somme total des accuracy sur le dataset étudié
+MSSD_total = np.sum(np.array(MSSD_acc))
+weight.append([a/MSSD_total for a in MSSD_acc])
+MFCC_total = np.sum(np.array(MFCC_acc))
+weight.append([a/MFCC_total for a in MFCC_acc])
+MARSYAS_total = np.sum(np.array(MARSYAS_acc))
+weight.append([a/MARSYAS_total for a in MARSYAS_acc])
+print(weight)
+
+
+RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
+RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
+SVM_models_path = ['./Models/svm_ssd.sav',"",""]
+
+#run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+
+# # LOAD modeles
+# RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
+# RN_model_.load_weights("Models/MLP_model_SSD/cp.ckpt")
+
+# Y_pred_RN = RN_model_.predict(X_test)
 
 
 
-data_path = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv" #=> MLP 30.7%
-X, Y, id, le = get_data(data_path)
+##### MARCHE BIEN
+# dp = "./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv"
+# X, Y, id, le = get_data(dp)
+# X = preprocessing.normalize(X, norm='max',axis = 0)
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8,random_state=60, stratify=Y)
+# X_train_v2, X_test_v2, id_train_v2, id_test_v2, Y_train_v2, Y_test_v2 = train_test_ID_split(X,Y, id)
 
-# Normalise ou autre traitement
-X_train,X_test, id_train, id_test, Y_train, Y_test = train_test_ID_split(X,Y, id)
-print(X_train[0], id_train[0])
-print(Y_train[0], le.inverse_transform([Y_train[0]]))
-# id = np.array([id[:1000]])
-# X = X[:1000]
-# Y = Y[:1000]
-
-# nb_features = len(X[0])# -1 a cause de l ID
+# nb_features = len(X[0])
 # nb_classes = max(Y)
 # train_size = len(X)
 
-# print(np.shape(X),np.shape(id))
-# X_ID  = np.concatenate((X, id.T),axis=1)
-# print(np.shape(X_ID))
+# model2 = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
+# model2.load_weights("Models/MLP_model_SSD/cp.ckpt")
 
-# #print(X_ID[:10])
+# Y_pred_temp2 = model2.predict(X_test_v2)
 
-# X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)  # 70% training and 30% test
+# remise en forme de Y_pred
+# Y_pred2 = []
+# for i in Y_pred_temp2:
+#     Y_pred2.append(np.argmax(i))    
 
-
-
-# X_train = X_train_ID[:, [range(nb_features)]]
-# X_test  = X_test_ID[:, [range(nb_features)]]
-# id_train = X_train_ID[:, [-1]]
-# id_test = X_test_ID[:, [-1]]
-
-# print("#################################################")
-# print(X[0], X_ID[0])
-# print("*************************************************")
-# print(X_train[0], X_train_ID[0] )
-# print("#################################################")
-# print(id_train[0])
-
-
+# f1 = metrics.f1_score(Y_test, Y_pred2,average='weighted')
+# acc = metrics.accuracy_score(Y_test, Y_pred2)
+# print("acc :", acc,"f1 :", f1)
