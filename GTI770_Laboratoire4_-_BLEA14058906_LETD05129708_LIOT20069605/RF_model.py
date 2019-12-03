@@ -50,7 +50,7 @@ def RF_dataset_study(path_list,n_estimators = 10,n_splits = 5):
 
         print(path)
 
-        X,Y = get_data(path)
+        X,Y,le = get_data(path)
         scores = []
         accuracy = []
         kf = KFold(n_splits)
@@ -67,7 +67,7 @@ def RF_dataset_study(path_list,n_estimators = 10,n_splits = 5):
         m_f1 = np.mean(scores)
         results.append((path,[m_acc,m_f1]))
 
-    results = np.array(results)
+    
 
     return results
 

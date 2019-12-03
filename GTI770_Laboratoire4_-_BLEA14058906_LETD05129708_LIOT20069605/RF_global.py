@@ -30,7 +30,7 @@ from sklearn.model_selection import KFold
 import sklearn.metrics as metrics
 import time
 from sklearn import preprocessing
-#from imblearn.under_sampling import RandomUnderSampler
+from imblearn.under_sampling import RandomUnderSampler
 import pickle
 
 
@@ -50,22 +50,23 @@ path_trh = "./tagged_feature_sets/msd-trh_dev/msd-trh_dev.csv"
 path_list = [path_marsyas]
 
 X,Y,Label = get_data(path_marsyas)
+
 X = preprocessing.normalize(X, norm ='max',axis=0)
 
-#X = X[:100]
-#Y = Y[:100]
+X = X[:10000]
+Y = Y[:10000]
 #rus = RandomUnderSampler(sampling_strategy='auto')
-#X,Y = rus.fit_resample(X,Y)
+#X,Y = rus.fit_sample(X,Y)
 
 
 
-#res = RF_dataset_study(path_list,5,5)
-#print(res)
+res = RF_dataset_study(path_list,5,5)
+print(res)
 
 #Etude des hyperparamètres
 
 #Nombre d'arbres
-"""
+
 list_estimators = [2,5]
 n_splits = 5
 res = RF_nbEstimators(X,Y,list_estimators,n_splits)
@@ -77,7 +78,7 @@ test_delay = res[:,3]
 plot_perf_delay(acc, f1, train_delay,test_delay,"nombre d'estimateurs")
 print(res)
 
-
+"""
 #Profondeur des arbres
 list_max_depth = [5,None]
 res = RF_maxDepth(X,Y,list_max_depth,n_splits = 5)
@@ -129,7 +130,7 @@ plot_perf_delay(acc, f1, train_delay,test_delay,"split")
 
 
 #############Saving models with pickle
-
+"""
 
 #Marsyas
 # Fit the model on training set
@@ -187,6 +188,6 @@ loaded_model = pickle.load(open('rfc_mfcc.sav', 'rb'))
 result = loaded_model.score(X_test, Y_test)
 print(loaded_model.predict(X_test))
 print(result)
-
+"""
 
 
