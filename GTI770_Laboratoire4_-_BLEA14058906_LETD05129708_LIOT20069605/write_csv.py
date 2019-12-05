@@ -24,7 +24,9 @@
 #Imports
 from functions import *
 from RF_model import *
+from boosting import *
 import numpy as np
 import csv
+
 
 #write file
