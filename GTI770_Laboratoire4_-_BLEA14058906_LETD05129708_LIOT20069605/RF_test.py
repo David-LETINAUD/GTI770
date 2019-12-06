@@ -71,7 +71,11 @@ RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 SVM_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 
-run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+pred,perf = run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+print(np.shape(pred))
+print(pred)
+
+print(np.shape(perf))
 
 
 
