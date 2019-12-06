@@ -135,7 +135,7 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test, C, gamma):
               Rapport de classification
 
     """
-    svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma)
+    svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma,cache_size=11264)
     start_train = time.time()
     svc_class.fit(X_train, Y_train)
     end_train = time.time()
