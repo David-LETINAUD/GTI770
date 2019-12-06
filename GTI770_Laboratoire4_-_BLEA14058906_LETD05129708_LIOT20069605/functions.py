@@ -189,17 +189,17 @@ def plot_confusion_matrix(y_true, y_pred, classes,
            # ylim = (-0.5,len(classes)-0.5)
            )
            # Rotate the tick labels and set their alignment.
-           plt.setp(ax.get_xticklabels(), rotation=90, ha="right",
+    plt.setp(ax.get_xticklabels(), rotation=90, ha="right",
                     rotation_mode="anchor")
            
            # Loop over data dimensions and create text annotations.
-           fmt = '.2f' if normalize else 'd'
-           thresh = cm.max() / 2.
-           for i in range(cm.shape[0]):
-               for j in range(cm.shape[1]):
-                   ax.text(j, i, format(cm[i, j], fmt),
-                           ha="center", va="center",
-                           color="white" if cm[i, j] > thresh else "black")
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
                #fig.tight_layout()
     plt.show()
     return ax

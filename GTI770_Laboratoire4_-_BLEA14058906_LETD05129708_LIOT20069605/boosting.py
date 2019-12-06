@@ -37,60 +37,60 @@ dropout = 0.5
 
 
 def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
-X, Y, id, le = get_data(data_path)
-X = preprocessing.normalize(X, norm='max',axis = 0)
+    X, Y, id, le = get_data(data_path)
+    X = preprocessing.normalize(X, norm='max',axis = 0)
 
-nb_features = len(X[0])
-nb_classes = max(Y)+1
+    nb_features = len(X[0])
+    nb_classes = max(Y)+1
 
-#_, X_test, id_train, id_test, _, Y_test = train_test_ID_split(X,Y, id)
+    #_, X_test, id_train, id_test, _, Y_test = train_test_ID_split(X,Y, id)
 
-# LOAD modeles
-RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
-RN_model_.load_weights(RN_path)
+    # LOAD modeles
+    RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
+    RN_model_.load_weights(RN_path)
 
-pickle_in = open(RF_path, "rb")
-RF_model_ = pickle.load(pickle_in)
+    pickle_in = open(RF_path, "rb")
+    RF_model_ = pickle.load(pickle_in)
 
-# pickle_in = open(SVM_path, "rb")
-# SVM_model_ = pickle.load(pickle_in)
+    # pickle_in = open(SVM_path, "rb")
+    # SVM_model_ = pickle.load(pickle_in)
 
 
-#########################   predict modele
-# RN MODEL
-Y_pred_RN = RN_model_.predict_proba(X)
+    #########################   predict modele
+    # RN MODEL
+    Y_pred_RN = RN_model_.predict_proba(X)
 
-# RF MODEL
-Y_pred_RF = RF_model_.predict_proba(X)
+    # RF MODEL
+    Y_pred_RF = RF_model_.predict_proba(X)
 
-#SVM MODEL
-# Y_pred_SVM = SVM_model_.predict_proba(X)
+    #SVM MODEL
+    # Y_pred_SVM = SVM_model_.predict_proba(X)
 
-Y_pred_one_hot = weights[0] * Y_pred_RN[:,range(23)] + weights[1] * Y_pred_RF[:,range(23)] #+ weights[2]*Y_pred_SVM
+    Y_pred_one_hot = weights[0] * Y_pred_RN[:,range(23)] + weights[1] * Y_pred_RF[:,range(23)] #+ weights[2]*Y_pred_SVM
 
-Y_pred = []
-for i in Y_pred_one_hot:
-Y_pred.append(np.argmax(i))
+    Y_pred = []
+    for i in Y_pred_one_hot:
+        Y_pred.append(np.argmax(i))
 
-Y_pred_label = list(le.inverse_transform(Y_pred))
+    Y_pred_label = list(le.inverse_transform(Y_pred))
 
-# return id/Y_pred/acc/f1
-f1 = metrics.f1_score(Y, Y_pred,average='weighted')
-acc = metrics.accuracy_score(Y, Y_pred)
-print("acc :", acc,"f1 :", f1)
-return id, Y_pred_label, acc, f1
+    # return id/Y_pred/acc/f1
+    f1 = metrics.f1_score(Y, Y_pred,average='weighted')
+    acc = metrics.accuracy_score(Y, Y_pred)
+    print("acc :", acc,"f1 :", f1)
+    return id, Y_pred_label, acc, f1
 
 
 def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
 
-id_genre_pred = []
-perf = []
-for data_path,weights,rn_p,rf_p,svm_p in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path):
-r = boosting(data_path,weights,rn_p,rf_p,svm_p)
-id_genre_pred.append(r[0:2])
-perf.append(r[2:4])
+    id_genre_pred = []
+    perf = []
+    for data_path,weights,rn_p,rf_p,svm_p in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path):
+        r = boosting(data_path,weights,rn_p,rf_p,svm_p)
+        id_genre_pred.append(r[0:2])
+        perf.append(r[2:4])
 
-return id_genre_pred, perf
+    return id_genre_pred, perf
 
 
 data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
@@ -118,7 +118,7 @@ RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 SVM_models_path = ['./Models/svm_ssd.sav',"",""]
 
-#run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
 
 # # LOAD modeles
 # RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
