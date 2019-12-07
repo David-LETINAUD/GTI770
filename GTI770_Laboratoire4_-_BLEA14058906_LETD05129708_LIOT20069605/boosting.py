@@ -24,6 +24,8 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from RN_model import RN_model
 import pickle
+from sklearn.decomposition import PCA
+from SVC_model import PCA_Find_ncomp
 
 from sklearn import metrics
 
@@ -40,6 +42,13 @@ def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
     X, Y, id, le = get_data(data_path)
     X = preprocessing.normalize(X, norm='max',axis = 0)
 
+    # PCA pour SVM
+    N_comp=PCA_Find_ncomp(X,0.95)
+
+    pca = PCA(n_components=32)
+    pca.fit(X)
+    PCA_X = pca.transform(X)
+
     nb_features = len(X[0])
     nb_classes = max(Y)+1
 
@@ -49,24 +58,27 @@ def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
     RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
     RN_model_.load_weights(RN_path)
 
-    pickle_in = open(RF_path, "rb")
-    RF_model_ = pickle.load(pickle_in)
+    # pickle_in = open(RF_path, "rb")
+    # RF_model_ = pickle.load(pickle_in)
 
-    # pickle_in = open(SVM_path, "rb")
-    # SVM_model_ = pickle.load(pickle_in)
+    pickle_in = open(SVM_path, "rb")
+    SVM_model_ = pickle.load(pickle_in)
 
 
     #########################   predict modele
     # RN MODEL
-    Y_pred_RN = RN_model_.predict_proba(X)
+    #Y_pred_RN = RN_model_.predict_proba(X)
 
     # RF MODEL
-    Y_pred_RF = RF_model_.predict_proba(X)
+   # Y_pred_RF = RF_model_.predict_proba(X)
 
     #SVM MODEL
-    # Y_pred_SVM = SVM_model_.predict_proba(X)
+    Y_pred_SVM = SVM_model_.predict(PCA_X[:10])
+    print("###################")
+    print(Y_pred_SVM)
+    print("###################")
 
-    Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF #+ weights[2]*Y_pred_SVM 
+    Y_pred_one_hot = Y_pred_SVM# weights[0] * Y_pred_RN + weights[2]*Y_pred_SVM # weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
     Y_pred = []
     for i in Y_pred_one_hot:
@@ -95,10 +107,10 @@ def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
 
 data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
 # Calculer les poids
-#           SSD    MFCC  MARSYAS    
-MSSD_acc = [0.353, 0.25, 0.28]
-MFCC_acc = [0.249,0.27,0.17]
-MARSYAS_acc = [0.32,0.18,0.25]
+#           RN    RF  SVM    
+MSSD_acc = [0.353, 0.2786, 0.31]
+MFCC_acc = [0.249,0.2842,0.07]
+MARSYAS_acc = [0.32,0.2624,0.27]
 
 # RN_acc = [0.353,0.249, 0.320]
 # RN_f1 = [0.333,0.220,0.299]
@@ -116,7 +128,7 @@ print(weight)
 
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
-SVM_models_path = ['./Models/svm_ssd.sav',"",""]
+SVM_models_path = ['./Models/svm_ssd.sav',"./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
 
 run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
 
