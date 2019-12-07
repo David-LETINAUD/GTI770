@@ -30,6 +30,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
 import sklearn.metrics as metrics
 import time
+import csv
 
 
 #Ouverture
@@ -72,10 +73,33 @@ RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_m
 SVM_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 
 pred,perf = run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
-print(np.shape(pred))
-print(pred)
 
-print(np.shape(perf))
+#### Ecriture
+
+pred_X, pred_Y, pred_Z = pred[0][:][:],pred[1][:][:],pred[2][:][:]
+list_files = ['SSD_pred_file.csv','MFCC_pred_file.csv','MARSYAS_pred_file.csv']
+
+
+def write_pred_csv(title_csv,prediction_list):
+
+    """
+        ecriture csv, ! format prediction_list,
+    """
+
+    with open(title_csv, mode = 'w') as pred_file :
+        file_writer = csv.writer(pred_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for i in range(len(prediction_list[0])):
+            file_writer.writerow([prediction_list[0][i],prediction_list[1][i]])
+
+
+write_pred_csv(list_files[0],pred_X)
+write_pred_csv(list_files[1],pred_Y)
+write_pred_csv(list_files[2],pred_Z)
+
+                            
+
+
+
 
 
 

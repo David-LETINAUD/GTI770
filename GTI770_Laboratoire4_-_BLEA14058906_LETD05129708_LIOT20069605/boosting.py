@@ -93,7 +93,11 @@ def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
     return id_genre_pred, perf
 
 
-data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
+
+
+#### Ecriture CSV
+
+data_path = [path_SSD,path_MFC,path_marsyas]
 # Calculer les poids
 #           SSD    MFCC  MARSYAS
 MSSD_acc = [0.353, 0.25, 0.28]
@@ -116,9 +120,34 @@ print(weight)
 
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
-SVM_models_path = ['./Models/svm_ssd.sav',"",""]
+SVM_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 
-run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+pred,perf = run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+
+#### Ecriture
+
+pred_X, pred_Y, pred_Z = pred[0][:][:],pred[1][:][:],pred[2][:][:]
+list_files = ['SSD_pred_file.csv','MFCC_pred_file.csv','MARSYAS_pred_file.csv']
+
+
+def write_pred_csv(title_csv,prediction_list):
+    
+    """
+        ecriture csv, ! format prediction_list,
+        """
+    
+    with open(title_csv, mode = 'w') as pred_file :
+        file_writer = csv.writer(pred_file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for i in range(len(prediction_list[0])):
+            file_writer.writerow([prediction_list[0][i],prediction_list[1][i]])
+
+
+write_pred_csv(list_files[0],pred_X)
+write_pred_csv(list_files[1],pred_Y)
+write_pred_csv(list_files[2],pred_Z)
+#######################################
+
+
 
 # # LOAD modeles
 # RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
