@@ -157,7 +157,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     """
     if not title:
         if normalize:
-            title = 'Normalized confusion matrix'
+            title = 'Normalized confusion matrix (in %)'
         else:
             title = 'Confusion matrix, without normalization'
 
@@ -168,7 +168,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     #classes = classes[tmp]
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
+        cm = cm * 100 # affichage en % pour un meilleur affichage
+        print("Normalized confusion matrix (in %)")
     else:
         print('Confusion matrix, without normalization')
 

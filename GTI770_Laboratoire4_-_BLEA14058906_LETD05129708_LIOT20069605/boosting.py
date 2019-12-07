@@ -38,52 +38,60 @@ dropout = 0.5
 
 
 
-def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
+def boosting(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp ):
     X, Y, id, le = get_data(data_path)
+
+    dataset_size = 10000 #len(X)
+    X = X[:dataset_size]
+    Y = Y[:dataset_size]
+
     X = preprocessing.normalize(X, norm='max',axis = 0)
 
     # PCA pour SVM
-    N_comp=PCA_Find_ncomp(X,0.95)
-
-    pca = PCA(n_components=32)
-    pca.fit(X)
-    PCA_X = pca.transform(X)
+    if SVM_N_comp>0:
+        pca = PCA(n_components=SVM_N_comp)
+        pca.fit(X)
+        PCA_X = pca.transform(X)
+    else:
+        PCA_X = X
 
     nb_features = len(X[0])
     nb_classes = max(Y)+1
-
-    #_, X_test, id_train, id_test, _, Y_test = train_test_ID_split(X,Y, id)
 
     # LOAD modeles
     RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
     RN_model_.load_weights(RN_path)
 
-    # pickle_in = open(RF_path, "rb")
-    # RF_model_ = pickle.load(pickle_in)
+    pickle_in = open(RF_path, "rb")
+    RF_model_ = pickle.load(pickle_in)
 
     pickle_in = open(SVM_path, "rb")
     SVM_model_ = pickle.load(pickle_in)
 
-
     #########################   predict modele
     # RN MODEL
-    #Y_pred_RN = RN_model_.predict_proba(X)
+    Y_pred_RN = RN_model_.predict_proba(X)
 
     # RF MODEL
-   # Y_pred_RF = RF_model_.predict_proba(X)
+    Y_pred_RF = RF_model_.predict_proba(X)
 
     #SVM MODEL
-    Y_pred_SVM = SVM_model_.predict(PCA_X[:10])
-    print("###################")
-    print(Y_pred_SVM)
-    print("###################")
+    Y_pred_SVM_tmp = SVM_model_.predict(PCA_X)
+    Y_pred_SVM = []
+    for i in Y_pred_SVM_tmp:
+        one_hot = np.zeros(nb_classes)
+        one_hot[i]=0.5
+        Y_pred_SVM.append(one_hot)
+    Y_pred_SVM = np.array(Y_pred_SVM)
 
-    Y_pred_one_hot = Y_pred_SVM# weights[0] * Y_pred_RN + weights[2]*Y_pred_SVM # weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
+    # Combinaison des décisions
+    Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
     Y_pred = []
     for i in Y_pred_one_hot:
         Y_pred.append(np.argmax(i))
 
+    # Transform numeros de classes en noms
     Y_pred_label = list(le.inverse_transform(Y_pred))
     
     # return id/Y_pred/acc/f1
@@ -93,12 +101,12 @@ def boosting(data_path, weights, RN_path, RF_path, SVM_path ):
     return id, Y_pred_label, acc, f1
 
 
-def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
+def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab):
    
     id_genre_pred = []
     perf = []
-    for data_path,weights,rn_p,rf_p,svm_p in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path):
-        r = boosting(data_path,weights,rn_p,rf_p,svm_p)
+    for data_path,weights,rn_p,rf_p,svm_p, n_comp in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab):
+        r = boosting(data_path,weights,rn_p,rf_p,svm_p,n_comp)
         id_genre_pred.append(r[0:2])
         perf.append(r[2:4])
 
@@ -108,7 +116,7 @@ def run_boosting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path):
 data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
 # Calculer les poids
 #           RN    RF  SVM    
-MSSD_acc = [0.353, 0.2786, 0.31]
+MSSD_acc = [0.315, 0.2786, 0.31]
 MFCC_acc = [0.249,0.2842,0.07]
 MARSYAS_acc = [0.32,0.2624,0.27]
 
@@ -124,13 +132,15 @@ weight.append([a/MFCC_total for a in MFCC_acc])
 MARSYAS_total = np.sum(np.array(MARSYAS_acc))
 weight.append([a/MARSYAS_total for a in MARSYAS_acc])
 print(weight)
+#weight = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
 
 
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
-SVM_models_path = ['./Models/svm_ssd.sav',"./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
+SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
+SVM_N_comp_tab = [32, -1,32]
 
-run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path)
+run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab)
 
 # # LOAD modeles
 # RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
