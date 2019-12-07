@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from RN_model import RN_model
 import pickle
-
+import csv
 from sklearn import metrics
 
 layer_sizes = [500] # OK
