@@ -76,13 +76,14 @@ def boosting(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp ):
     Y_pred_RF = RF_model_.predict_proba(X)
 
     #SVM MODEL
-    Y_pred_SVM_tmp = SVM_model_.predict(PCA_X)
-    Y_pred_SVM = []
-    for i in Y_pred_SVM_tmp:
-        one_hot = np.zeros(nb_classes)
-        one_hot[i]=0.5
-        Y_pred_SVM.append(one_hot)
-    Y_pred_SVM = np.array(Y_pred_SVM)
+    Y_pred_SVM = SVM_model_.predict_proba(PCA_X)
+    # Y_pred_SVM_tmp = SVM_model_.predict(PCA_X)
+    # Y_pred_SVM = []
+    # for i in Y_pred_SVM_tmp:
+    #     one_hot = np.zeros(nb_classes)
+    #     one_hot[i]=0.5
+    #     Y_pred_SVM.append(one_hot)
+    # Y_pred_SVM = np.array(Y_pred_SVM)
 
     # Combinaison des décisions
     Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
@@ -138,7 +139,7 @@ print(weight)
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
-SVM_N_comp_tab = [32, -1,32]
+SVM_N_comp_tab = [28, -1,32]
 
 run_boosting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab)
 
