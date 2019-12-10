@@ -29,7 +29,7 @@ import pandas as pd
 ########################################   Lecture   ########################################
 def get_data(dataset_path):
     """
-    Lit et retourne les données du fichier csv spécifié en entré  
+    Lit et retourne les données du fichier csv spécifié en entrée  
     input :
         dataset_path (string) : nom du fichier à ouvrir
     output : 
@@ -46,6 +46,33 @@ def get_data(dataset_path):
     id= np.array(features_list.iloc[:,1])
 
     return X, Y, id, le
+
+def get_data_whithout_labels(dataset_path):
+    """
+    Lit et retourne les données du fichier csv (sans labels) spécifié en entrée  
+    input :
+        dataset_path (string) : nom du fichier à ouvrir
+    output : 
+        X, id, classes_
+    """
+
+    # Lecture du CSV
+    features_list = pd.read_csv(dataset_path, header=None, sep = ',')
+
+    # Get_Label
+    X = np.array(features_list.iloc[:,2:-1])
+    id= np.array(features_list.iloc[:,1])
+
+    # liste des classes tel que le ressort le.classes_
+    classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
+                'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
+                'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
+                'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
+                'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
+                'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
+
+    return X, id, classes_
+
 
 def train_test_ID_split(X, Y, id):
     id = np.array([id])
