@@ -17,9 +17,11 @@ GTI770-A19-01
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
 from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
+from sklearn.utils import class_weight
 import time
 from sklearn import svm
 from sklearn.metrics import classification_report, confusion_matrix, f1_score
+import numpy as np
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import PCA
@@ -135,7 +137,8 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test, C, gamma):
               Rapport de classification
 
     """
-    svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma,cache_size=11264)
+    svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma,cache_size=11264,probability=True,class_weight='balanced')
+
     start_train = time.time()
     svc_class.fit(X_train, Y_train)
     end_train = time.time()

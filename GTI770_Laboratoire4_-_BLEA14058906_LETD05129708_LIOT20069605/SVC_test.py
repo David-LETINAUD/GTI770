@@ -19,23 +19,28 @@ GTI770-A19-01
 
 from SVC_model import PCA_Find_ncomp, PCA_transform, SVM_Gridsearch, SVC_Linear, SVC_rbf
 from functions import *
+from sklearn.utils import class_weight
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
+import numpy as np
 import pandas as pd
 import pickle
 
-# SSD_path = "/home/ens/AN03460/Desktop/TP4/music/music/tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv"
+SSD_path = "/home/ens/AN03460/Desktop/TP4/music/music/tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv"
 #
-# X, Y, le = get_data(SSD_path)
-# X = preprocessing.normalize(X, norm='max', axis=0)
-# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random_state=60, stratify=Y)
+X, Y, id,le = get_data(SSD_path)
+X = preprocessing.normalize(X, norm='max', axis=0)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random_state=60, stratify=Y)
+class_weights = class_weight.compute_class_weight('balanced',
+                                                  np.unique(Y_train),
+                                                  Y_train)
 #
 #
-# N_comp = PCA_Find_ncomp(X_train, 0.95)
+N_comp = PCA_Find_ncomp(X_train, 0.95)
 #
 # print(N_comp)
 #
-# PCA_X_Train, PCA_X_Test = PCA_transform(X_train, X_test, N_comp)
+PCA_X_Train, PCA_X_Test = PCA_transform(X_train, X_test, N_comp)
 #
 #
 #
@@ -86,11 +91,11 @@ import pickle
 # print(N_comp)
 
 
-dataset_path=("/home/ens/AN03460/Desktop/TP4/music/music/tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
-print('Test ACC mfccs')
-X, Y,le = get_data(dataset_path)
-X = preprocessing.normalize(X, norm='max',axis = 0)
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random_state=60, stratify=Y)
+# dataset_path=("/home/ens/AN03460/Desktop/TP4/music/music/tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv")
+# print('Test ACC mfccs')
+# X, Y,le = get_data(dataset_path)
+# X = preprocessing.normalize(X, norm='max',axis = 0)
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random_state=60, stratify=Y)
 # N_comp=PCA_Find_ncomp(X_train,0.95)
 # print(N_comp)
 
@@ -99,12 +104,13 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8, random
 
 #PCA_X_Train,PCA_X_Test=PCA_transform(X_train,X_test,N_comp)
 
-Grid = SVM_Gridsearch(X_train[:30000], Y_train[:30000])
+#Grid = SVM_Gridsearch(X_train[:30000], Y_train[:30000])
 
-print('best param')
-print(Grid.best_params_)
+#print('best param')
+#print(Grid.best_params_)
 
 
-print('best score')
-print(Grid.best_score_)
+#print('best score')
+#print(Grid.best_score_)
 
+Svc_ssd,y_pred,train_time,pred_time=SVC_rbf(PCA_X_Train[:2000], Y_train[:2000], PCA_X_Test[:2000], Y_test[:2000], 10, 1)
