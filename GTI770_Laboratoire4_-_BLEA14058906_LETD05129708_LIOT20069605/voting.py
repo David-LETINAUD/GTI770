@@ -29,22 +29,23 @@ from SVC_model import PCA_Find_ncomp
 
 from sklearn import metrics
 
-layer_sizes = [500] # OK
-epochs = 100 # OK avec 100
+# Hyperparamètre des réseaux de neurones
+layer_sizes = [500]
+epochs = 100 
 learning_rate = 0.001
 batch_size = 500
 
 dropout = 0.5
 
 
-
-def combining(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp, with_labels = True ):
+def voting_L1(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp,classes_, with_labels = True ):
     if with_labels == True:
         X, Y, id, le = get_data(data_path)
     else :
-        X, id, classes_ = get_data_whithout_labels(data_path)
+        X, id = get_data_whithout_labels(data_path)
+        Y = [-1]
 
-    # dataset_size = 100 #len(X)
+    # dataset_size = 1000 #len(X)
     # X = X[:dataset_size]
     # if with_labels == True:
     #     Y = Y[:dataset_size]
@@ -61,10 +62,7 @@ def combining(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp, with_l
 
     # Calcul nb de features et de classes
     nb_features = len(X[0])
-    if with_labels == True:
-        nb_classes = max(Y)+1
-    else :
-        nb_classes = len(classes_)
+    nb_classes = len(classes_)
 
     # LOAD modeles
     RN_model_ = RN_model(layer_sizes, dropout, learning_rate, nb_features, nb_classes)
@@ -76,7 +74,7 @@ def combining(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp, with_l
     pickle_in = open(SVM_path, "rb")
     SVM_model_ = pickle.load(pickle_in)
 
-    #########################   predict modele
+    #########################   prediction
     # RN MODEL
     Y_pred_RN = RN_model_.predict_proba(X)
 
@@ -89,11 +87,12 @@ def combining(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp, with_l
     ######################### Combinaison des décisions
     Y_pred = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
-    return Y_pred, id
+    return Y_pred, id, Y
     
 
 
-def run_combining(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab, with_labels = True):
+def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab, with_labels = True):
+    # liste des classes tel que le ressort le.classes_
     classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
                 'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
                 'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
@@ -109,43 +108,33 @@ def run_combining(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_c
     sum_L2 = np.sum(np.array(weight_L2))
     weight_L2_normalize = [w/sum_L2 for w in weight_L2]
 
-    id_genre_pred = []
-    perf = []
-
     Y_pred_proba_tab=[]
 
-    cpt = 0
     for data_path,weights,rn_p,rf_p,svm_p, n_comp in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab):
-        if cpt != 1:
-            r,id = combining(data_path,weights,rn_p,rf_p,svm_p,n_comp, with_labels)
-            Y_pred_proba_tab.append(r)
-        else :
-            Y_pred_proba_tab.append(0)
-        cpt+=1
+        r,id, Y = voting_L1(data_path,weights,rn_p,rf_p,svm_p,n_comp,classes_, with_labels)
+        Y_pred_proba_tab.append(r)
 
-        # Les 3 résultats doivent êux même être combiné
-
-        # id_genre_pred.append(r[0:2])
-        # if with_labels == True:
-        #     perf.append(r[2:4])
     #Y_pred_one_hot = weight_L2[0]*Y_pred_one_hot_tab[0] + weight_L2[1]*Y_pred_one_hot_tab[1]+ weight_L2[2]*Y_pred_one_hot_tab[2]
     #Y_pred_one_hot = weight_L2_normalize[0]*Y_pred_one_hot_tab[0] + weight_L2_normalize[1]*Y_pred_one_hot_tab[1] + weight_L2_normalize[2]*Y_pred_one_hot_tab[2]
     Y_pred_proba = weight_L2_normalize[0]*Y_pred_proba_tab[0] + weight_L2_normalize[2]*Y_pred_proba_tab[2]
     Y_pred = []
 
+    # Prendre le vote maximal
     for i in Y_pred_proba:
         Y_pred.append(np.argmax(i))
 
+    # Conversion du nombre en label
     Y_pred_label = [classes_[i] for i in Y_pred ]
 
-    return id, Y_pred_label
-    # if with_labels == True:
-    #     return id_genre_pred, perf
-    # else :
-    #      return id_genre_pred
+    if with_labels == True:
+        f1 = metrics.f1_score(Y, Y_pred,average='weighted')
+        acc = metrics.accuracy_score(Y, Y_pred)
+        return [id, Y_pred_label], [acc,f1]
+    else :
+         return id, Y_pred_label
 
 
-#data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
+data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
 data_path_nolabels = ["./untagged_feature_sets/msd-ssd_test_nolabels/msd-ssd_test_nolabels.csv", "./untagged_feature_sets/msd-jmirmfccs_test_nolabels/msd-jmirmfccs_test_nolabels.csv", "./untagged_feature_sets/msd-marsyas_test_new_nolabels/msd-marsyas_test_new_nolabels.csv"] #=> MLP 30.7%
 
 # Calculer les poids
@@ -174,16 +163,11 @@ RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_m
 SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
 SVM_N_comp_tab = [28, -1,32]
 
-#run_combining(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=True)
+# Dataset d'entrainement avec label
+#pred, perf = voting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=True)
 
-pred = run_combining(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=False)
-
-
-
-#pred_X, pred_Y, pred_Z = pred[0][:][:],pred[1][:][:],pred[2][:][:]
-
-
-# list_files = ['SSD_pred_file.csv','MFCC_pred_file.csv','MARSYAS_pred_file.csv']
+# Dataset de validation sans label
+pred = voting(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=False)
 
 def write_pred_csv(title_csv,prediction_list):
     
@@ -199,8 +183,6 @@ def write_pred_csv(title_csv,prediction_list):
 
 
 write_pred_csv("6_modeles.csv",pred)
-# write_pred_csv(list_files[1],pred_Y)
-# write_pred_csv(list_files[2],pred_Z)
 
 
 #Final SSD_acc = 0.26981 -> 0.404

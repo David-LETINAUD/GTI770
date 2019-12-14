@@ -54,7 +54,7 @@ def get_data_whithout_labels(dataset_path):
     input :
         dataset_path (string) : nom du fichier à ouvrir
     output : 
-        X, id, classes_
+        X, id
     """
 
     # Lecture du CSV
@@ -64,15 +64,7 @@ def get_data_whithout_labels(dataset_path):
     X = np.array(features_list.iloc[:,2:-1])
     id= np.array(features_list.iloc[:,1])
 
-    # liste des classes tel que le ressort le.classes_
-    classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
-                'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
-                'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
-                'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
-                'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
-                'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
-
-    return X, id, classes_
+    return X, id
 
 
 def plot_perf_epochs(histo,legende,titre,sous_titre): 
