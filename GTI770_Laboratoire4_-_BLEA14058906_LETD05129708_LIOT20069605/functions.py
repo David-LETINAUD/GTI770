@@ -178,7 +178,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     #classes = classes[tmp]
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        cm = cm * 100 # affichage en % pour un meilleur affichage
+        cm = cm * 100 # affichage en % pour une meilleure visibilité
         print("Normalized confusion matrix (in %)")
     else:
         print('Confusion matrix, without normalization')
@@ -205,7 +205,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
     # Loop over data dimensions and create text annotations.
     # fmt = '.2f' if normalize else 'd'
-    fmt = '.0f' if normalize else 'd'
+    fmt = '.0f' if normalize else 'd' pour une meilleure visibilité
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
