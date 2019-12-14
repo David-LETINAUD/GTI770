@@ -46,7 +46,7 @@ def get_data(dataset_path):
     X = np.array(features_list.iloc[:,2:-1])
     id= np.array(features_list.iloc[:,1])
 
-    # dataset_size = 10000 #len(X)
+    # dataset_size = 100 #len(X)
     # X = X[:dataset_size]
     # Y = Y[:dataset_size]
     # id = id[:dataset_size]
