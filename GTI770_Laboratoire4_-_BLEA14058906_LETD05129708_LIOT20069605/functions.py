@@ -205,7 +205,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
     # Loop over data dimensions and create text annotations.
     # fmt = '.2f' if normalize else 'd'
-    fmt = '.0f' if normalize else 'd' pour une meilleure visibilité
+    fmt = '.0f' if normalize else 'd' #pour une meilleure visibilité
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
