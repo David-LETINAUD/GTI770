@@ -46,6 +46,11 @@ def get_data(dataset_path):
     X = np.array(features_list.iloc[:,2:-1])
     id= np.array(features_list.iloc[:,1])
 
+    # dataset_size = 10000 #len(X)
+    # X = X[:dataset_size]
+    # Y = Y[:dataset_size]
+    # id = id[:dataset_size]
+
     return X, Y, id, le
 
 def get_data_whithout_labels(dataset_path):
@@ -54,7 +59,7 @@ def get_data_whithout_labels(dataset_path):
     input :
         dataset_path (string) : nom du fichier à ouvrir
     output : 
-        X, id
+        (np.ndarray) : X, id
     """
 
     # Lecture du CSV
@@ -199,7 +204,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
              rotation_mode="anchor")
 
     # Loop over data dimensions and create text annotations.
-    fmt = '.2f' if normalize else 'd'
+    # fmt = '.2f' if normalize else 'd'
+    fmt = '.0f' if normalize else 'd'
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):

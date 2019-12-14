@@ -39,16 +39,29 @@ dropout = 0.5
 
 
 def voting_L1(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp,classes_, with_labels = True ):
+    """
+    1ère couche du système de vote
+    lance la combinaison de 3 modèles regrouppé par un même dataset
+    input :
+        data_path_tab (string ) : nom du features set
+        weights (float list) : poids à associer à chaque modèle
+        RN_path (string) : chemins du modèle RN à charger 
+        RF_path (string) : chemins du modèle RF à charger 
+        SVM_path (string) : chemins du modèle SVM à charger 
+        SVM_N_comp (int) : nombre de composants à utiliser pour PCA des modèles SVM
+        classes_ (string list) : liste des classes des features set
+        with_labels (boolean) : spécifie si le features set comporte les labels correspondant aux ID
+    output : 
+      Retourne les vecteurs de probabilité prédit par l'association des 3 modèles
+      et les identifiants qui leur sont associés
+      Retourne aussi les labels si le features set contient les labels de sortie
+        (np.ndarray) : Y_pred, id, Y
+    """
     if with_labels == True:
         X, Y, id, le = get_data(data_path)
     else :
         X, id = get_data_whithout_labels(data_path)
-        Y = [-1]
-
-    # dataset_size = 1000 #len(X)
-    # X = X[:dataset_size]
-    # if with_labels == True:
-    #     Y = Y[:dataset_size]
+        Y = np.array([-1])
 
     X = preprocessing.normalize(X, norm='max',axis = 0)
 
@@ -85,25 +98,37 @@ def voting_L1(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp,classes
     Y_pred_SVM = SVM_model_.predict_proba(PCA_X)
 
     ######################### Combinaison des décisions
-    Y_pred = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
+    Y_pred_proba = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
-    return Y_pred, id, Y
+    return Y_pred_proba, id, Y
     
 
+def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab,classes_, with_labels = True):
+    """
+    Lance le système de max vote avec 9 modèles sur 3 datasets (3 modèles pour 1 features set)
+    input :
+        data_path_tab (string list) : nom des features set
+        weights_tab (list of float list) : poids à associer à chaque modèle (regroupement par features set)
+        RN_path (string list) : liste des chemins des modèles RN à charger 
+        RF_path (string list) : liste des chemins des modèles RF à charger 
+        SVM_path (string list) : liste des chemins des modèles SVM à charger 
+        SVM_N_comp_tab (int list) : liste du nombre de composants à utiliser pour PCA des modèles SVM
+        classes_ (string list) : liste des classes des features set
+        with_labels (boolean) : spécifie si les features set comportent les labels correspondant aux ID
+    output : 
+    Retourne l'identifiant avec la classe prédite correspondante
+    Retourne aussi les performances si les features set comportent les labels de sorties
+      if with_labels = True
+        (np.ndarray) : id, Y_pred_label, Y_pred, Y
+        (float) : acc, f1
+      else :
+        (np.ndarray) : id, Y_pred_label
+    """
 
-def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab, with_labels = True):
-    # liste des classes tel que le ressort le.classes_
-    classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
-                'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
-                'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
-                'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
-                'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
-                'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
-
-        # SSD MFCC MARSYAS
-    # ACC = [0.274,0.155, 0.238]        # Accuracy correspondant à la combinaison de 3 modèles RN RF et SVM par features set
-    Ponderation = [0.666,0.402,0.599]   # Somme des accuracys de chaque modèles en réponse au dataset SSD MFCC MARSYAS
-    ACC = [0.274,0, 0.238]                
+    # SSD MFCC MARSYAS
+    ACC = [0.274,0.155, 0.238]        # Accuracy correspondant à la combinaison de 3 modèles RN RF et SVM par features set
+    #ACC = [0.274,0, 0.238] 
+    Ponderation = [0.666,0.402,0.599]   # Somme des accuracys de chaque modèles en réponse au dataset SSD MFCC MARSYAS                 
     weight_L2 = [p*a for a,p in zip(ACC,Ponderation)]
     sum_L2 = np.sum(np.array(weight_L2))
     weight_L2_normalize = [w/sum_L2 for w in weight_L2]
@@ -129,10 +154,17 @@ def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab
     if with_labels == True:
         f1 = metrics.f1_score(Y, Y_pred,average='weighted')
         acc = metrics.accuracy_score(Y, Y_pred)
-        return [id, Y_pred_label], [acc,f1]
+        return [id, Y_pred_label, Y_pred, Y], [acc,f1]
     else :
          return id, Y_pred_label
 
+# liste des classes tel que le ressort le.classes_
+classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
+            'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
+            'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
+            'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
+            'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
+            'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
 
 data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
 data_path_nolabels = ["./untagged_feature_sets/msd-ssd_test_nolabels/msd-ssd_test_nolabels.csv", "./untagged_feature_sets/msd-jmirmfccs_test_nolabels/msd-jmirmfccs_test_nolabels.csv", "./untagged_feature_sets/msd-marsyas_test_new_nolabels/msd-marsyas_test_new_nolabels.csv"] #=> MLP 30.7%
@@ -143,8 +175,6 @@ MSSD_acc = [0.273, 0.21, 0.183]
 MFCC_acc = [0.155,0.13,0.117]
 MARSYAS_acc = [0.224,0.208,0.167]
 
-# RN_acc = [0.353,0.249, 0.320]
-# RN_f1 = [0.333,0.220,0.299]
 weight = []
 # Le poids est calculé selon le pourcentage que représente l'accuracy..
 # .. du modèle sur la somme total des accuracy sur le dataset étudié
@@ -157,23 +187,23 @@ weight.append([a/MARSYAS_total for a in MARSYAS_acc])
 print(weight)
 #weight = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
 
-
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
 SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
 SVM_N_comp_tab = [28, -1,32]
 
 # Dataset d'entrainement avec label
-#pred, perf = voting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=True)
+pred, perf = voting(data_path,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=True)
+plot_confusion_matrix(pred[3],pred[2],classes_, title="Voting confusion matrix (in %)") # Affichage en % au lieu de normalisation standard pour une meilleure visibilité
 
 # Dataset de validation sans label
-pred = voting(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,with_labels=False)
+#pred = voting(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=False)
+
 
 def write_pred_csv(title_csv,prediction_list):
-    
     """
-        ecriture csv, ! format prediction_list,
-        """
+    ecriture csv, ! format prediction_list,
+    """
     
     with open(title_csv, mode = 'w') as pred_file :
         file_writer = csv.writer(pred_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -182,7 +212,8 @@ def write_pred_csv(title_csv,prediction_list):
             file_writer.writerow([prediction_list[0][i],prediction_list[1][i]])
 
 
-write_pred_csv("6_modeles.csv",pred)
+write_pred_csv("9_modeles_tests.csv",pred)
+
 
 
 #Final SSD_acc = 0.26981 -> 0.404
