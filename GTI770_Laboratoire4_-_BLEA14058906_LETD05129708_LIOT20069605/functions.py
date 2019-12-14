@@ -33,7 +33,8 @@ def get_data(dataset_path):
     input :
         dataset_path (string) : nom du fichier à ouvrir
     output : 
-        (np.ndarray) : X, Y
+        (np.ndarray) : X, Y, id
+        label_encoder : le
     """
 
     # Lecture du CSV
@@ -72,21 +73,6 @@ def get_data_whithout_labels(dataset_path):
                 'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
 
     return X, id, classes_
-
-
-def train_test_ID_split(X, Y, id):
-    id = np.array([id])
-    nb_features = len(X[0])
-
-    X_ID  = np.concatenate((X, id.T),axis=1)
-    X_train_ID, X_test_ID, Y_train, Y_test = train_test_split(X_ID, Y, train_size=0.8,random_state=60, stratify=Y)
-
-    X_train = X_train_ID[:, range(nb_features)].astype(np.float64)
-    X_test  = X_test_ID[:, range(nb_features)].astype(np.float64)
-    id_train = X_train_ID[:, -1]
-    id_test = X_test_ID[:, -1]
-
-    return X_train,X_test, id_train, id_test, Y_train, Y_test
 
 
 def plot_perf_epochs(histo,legende,titre,sous_titre): 

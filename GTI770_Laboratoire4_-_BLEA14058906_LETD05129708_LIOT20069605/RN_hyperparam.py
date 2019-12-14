@@ -79,6 +79,9 @@ predicting_delay_RN = []
 
 ########################## Layer size hyperparam test
 def layer_size_test():
+    """
+    Méthode pour le test de l'hyperparamètre : layer size
+    """
     global training_delay_RN
     training_delay_RN = []
     global predicting_delay_RN 
@@ -148,6 +151,9 @@ def layer_size_test():
 
 ################################## Nombres de perceptrons
 def perceptrons_number_test():
+    """
+    Méthode pour le test de l'hyperparamètre : nombre de perceptrons
+    """
     global training_delay_RN
     training_delay_RN = []
     global predicting_delay_RN 
@@ -216,6 +222,9 @@ def perceptrons_number_test():
 
 ################################## Learning rate 
 def learning_rate_test():
+    """
+    Méthode pour le test de l'hyperparamètre : taux d'apprentissage
+    """
     global training_delay_RN
     training_delay_RN = []
     global predicting_delay_RN 
@@ -288,6 +297,9 @@ def learning_rate_test():
 
 ################################## Nombres d'iterations
 def epochs_number_test():
+    """
+    Méthode pour le test de l'hyperparamètre : nombre d'epochs
+    """
     global training_delay_RN
     training_delay_RN = []
     global predicting_delay_RN 
@@ -366,6 +378,9 @@ def epochs_number_test():
     titre = "RN : HyperParam = number of epochs" 
 
 def RN_plot_test():
+    """
+    Méthode pour afficher les performances du modèle avec l'hyperparamètre testé précédemment
+    """
     #print( leg, titre ,sub_title)
     plot_perf_epochs(ho, leg, titre ,sub_title)
     plot_perf_delay(f1_RN,acc_RN,training_delay_RN,predicting_delay_RN,titre)

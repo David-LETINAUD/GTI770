@@ -87,9 +87,9 @@ def combining(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp, with_l
     Y_pred_SVM = SVM_model_.predict_proba(PCA_X)
 
     ######################### Combinaison des décisions
-    Y_pred_one_hot = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
+    Y_pred = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
-    return Y_pred_one_hot, id
+    return Y_pred, id
     
 
 
@@ -112,15 +112,15 @@ def run_combining(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_c
     id_genre_pred = []
     perf = []
 
-    Y_pred_one_hot_tab=[]
+    Y_pred_proba_tab=[]
 
     cpt = 0
     for data_path,weights,rn_p,rf_p,svm_p, n_comp in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab):
         if cpt != 1:
             r,id = combining(data_path,weights,rn_p,rf_p,svm_p,n_comp, with_labels)
-            Y_pred_one_hot_tab.append(r)
+            Y_pred_proba_tab.append(r)
         else :
-            Y_pred_one_hot_tab.append(0)
+            Y_pred_proba_tab.append(0)
         cpt+=1
 
         # Les 3 résultats doivent êux même être combiné
@@ -130,10 +130,10 @@ def run_combining(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_c
         #     perf.append(r[2:4])
     #Y_pred_one_hot = weight_L2[0]*Y_pred_one_hot_tab[0] + weight_L2[1]*Y_pred_one_hot_tab[1]+ weight_L2[2]*Y_pred_one_hot_tab[2]
     #Y_pred_one_hot = weight_L2_normalize[0]*Y_pred_one_hot_tab[0] + weight_L2_normalize[1]*Y_pred_one_hot_tab[1] + weight_L2_normalize[2]*Y_pred_one_hot_tab[2]
-    Y_pred_one_hot = weight_L2_normalize[0]*Y_pred_one_hot_tab[0] + weight_L2_normalize[2]*Y_pred_one_hot_tab[2]
+    Y_pred_proba = weight_L2_normalize[0]*Y_pred_proba_tab[0] + weight_L2_normalize[2]*Y_pred_proba_tab[2]
     Y_pred = []
 
-    for i in Y_pred_one_hot:
+    for i in Y_pred_proba:
         Y_pred.append(np.argmax(i))
 
     Y_pred_label = [classes_[i] for i in Y_pred ]
