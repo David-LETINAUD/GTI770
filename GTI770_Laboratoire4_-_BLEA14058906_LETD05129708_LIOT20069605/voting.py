@@ -165,46 +165,46 @@ def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab
          return id, Y_pred_label
 
 # liste des classes tel que le ressort le.classes_
-classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
-            'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
-            'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
-            'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
-            'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
-            'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
+# classes_ = ['BIG_BAND','BLUES_CONTEMPORARY','COUNTRY_TRADITIONAL','DANCE',
+#             'ELECTRONICA','EXPERIMENTAL','FOLK_INTERNATIONAL','GOSPEL','GRUNGE_EMO',
+#             'HIP_HOP_RAP','JAZZ_CLASSIC','METAL_ALTERNATIVE','METAL_DEATH',
+#             'METAL_HEAVY','POP_CONTEMPORARY','POP_INDIE','POP_LATIN','PUNK','REGGAE',
+#             'RNB_SOUL','ROCK_ALTERNATIVE','ROCK_COLLEGE','ROCK_CONTEMPORARY',
+#             'ROCK_HARD','ROCK_NEO_PSYCHEDELIA']
 
-data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
-data_path_nolabels = ["./untagged_feature_sets/msd-ssd_test_nolabels/msd-ssd_test_nolabels.csv", "./untagged_feature_sets/msd-jmirmfccs_test_nolabels/msd-jmirmfccs_test_nolabels.csv", "./untagged_feature_sets/msd-marsyas_test_new_nolabels/msd-marsyas_test_new_nolabels.csv"] #=> MLP 30.7%
+# data_path = ["./tagged_feature_sets/msd-ssd_dev/msd-ssd_dev.csv", "./tagged_feature_sets/msd-jmirmfccs_dev/msd-jmirmfccs_dev.csv", "./tagged_feature_sets/msd-marsyas_dev_new/msd-marsyas_dev_new.csv"] #=> MLP 30.7%
+# data_path_nolabels = ["./untagged_feature_sets/msd-ssd_test_nolabels/msd-ssd_test_nolabels.csv", "./untagged_feature_sets/msd-jmirmfccs_test_nolabels/msd-jmirmfccs_test_nolabels.csv", "./untagged_feature_sets/msd-marsyas_test_new_nolabels/msd-marsyas_test_new_nolabels.csv"] #=> MLP 30.7%
 
-# Calculer les poids
-#           RN    RF  SVM    
-SSD_acc = [0.273, 0.21, 0.183]
-MFCC_acc = [0.155,0.13,0.117]
-MARSYAS_acc = [0.224,0.208,0.167]
+# # Calculer les poids
+# #           RN    RF  SVM    
+# SSD_acc = [0.273, 0.21, 0.183]
+# MFCC_acc = [0.155,0.13,0.117]
+# MARSYAS_acc = [0.224,0.208,0.167]
 
-weights = []
-# Le poids est calculé selon le pourcentage que représente l'accuracy..
-# .. du modèle sur la somme total des accuracy sur le dataset étudié
-MSSD_total = np.sum(np.array(SSD_acc))
-weights.append([a/MSSD_total for a in SSD_acc])
-MFCC_total = np.sum(np.array(MFCC_acc))
-weights.append([a/MFCC_total for a in MFCC_acc])
-MARSYAS_total = np.sum(np.array(MARSYAS_acc))
-weights.append([a/MARSYAS_total for a in MARSYAS_acc])
-print("Weight L1")
-print(weights)
-##weights = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
+# weights = []
+# # Le poids est calculé selon le pourcentage que représente l'accuracy..
+# # .. du modèle sur la somme total des accuracy sur le dataset étudié
+# MSSD_total = np.sum(np.array(SSD_acc))
+# weights.append([a/MSSD_total for a in SSD_acc])
+# MFCC_total = np.sum(np.array(MFCC_acc))
+# weights.append([a/MFCC_total for a in MFCC_acc])
+# MARSYAS_total = np.sum(np.array(MARSYAS_acc))
+# weights.append([a/MARSYAS_total for a in MARSYAS_acc])
+# print("Weight L1")
+# print(weights)
+# ##weights = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
 
-RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
-RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
-SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
-SVM_N_comp_tab = [28, -1,32]
+# RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
+# RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
+# SVM_models_path = ["./Models/svm_ssd.sav","./Models/svm_mfcc.sav","./Models/svm_marsyas.sav"]
+# SVM_N_comp_tab = [28, -1,32]
 
-# Dataset d'entrainement avec label
-pred, perf = voting(data_path,weights,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=True)
-plot_confusion_matrix(pred[3],pred[2],classes_, title="Voting confusion matrix (in %)") # Affichage en % au lieu de normalisation standard pour une meilleure visibilité
+# # Dataset d'entrainement avec label
+# pred, perf = voting(data_path,weights,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=True)
+# plot_confusion_matrix(pred[3],pred[2],classes_, title="Voting confusion matrix (in %)") # Affichage en % au lieu de normalisation standard pour une meilleure visibilité
 
-# Dataset de validation sans label
-#pred = voting(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=False)
+# # Dataset de validation sans label
+# #pred = voting(data_path_nolabels,weight,RN_models_path, RF_models_path, SVM_models_path,SVM_N_comp_tab,classes_,with_labels=False)
 
 
 def write_pred_csv(title_csv,prediction_list):
@@ -219,7 +219,7 @@ def write_pred_csv(title_csv,prediction_list):
             file_writer.writerow([prediction_list[0][i],prediction_list[1][i]])
 
 
-write_pred_csv("9_modeles_tests_2.csv",pred)
+# write_pred_csv("9_modeles_tests_2.csv",pred)
 
 
 
