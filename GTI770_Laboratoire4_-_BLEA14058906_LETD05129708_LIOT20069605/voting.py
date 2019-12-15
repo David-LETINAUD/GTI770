@@ -89,15 +89,19 @@ def voting_L1(data_path, weights, RN_path, RF_path, SVM_path, SVM_N_comp,classes
 
     #########################   prediction
     # RN MODEL
+    print("####### RN predictions ")
     Y_pred_RN = RN_model_.predict_proba(X)
 
     # RF MODEL
+    print("####### RF predictions ")
     Y_pred_RF = RF_model_.predict_proba(X)
 
     #SVM MODEL
+    print("####### SVM predictions ")
     Y_pred_SVM = SVM_model_.predict_proba(PCA_X)
 
     ######################### Combinaison des décisions
+    print("####### Combining ")
     Y_pred_proba = weights[0] * Y_pred_RN + weights[1] * Y_pred_RF + weights[2]*Y_pred_SVM 
     
     return Y_pred_proba, id, Y
@@ -134,10 +138,12 @@ def voting(data_path_tab, weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab
     weight_L2_normalize = [w/sum_L2 for w in weight_L2]
 
     Y_pred_proba_tab=[]
-
+    cpt = 0 
     for data_path,weights,rn_p,rf_p,svm_p, n_comp in zip(data_path_tab,weights_tab, RN_path, RF_path, SVM_path,SVM_N_comp_tab):
+        print(cpt, "#######", data_path, "weights : ", weights)
         r,id, Y = voting_L1(data_path,weights,rn_p,rf_p,svm_p,n_comp,classes_, with_labels)
         Y_pred_proba_tab.append(r)
+        cpt+=1
 
     #Y_pred_one_hot = weight_L2[0]*Y_pred_one_hot_tab[0] + weight_L2[1]*Y_pred_one_hot_tab[1]+ weight_L2[2]*Y_pred_one_hot_tab[2]
     Y_pred_proba = weight_L2_normalize[0]*Y_pred_proba_tab[0] + weight_L2_normalize[1]*Y_pred_proba_tab[1] + weight_L2_normalize[2]*Y_pred_proba_tab[2]
@@ -186,7 +192,7 @@ MARSYAS_total = np.sum(np.array(MARSYAS_acc))
 weights.append([a/MARSYAS_total for a in MARSYAS_acc])
 print("Weight L1")
 print(weights)
-weights = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
+##weights = [[0.4,0.2,0.4], [0.4,0.55,0.05], [0.35,0.3,0.35]]
 
 RN_models_path = ["Models/MLP_model_SSD/cp.ckpt", "Models/MLP_model_MFCC/cp.ckpt", "Models/MLP_model_MARSYAS/cp.ckpt" ]
 RF_models_path = ["./Models/rfc_ssd.sav","./Models/rfc_mfcc.sav","./Models/rfc_marsyas.sav"]
@@ -213,7 +219,7 @@ def write_pred_csv(title_csv,prediction_list):
             file_writer.writerow([prediction_list[0][i],prediction_list[1][i]])
 
 
-write_pred_csv("9_modeles_tests.csv",pred)
+write_pred_csv("9_modeles_tests_2.csv",pred)
 
 
 
