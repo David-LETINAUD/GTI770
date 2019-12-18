@@ -133,8 +133,10 @@ def SVC_rbf(X_train, Y_train, X_test, Y_test, C, gamma):
             C      : (double) hyperparamètre C
             gamma  : (double)hyperparamètre gamma
         output:
-              Matrice de confusion
-              Rapport de classification
+             svc_class: Resultat
+             y_pred: (np_array) Liste des prédiction
+	     train_time: (int) temps de training
+             pred_time: (int) temps de prédiction
 
     """
     svc_class = svm.SVC(kernel="rbf", C=C, gamma=gamma,cache_size=11264,probability=True,class_weight='balanced')
