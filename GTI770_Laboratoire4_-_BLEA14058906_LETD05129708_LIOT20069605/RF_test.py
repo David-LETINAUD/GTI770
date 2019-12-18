@@ -83,7 +83,8 @@ list_files = ['SSD_pred_file.csv','MFCC_pred_file.csv','MARSYAS_pred_file.csv']
 def write_pred_csv(title_csv,prediction_list):
 
     """
-        ecriture csv, ! format prediction_list,
+        NON définitif
+        Premier test d'écriture ecriture csv, ! format prediction_list,
     """
 
     with open(title_csv, mode = 'w') as pred_file :
