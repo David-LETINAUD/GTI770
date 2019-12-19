@@ -1,0 +1,5 @@
+### GTI770 - Systèmes intelligents et apprentissage machine 
+TP3 : Développement d'un système intelligent
+
+Au cours de ce laboratoire, nous allons construire un système intelligent qui permettra de classer les musiques d'un dataset en fonction de leur genre. L'objectif est d'utiliser plusieurs ensembles de primitives qui sont à notre disposition. Par ailleurs, nous allons également combiner trois algorithmes de classification afin d'améliorer les performances de reconnaissance de genre musical.
+Notre étude se déroule en plusieurs parties. Dans un premier temps, une revue de la littérature et des premiers tests fonctionnels nous permettront de déterminer les algorithmes et ensembles de primitives les plus appropriés à notre problème. Suite à cela, nous mènerons une étude des hyper paramètres. Enfin, nous nous intéresserons à la combinaison des modèles et nos résultats tout en apportant des recommandations et discussions sur l'ensemble du projet.
